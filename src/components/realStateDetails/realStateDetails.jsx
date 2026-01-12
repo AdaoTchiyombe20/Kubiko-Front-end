@@ -1,4 +1,4 @@
-import { Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon, UserSearch02Icon } from "hugeicons-react";
+import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon, UserSearch02Icon } from "hugeicons-react";
 import Cards from "../cards/cards";
 import RandomText from "../randomTextAndSvg/randomText";
 import RecentSearchs from "../recentSearchs/recentSearchs";
@@ -9,16 +9,20 @@ import ActionButtons from "../realStateDetailsActionButtons/actionButtons";
 import styles from './realStateDetails.module.css'
 import { useContext } from "react"
 import { AppContext } from "../context/appcontext"
-
+import BackButton from "../../navigateBackButton/navigateBackButton";
+import { useNavigate } from "react-router-dom";
 export default function RealStateDetails(){
 
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)
-
+    const navigate = useNavigate()
     return(
         <div className={`${styles.realStateDetails}`}>
             <VariousModal />
             <div className="row">
                 <div className="col-5">
+                    <div>
+                        <BackButton icon={<ArrowLeft02Icon />} onClick={() => navigate('/')} />
+                    </div>
 
                 </div>
                 <div className="col-7">

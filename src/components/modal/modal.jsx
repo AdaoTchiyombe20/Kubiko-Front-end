@@ -10,6 +10,7 @@ import styles from './modal.module.css'
 import TimeChoose from '../timeChoose/timeChoose';
 import ScheduleCalendar from '../calendar/calendar';
 import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
+import BackButton from '../../navigateBackButton/navigateBackButton';
 
 export default function VariousModal(props) {
 
@@ -25,24 +26,10 @@ export default function VariousModal(props) {
         centered
       >
         {
-            showLocalModal == 'phone' && (
-                <div className='d-flex align-items-center gap-2 mb-3' style={{cursor: 'pointer', width: 'min-content'}} onClick={() =>{
-                    setShowLocalModal('login')
-                }}>
-                    <ArrowLeft02Icon />
-                    <p className='m-0'>Voltar</p>      
-                </div>
-            )
+            showLocalModal == 'phone' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('login')} /> )
         }
         {
-            showLocalModal == 'scheduleRequested' && (
-                <div className='d-flex align-items-center gap-2 mb-3' style={{cursor: 'pointer', width: 'min-content'}} onClick={() =>{
-                    setShowLocalModal('scheduleVisit')
-                }}>
-                    <ArrowLeft02Icon />
-                    <p className='m-0'>Voltar</p>      
-                </div>
-            )
+            showLocalModal == 'scheduleRequested' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('login')} />)
         }
         <Modal.Header className='border-0 p-0' closeButton = {showLocalModal == 'scheduleVisit' ? true : false}>
           <Modal.Title className='fw-semibold fs-3'>
