@@ -1,0 +1,12 @@
+:root{
+    --text-base-color: #3541A9;
+}
+.timeChooseContainer button{
+    background-color: #F8F9F5;
+    font-weight: 500;
+    padding: 8px 20px;
+}
+.active{
+    background-color: #EDEFFD !important;
+    color: var(--text-base-color) !important;
+}

@@ -1,0 +1,10 @@
+/* .tabNavLink{
+    display: flex;
+    align-items: center;
+    height: 30px !important;
+    font-size: 12px !important;
+    color: #202664 !important;
+}
+.tabNavLink:where([aria-selected='true']){
+    background-color: #EDEFFD !important;
+} */

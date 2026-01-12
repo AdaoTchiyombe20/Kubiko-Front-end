@@ -1,0 +1,16 @@
+.card{
+    border: 1px solid #ECECF2 !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+}
+.cardHeader{
+    background-color: white !important;
+}
+.cardHeader div{
+    height: 52px;
+    width: 52px;
+    background-color: #3541A9;
+}
+.cardText{
+    text-align: justify;
+}

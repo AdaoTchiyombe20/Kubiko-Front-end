@@ -1,0 +1,13 @@
+.favourites{
+    font-size: 14px;
+    background-color: #F8F9F5;
+    padding: 10px 23px;
+    gap: 10px;
+}
+.loginDropdown::after{
+    display: none !important;
+}
+.loginDropdown a{
+    font-size: 13px;
+    line-height: 0.95rem;
+}

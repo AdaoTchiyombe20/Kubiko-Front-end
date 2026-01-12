@@ -1,0 +1,16 @@
+*{
+  font-family: 'Inter';
+}
+header{
+  height: 80px;
+  padding: 0 64px;
+}
+main{
+  padding: 0 64px;
+}
+.footer{
+  padding: 64px;
+}
+.realStateCards{
+  gap: 20px;
+}

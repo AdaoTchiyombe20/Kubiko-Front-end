@@ -1,0 +1,31 @@
+:root{
+    --text-base-color: #3541A9;
+}
+.realStateDetails{
+    padding: 64px;
+
+    h2{
+        font-family: 'Parkinsans';
+    }
+}
+.realStateDetailsContainerCards{
+    margin-bottom: 64px;
+}
+.realStatePrice{
+    margin-top: 24px;
+}
+.realStatePrice p{
+    font-size: 20px;
+    color: var(--text-base-color) !important;
+}
+.detailsItem{
+    margin-top: 24px;
+}
+.ownerDescription{
+    margin: 24px 0;
+}
+.ownerDescription h2{
+    font-family: 'Inter';
+    font-size: 18px;
+    margin: 16px 0;
+}

@@ -1,0 +1,28 @@
+:root{
+    --text-base-color: #3541A9;
+}
+.googleButton{
+    background-color: var(--text-base-color) !important;
+}
+.phoneAuthenticationButton{
+    background-color: #F0F0F2 !important;
+}
+.sendPhoneCodeButton{
+    background-color: var(--text-base-color) !important;
+}
+.setProfileForm{
+    font-family: 'Inter';
+}
+.setProfileForm label{
+    font-family: 'Inter' !important;
+    font-size: 14px;
+    font-weight: 500;
+}
+.setProfileForm input{
+    border: 1px solid #ECECF2;
+    border-radius: 8px;
+    font-size: 14px;
+    padding: 12px 10px;
+    height: 40px;
+    outline: none;
+}

@@ -1,0 +1,29 @@
+.sellOrRent p{
+    font-size: 14px;
+}
+.sellOrRent p:first-child{
+    background-color: #EDEFFD;
+    color: #202664;
+    padding: 2px 16px;
+}
+.sellOrRent p:last-child{
+    color: #3541A9;
+}
+.cardHeader{
+    position: relative;
+}
+.cardHeader div{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.cardText{
+    font-size: 14px;
+}
+.cardFooter button:hover{
+    color: white !important;
+    background-color: #202664 !important;
+    border-color: #202664 !important;
+    outline: none;
+    cursor: pointer;
+}

@@ -1,0 +1,75 @@
+:root{
+    --carrousel-slide-radio-button-color: #4B5BEE;
+    --text-base-color: #3541A9;
+    --black-text-base-color: #323131;
+}
+.radix-themes:where([data-is-root-theme='true']) {
+  min-height: 1dvh !important;
+}
+.rt-BaseTabList{
+    border: none !important;
+}
+.rt-TabsTrigger{
+    width: 160px !important;
+    font-weight: 400 !important;
+}
+.rt-TabsTrigger:hover{
+    color: #808080;
+}
+.rt-TabsTrigger:where([data-state='active']){
+    color: var(--text-base-color) !important;
+}
+.carousel-item img{
+    width: 100%;
+    height: calc(75vh - 80px);
+    object-fit: cover;
+}
+
+.carousel-indicators{
+    display: flex;
+    align-items: end;
+}
+.carousel-indicators button{
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+}
+.carousel-indicators .active{
+    width: 56px !important;
+    height: 8px !important;
+    border-radius: 8px !important;
+    background-color: var(--carrousel-slide-radio-button-color) !important;
+}
+.modal-content{
+    padding: 32px;
+}
+.flag-dropdown{
+    border: 1px solid #ECECF2 !important;
+    border-right: 0 !important;
+    background-color: white !important;
+}
+.phoneInput{
+    height: 40px !important;
+    border: 1px solid #ECECF2 !important;
+    border-radius: 8px;
+    padding: 10px 10px 10px 40px !important;
+    box-shadow: none !important;
+    font-size: 14px !important;
+    font-family: 'Inter';
+}
+.p-calendar{
+    width: 100% !important;
+}
+.p-datepicker::-webkit-scrollbar {
+  width: 6px;
+}
+
+.p-datepicker::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 10px;
+}
+
+.p-datepicker::-webkit-scrollbar-thumb {
+  background: #e1dddd;
+  border-radius: 10px;
+}

@@ -1,0 +1,20 @@
+.footer_up_left p{
+    color: #FFFFFF99;
+    text-align: justify;
+}
+.footerLogo div{
+    background-color: white;
+    width: 39px;
+    height: 39px;
+}
+.footerLogo h2{
+    font-family: 'Parkinsans' !important;
+}
+.ulFooter li:first-child{
+    margin-top: 5px;
+}
+.ulFooter li a{
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+}

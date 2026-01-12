@@ -1,0 +1,16 @@
+:root{
+    --text-base-color: #3541A9;
+}
+.alertContainer{
+    display: flex;
+    gap: 15px;
+    padding: 16px;
+    background-color: #EDEFFD;
+}
+.alertContainer div:nth-child(2){
+    padding-top: 1px;
+}
+.alertContainer div:nth-child(2) p:first-child{
+    font-weight: 600;
+    color: var(--text-base-color);
+}

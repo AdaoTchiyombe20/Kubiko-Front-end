@@ -1,0 +1,6 @@
+.dropdown_toggle{
+    font-size: 14px !important;
+}
+.dropdown_toggle::after{
+    display: none !important;
+}
