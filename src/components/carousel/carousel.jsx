@@ -4,7 +4,7 @@ import house3 from '../../assets/imgs/house3.jpg'
 
 export default function Carrousel() {
   return (
-    <Carousel interval={2000} pause={false}>
+    <Carousel className='home-carrousel' interval={2000} pause={false}>
       <Carousel.Item>
         <img src={house3} />
       </Carousel.Item>

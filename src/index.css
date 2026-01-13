@@ -24,7 +24,10 @@
     height: calc(75vh - 80px);
     object-fit: cover;
 }
-
+.home-carrousel .carousel-indicators{
+    left: inherit !important;
+    right: -210px !important;
+}
 .carousel-indicators{
     display: flex;
     align-items: end;
@@ -37,8 +40,29 @@
 .carousel-indicators .active{
     width: 56px !important;
     height: 8px !important;
+    border-top: none !important;
+    border-bottom: none !important;
     border-radius: 8px !important;
+    align-self: center;
     background-color: var(--carrousel-slide-radio-button-color) !important;
+}
+
+.home-carrousel .carousel-control-next-icon, .home-carrousel .carousel-control-prev-icon{
+    display: none;
+}
+.details-carrousel .carousel-control-next-icon, .details-carrousel .carousel-control-prev-icon{
+    filter: invert(1);
+    width: 20px !important;
+    height: 20px !important;
+}
+.details-carrousel .carousel-control-next, .details-carrousel .carousel-control-prev{
+    background-color: white !important;
+    opacity: 1 !important;
+    border-radius: 10px;
+    height: 40px;
+    width: 40px !important;
+    align-self: center;
+    margin: 0 30px;
 }
 .modal-content{
     padding: 32px;

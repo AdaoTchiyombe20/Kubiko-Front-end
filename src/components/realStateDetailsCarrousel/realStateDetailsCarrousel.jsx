@@ -1,27 +1,19 @@
 import Carousel from 'react-bootstrap/Carousel';
-import ExampleCarouselImage from 'components/ExampleCarouselImage';
-import { House03Icon, House02Icon } from 'hugeicons-react';
-export default function realStateDetailsCarrousel() {
+import house02 from '../../assets/imgs/house2.jpg'
+import house03 from '../../assets/imgs/house3.jpg'
+import house04 from '../../assets/imgs/house4.jpg'
+
+export default function DetailsCarrousel() {
   return (
-    <Carousel>
+    <Carousel className='details-carrousel' interval={null}>
       <Carousel.Item>
-        <img src={House02Icon} alt=''/>
+        <img src={house02} alt='house02' className='rounded-3' style={{height: '500px'}}/>
       </Carousel.Item>
       <Carousel.Item>
-        <ExampleCarouselImage text="Second slide" />
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
+        <img src={house03} alt='house03' className='rounded-3' style={{height: '500px'}}/>
       </Carousel.Item>
       <Carousel.Item>
-        <ExampleCarouselImage text="Third slide" />
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
+        <img src={house04} alt='house04' className='rounded-3' style={{height: '500px'}}/>
       </Carousel.Item>
     </Carousel>
   );

@@ -11,6 +11,7 @@ import { useContext } from "react"
 import { AppContext } from "../context/appcontext"
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import { useNavigate } from "react-router-dom";
+import DetailsCarrousel from "../realStateDetailsCarrousel/realStateDetailsCarrousel";
 export default function RealStateDetails(){
 
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)
@@ -22,6 +23,9 @@ export default function RealStateDetails(){
                 <div className="col-5">
                     <div>
                         <BackButton icon={<ArrowLeft02Icon />} onClick={() => navigate('/')} />
+                    </div>
+                    <div>
+                        <DetailsCarrousel />
                     </div>
 
                 </div>

@@ -41,8 +41,8 @@ export default function Header(){
                     <a className={`${styles.loginDropdown} btn dropdown-toggle d-flex align-items-center p-0 gap-1 border border-0`} href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <UserCircleIcon size={24} color="#3541A9"/>
                         <div className="d-flex flex-column align-items-start">
-                            <a href="#" className="m-0 text-decoration-none">Olá!</a>
-                            <a href="#" className="m-0 text-decoration-none fw-semibold">Entrar</a>
+                            <span className="m-0 text-decoration-none">Olá!</span>
+                            <span className="m-0 text-decoration-none fw-semibold">Entrar</span>
                         </div>
                     </a>
                     <ul className={`${isLogged ? '' : 'd-none'} dropdown-menu border-0 shadow-lg mt-3`}>
