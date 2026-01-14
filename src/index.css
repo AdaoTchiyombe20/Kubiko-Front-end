@@ -1,7 +1,10 @@
 :root{
-    --carrousel-slide-radio-button-color: #4B5BEE;
+    --carrousel-slide-radio-button-color: #F28C28;
     --text-base-color: #3541A9;
     --black-text-base-color: #323131;
+}
+.homePage-main{
+    margin-top: 100px;
 }
 .radix-themes:where([data-is-root-theme='true']) {
   min-height: 1dvh !important;
@@ -25,8 +28,12 @@
     object-fit: cover;
 }
 .home-carrousel .carousel-indicators{
-    left: inherit !important;
-    right: -210px !important;
+    display: none;
+    /* 
+     ... Se quiser que apareça os indicators ...
+        left: inherit !important;
+        right: -210px !important;
+    */
 }
 .carousel-indicators{
     display: flex;

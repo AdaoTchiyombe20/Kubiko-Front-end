@@ -1,19 +1,60 @@
 import Carrousel from "../carousel/carousel";
 import Cards from "../cards/cards";
-import { ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, PinLocation03Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
 import RandomText from "../randomTextAndSvg/randomText";
 import PublicityCards from "../publicityCards/publicityCards";
-import { Theme } from "@radix-ui/themes";
 import Tab from "../tab/tab";
 import RecentSearchs from "../recentSearchs/recentSearchs";
+import { ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
+import { Theme } from "@radix-ui/themes";
+import styles from './home.module.css'
+import { Form } from "react-bootstrap";
 
 export default function Home(){
     return(
         <>
-            <div className="pb-4">
+            <div className="d-flex flex-column pb-4 position-relative mb-5">
                 <Carrousel />
+                <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
+                    <div>
+                        <h2 className="text-white text-center mb-5">Bem ao <span className="text-warning">Kubiko</span></h2>
+                        <h1 className="text-center lh-1 text-warning">Invista Hoje no <br /> Sonho da sua casa</h1>
+                    </div>
+                    <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
+                        <div className="col d-flex flex-column">
+                            <label htmlFor="">Tipo de imóvel</label>
+                            <Form.Select>
+                                <option value="">Apartamento</option>
+                            </Form.Select>
+                        </div>
+                        <div className="col d-flex flex-column">
+                            <label htmlFor="">Localização</label>
+                            <Form.Select>
+                                <option value="">Kilamba</option>
+                            </Form.Select>
+                        </div>
+                        <div className="col d-flex flex-column">
+                            <label htmlFor="">Preço</label>
+                            <Form.Select>
+                                <option value="">20.000.000kz</option>
+                            </Form.Select>
+                        </div>
+                        <div className="col d-flex flex-column">
+                            <label htmlFor="">Nº de quartos</label>
+                            <Form.Select>
+                                <option value="">5 ou mais</option>
+                            </Form.Select>
+                        </div>
+                        <div className="col">
+                            <button className="btn btn-warning text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
+                                Pesquisar
+                                <Search01Icon />
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <main className="mb-5">
+            
+            <main className="mb-5 homePage-main">
                 <div className="d-flex mb-4">
                     <RandomText text='IMÓVEIS' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<City03Icon size={16} color="#D28920"/>}/>
                 </div>

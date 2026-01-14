@@ -23,7 +23,7 @@ export default function Cards() {
             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="#F0F0F2" className="bi bi-circle-fill" viewBox="0 0 16 16">
               <circle cx="8" cy="8" r="8"/>
             </svg>
-            <p className='m-0'>Casas</p>
+            <p className='m-0 text-warning'>Casas</p>
           </div>
         <Card.Title className='fw-semibold'>450.000 Kz / mês</Card.Title>
         <Card.Text className={`${styles.cardText} m-0`}>
@@ -34,7 +34,7 @@ export default function Cards() {
         </Card.Text>
       </Card.Body>
       <Card.Footer className={`${styles.cardFooter} border border-0 bg-light-subtle`}>
-        <Button className='w-100 bg-light border-1 border-primary text-primary py-2' onClick={()=>{
+        <Button className='w-100 bg-light border-1 border-warning text-warning py-2' onClick={()=>{
           navigate('/details/1')
         }}>Ver detalhes</Button>
       </Card.Footer>

@@ -1,5 +1,5 @@
 :root{
-    --text-base-color: #3541A9;
+    --text-details-color: #F28C28;
 }
 .realStateDetails{
     padding: 64px;
@@ -16,7 +16,7 @@
 }
 .realStatePrice p{
     font-size: 20px;
-    color: var(--text-base-color) !important;
+    color: var(--text-details-color) !important;
 }
 .detailsItem{
     margin-top: 24px;

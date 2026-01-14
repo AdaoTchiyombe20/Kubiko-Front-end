@@ -2,8 +2,9 @@
     font-size: 14px;
 }
 .sellOrRent p:first-child{
-    background-color: #EDEFFD;
-    color: #202664;
+    background-color: #F28C28;
+    opacity: 0.7;
+    color: #FFFF;
     padding: 2px 16px;
 }
 .sellOrRent p:last-child{
@@ -22,8 +23,8 @@
 }
 .cardFooter button:hover{
     color: white !important;
-    background-color: #202664 !important;
-    border-color: #202664 !important;
+    background-color: #F28C28 !important;
+    border-color: #F28C28 !important;
     outline: none;
     cursor: pointer;
 }

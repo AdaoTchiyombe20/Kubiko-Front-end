@@ -35,7 +35,7 @@ export default function RealStateDetails(){
                         <h2 className="mt-2">Apartamento T1 na Alvalade, ideal para personalizar ao seu gosto</h2>
                     </div>
                     <div className={`${styles.realStatePrice}`}>
-                        <p className="fw-semibold text-primary m-0 ">25.650 AOA <span className="text-secondary fw-normal">/mês</span></p>
+                        <p className="fw-semibold m-0 ">25.650 AOA <span className="text-secondary fw-normal">/mês</span></p>
                         <small>Valor mensal. Pagamento negociável.</small>
                     </div>
                     <div className={`${styles.detailsItem} d-flex gap-4`}>
@@ -63,12 +63,12 @@ export default function RealStateDetails(){
                         <AdditionalInformation icon={<Time04Icon />} text={"Visitas mediante agendamento"}/>
                     </div>
                     <div className="d-flex align-items-center gap-3 mt-3">
-                        <ActionButtons icon={<Calendar04Icon />} text={'Agendar visita'} backgroundColor={'#3541A9'} onClick={() => {
+                        <ActionButtons icon={<Calendar04Icon />} text={'Agendar visita'} backgroundColor={'#F28C28'} border={'none'} onClick={() => {
                                 setShowLocalModal('scheduleVisit')
                                 handleShowModal()
                             }}
                         />
-                        <ActionButtons icon={<Call02Icon />} text={'Falar com o anunciante'} color={'#3541A9'} backgroundColor={'#EDEFFD'} />
+                        <ActionButtons icon={<Call02Icon />} text={'Falar com o anunciante'} color={'#F28C28'} backgroundColor={'#FFFF'} border={'1px solid #F28C28'} />
                     </div>
                 </div>
             </div>

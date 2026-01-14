@@ -2,7 +2,7 @@ import { Facebook01Icon, Home12Icon, InstagramIcon, Linkedin01Icon } from "hugei
 import styles from './footer.module.css'
 export default function Footer(){
     return(
-        <footer className="footer bg-primary text-white">
+        <footer className="footer bg-warning text-white">
           <div className="row footer_up d-flex justify-content-between pb-5">
             <div className={`${styles.footer_up_left} footer_up_left col-4`}>
               <div className={`${styles.footerLogo} d-flex align-items-center gap-2 mb-3`}>

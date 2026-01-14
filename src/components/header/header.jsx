@@ -28,7 +28,7 @@ export default function Header(){
                 </ul>
             </nav>
             <div className="d-flex align-items-center gap-4 px-3">
-                <div className={`${styles.favourites} d-flex align-items-center justify-content-center rounded-2`}>
+                <div className={`${styles.favourites} d-flex align-items-center justify-content-center text-warning rounded-2`}>
                     <FavouriteIcon size={18}/>
                     Favoritos
                 </div>
@@ -39,7 +39,7 @@ export default function Header(){
                     }
                 }}>
                     <a className={`${styles.loginDropdown} btn dropdown-toggle d-flex align-items-center p-0 gap-1 border border-0`} href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <UserCircleIcon size={24} color="#3541A9"/>
+                        <UserCircleIcon size={24} color="#F28C28"/>
                         <div className="d-flex flex-column align-items-start">
                             <span className="m-0 text-decoration-none">Olá!</span>
                             <span className="m-0 text-decoration-none fw-semibold">Entrar</span>

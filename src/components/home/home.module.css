@@ -1,0 +1,28 @@
+.aboveCarrousel{
+    padding-top: 120px;
+    bottom: -20px;
+}
+.aboveCarrousel h2{
+    font-family: 'Parkinsans';
+    font-size: 60px;
+}
+.aboveCarrousel h1{
+    font-family: 'Parkinsans';
+    font-size: 70px;
+}
+.homePageForm{
+    width: 90vw;
+    bottom: -40px;
+}
+.homePageForm select{
+    height: 50px;
+    padding: 0 15px;
+    margin-top: 10px;
+    border: none;
+    box-shadow: none !important;
+    background-color: #F0F1F1;
+}
+
+.homePageForm button{
+    height: 50px;
+}
