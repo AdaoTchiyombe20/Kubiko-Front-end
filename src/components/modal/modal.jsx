@@ -14,7 +14,7 @@ import BackButton from '../../navigateBackButton/navigateBackButton';
 
 export default function VariousModal(props) {
 
-    const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
+const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
 
   return (
     <>

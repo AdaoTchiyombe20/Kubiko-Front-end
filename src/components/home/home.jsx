@@ -8,10 +8,12 @@ import { ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Ic
 import { Theme } from "@radix-ui/themes";
 import styles from './home.module.css'
 import { Form } from "react-bootstrap";
+import VariousModal from "../modal/modal";
 
 export default function Home(){
     return(
         <>
+            <VariousModal />
             <div className="d-flex flex-column pb-4 position-relative mb-5">
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
@@ -20,25 +22,25 @@ export default function Home(){
                         <h1 className="text-center lh-1 text-warning">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
                     <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
-                        <div className="col d-flex flex-column">
+                        <div className="col border-end border-2 pe-4 d-flex flex-column">
                             <label htmlFor="">Tipo de imóvel</label>
                             <Form.Select>
                                 <option value="">Apartamento</option>
                             </Form.Select>
                         </div>
-                        <div className="col d-flex flex-column">
+                        <div className="col border-end border-2 pe-4 d-flex flex-column">
                             <label htmlFor="">Localização</label>
                             <Form.Select>
                                 <option value="">Kilamba</option>
                             </Form.Select>
                         </div>
-                        <div className="col d-flex flex-column">
+                        <div className="col border-end border-2 pe-4 d-flex flex-column">
                             <label htmlFor="">Preço</label>
                             <Form.Select>
                                 <option value="">20.000.000kz</option>
                             </Form.Select>
                         </div>
-                        <div className="col d-flex flex-column">
+                        <div className="col border-end border-2 pe-4 d-flex flex-column">
                             <label htmlFor="">Nº de quartos</label>
                             <Form.Select>
                                 <option value="">5 ou mais</option>
@@ -53,7 +55,7 @@ export default function Home(){
                     </form>
                 </div>
             </div>
-            
+             
             <main className="mb-5 homePage-main">
                 <div className="d-flex mb-4">
                     <RandomText text='IMÓVEIS' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<City03Icon size={16} color="#D28920"/>}/>
