@@ -18,7 +18,6 @@ export default function RealStateDetails(){
     const navigate = useNavigate()
     return(
         <div className={`${styles.realStateDetails}`}>
-            <VariousModal />
             <div className="row">
                 <div className="col-5">
                     <div>

@@ -5,6 +5,7 @@ import App from './App.jsx'
 import AppProvider from './components/context/appcontext.jsx';
 import Home from './components/home/home.jsx';
 import RealStateDetails from './components/realStateDetails/realStateDetails.jsx';
+import FilterPage from './components/filterPage/filterPage.jsx';
 import './index.css'
 import "@radix-ui/themes/styles.css";
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
       {
         element: <RealStateDetails />,
         path: '/details/:id'
-      }, 
+      },
+      {
+        element: <FilterPage />,
+        path: '/filters'
+      } 
     ]
   }
 ])

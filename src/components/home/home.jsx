@@ -13,7 +13,6 @@ import VariousModal from "../modal/modal";
 export default function Home(){
     return(
         <>
-            <VariousModal />
             <div className="d-flex flex-column pb-4 position-relative mb-5">
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
