@@ -1,17 +1,17 @@
 import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon, UserSearch02Icon } from "hugeicons-react";
-import Cards from "../cards/cards";
-import RandomText from "../randomTextAndSvg/randomText";
-import RecentSearchs from "../recentSearchs/recentSearchs";
-import DetailsItem from "../detailsItem/detailsItem";
-import AdditionalInformation from "../detailsAdditionalInformations/detailsAdditionInformations";
-import VariousModal from "../modal/modal";
-import ActionButtons from "../realStateDetailsActionButtons/actionButtons";
+import Cards from "../../components/cards/cards";
+import RandomText from "../../components/randomTextAndSvg/randomText";
+import RecentSearchs from "../../components/recentSearchs/recentSearchs";
+import DetailsItem from "../../components/detailsItem/detailsItem";
+import AdditionalInformation from "../../components/detailsAdditionalInformations/detailsAdditionInformations";
+import VariousModal from "../../components/modal/modal";
+import ActionButtons from "../../components/realStateDetailsActionButtons/actionButtons";
 import styles from './realStateDetails.module.css'
 import { useContext } from "react"
-import { AppContext } from "../context/appcontext"
+import { AppContext } from "../../components/context/appcontext"
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import { useNavigate } from "react-router-dom";
-import DetailsCarrousel from "../realStateDetailsCarrousel/realStateDetailsCarrousel";
+import DetailsCarrousel from "../../components/realStateDetailsCarrousel/realStateDetailsCarrousel";
 export default function RealStateDetails(){
 
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)

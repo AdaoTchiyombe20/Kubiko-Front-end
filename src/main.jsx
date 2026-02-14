@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import App from './App.jsx'
 import AppProvider from './components/context/appcontext.jsx';
-import Home from './components/home/home.jsx';
-import RealStateDetails from './components/realStateDetails/realStateDetails.jsx';
-import FilterPage from './components/filterPage/filterPage.jsx';
+import Home from './pages/home/home.jsx';
+import RealStateDetails from './pages/realStateDetails/realStateDetails.jsx';
+import FilterPage from './pages/filterPage/filterPage.jsx';
 import './index.css'
 import "@radix-ui/themes/styles.css";
 import 'bootstrap/dist/css/bootstrap.min.css'

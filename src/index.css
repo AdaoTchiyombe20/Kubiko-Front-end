@@ -3,6 +3,18 @@
     --text-base-color: #3541A9;
     --black-text-base-color: #323131;
 }
+.text-default-color{
+    color: var(--text-base-color) !important;
+}
+.bg-default-color{
+    background-color: var(--black-text-base-color);
+}
+.outline-none{
+    outline: none !important;
+}
+.cursor-pointer{
+    cursor: pointer !important;
+}
 .homePage-main{
     margin-top: 100px;
 }

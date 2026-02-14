@@ -7,7 +7,7 @@ export default function AppProvider({children}){
     var [showModal, setShowModal] = useState(false)
     var handleShowModal = () => setShowModal(!showModal)
     var [showLocalModal, setShowLocalModal] = useState('')
-    var [isLogged, setIsLogged] = useState(false)
+    var [isLogged, setIsLogged] = useState(true)
 
     return(
         <AppContext.Provider value={{

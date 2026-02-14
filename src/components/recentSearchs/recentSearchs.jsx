@@ -1,6 +1,17 @@
 import RandomText from "../randomTextAndSvg/randomText"
 import { Home13Icon } from "hugeicons-react"
 export default function RecentSearchs(){
+
+    const recentSearchArray = [
+        {
+            text: '',
+            textColor: '',
+            backgroundColor: '',
+            boxShadow: '',
+            icon: <Home13Icon />
+        }
+    ]
+
     return(
         <div>
             <div className="mb-4">

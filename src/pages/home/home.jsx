@@ -1,14 +1,15 @@
-import Carrousel from "../carousel/carousel";
-import Cards from "../cards/cards";
-import RandomText from "../randomTextAndSvg/randomText";
-import PublicityCards from "../publicityCards/publicityCards";
-import Tab from "../tab/tab";
-import RecentSearchs from "../recentSearchs/recentSearchs";
-import { ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
+import Carrousel from "../../components/carousel/carousel";
+import Cards from "../../components/cards/cards";
+import RandomText from "../../components/randomTextAndSvg/randomText";
+import PublicityCards from "../../components/publicityCards/publicityCards";
+import Tab from "../../components/tab/tab";
+import RecentSearchs from "../../components/recentSearchs/recentSearchs";
+import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
 import { Theme } from "@radix-ui/themes";
 import styles from './home.module.css'
 import { Form } from "react-bootstrap";
-import VariousModal from "../modal/modal";
+import VariousModal from "../../components/modal/modal";
+import { Link } from "react-router-dom";
 
 export default function Home(){
     return(
@@ -17,7 +18,7 @@ export default function Home(){
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
                     <div>
-                        <h2 className="text-white text-center mb-5">Bem ao <span className="text-warning">Kubiko</span></h2>
+                        <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-warning">Kubiko</span></h2>
                         <h1 className="text-center lh-1 text-warning">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
                     <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
@@ -77,6 +78,12 @@ export default function Home(){
                         <Cards />
                         <Cards />
                         <Cards />
+                    </div>
+                    <div>
+                        <Link to={'/filters'} className="d-flex align-items-center gap-2 text-decoration-none text-warning my-4">
+                            <span>Ver mais</span>
+                            <ArrowRight02Icon />
+                        </Link>
                     </div>
                 </div>
                 <div className="row align-items-center my-4">

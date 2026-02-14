@@ -4,13 +4,14 @@ import Logo from '../../assets/imgs/kubiko.png'
 import styles from './header.module.css'
 import { useContext } from "react";
 import { AppContext } from "../context/appcontext";
+import { Link } from "react-router-dom";
 export default function Header(){
     const { setShowLocalModal, handleShowModal, isLogged } = useContext(AppContext)
     return(
         <header className="d-flex align-items-center justify-content-between border">
-            <div className="img">
+            <Link to={'/'} className="img">
                 <img src={Logo} alt=""/>
-            </div>
+            </Link>
             <nav className="">
                 <ul className="list-unstyled d-flex align-items-center m-0 gap-5">
                     <li>
