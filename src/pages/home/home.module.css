@@ -26,3 +26,15 @@
 .homePageForm button{
     height: 50px;
 }
+.highlightPropertyImages{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+}
+.highlightPropertyImages div{
+    border-radius: 8px;
+}
+.highlightPropertyImages div:first-child{
+    grid-row: 1 / span 2;
+}

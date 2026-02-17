@@ -12,7 +12,9 @@
   "dependencies": {
     "@radix-ui/themes": "^3.2.1",
     "bootstrap": "^5.3.8",
+    "framer-motion": "^12.34.0",
     "hugeicons-react": "^0.3.0",
+    "motion": "^12.34.0",
     "primereact": "^10.9.7",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",

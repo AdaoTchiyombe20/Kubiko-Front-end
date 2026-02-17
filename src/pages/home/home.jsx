@@ -4,12 +4,13 @@ import RandomText from "../../components/randomTextAndSvg/randomText";
 import PublicityCards from "../../components/publicityCards/publicityCards";
 import Tab from "../../components/tab/tab";
 import RecentSearchs from "../../components/recentSearchs/recentSearchs";
-import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
+import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, House01Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
 import { Theme } from "@radix-ui/themes";
 import styles from './home.module.css'
 import { Form } from "react-bootstrap";
 import VariousModal from "../../components/modal/modal";
 import { Link } from "react-router-dom";
+import FeaturedProperties from "../../components/ featuredProperties/ featuredProperties";
 
 export default function Home(){
     return(
@@ -114,6 +115,54 @@ export default function Home(){
                 <div className="d-flex mb-4">
                     <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<UserSearch02Icon size={16} color="#D28920"/>}/>
                 </div>
+                <div>
+                    <FeaturedProperties />
+                </div>
+                <div>
+                    <h1 className="text-center display-1" style={{fontWeight: '500'}}>Destaque o seu <span className="text-warning">imóvel</span></h1>
+                    <p className="text-center my-3" style={{
+                        fontSize: '18px'
+                    }}>
+                        Transforme seu imóvel em uma estrela! Com nosso sistema de patrocínio, Sua <br /> propriedade aparece em destaque para milhares de compradores qualificados.
+                    </p>
+                    <div className="container-fluid">
+                        <div className="row gx-5 my-5 px-5">
+                            <div className="col-lg-4 shadow-lg rounded-4 px-4 py-4">
+                                <div className="d-flex align-items-center gap-2 mb-4">
+                                    <div className="d-flex justify-content-center align-items-center bg-warning text-white rounded-circle" style={{
+                                        height: '50px',
+                                        width: '50px'
+                                    }}>
+                                        <House01Icon size={26}/>
+                                    </div>
+                                    <div>
+                                        <p className="m-0 lh-1 fw-semibold">Visibildidade premium</p>
+                                        <p className="m-0 fw-light">Apareça no topo  dos resultados de busca</p>
+                                    </div>
+                                </div>
+                                <ul className="fw-light ps-5 mb-4">
+                                    <li>Destaque visual com badge especial</li>
+                                    <li>Prioridade nos resultados de pesquisa</li>
+                                    <li>Mais visualizações e contatos</li>
+                                    <li>Estatísticas detalhadas de performance</li>
+                                </ul>
+                                <div className="d-flex flex-column align-items-center fw-semibold rounded-2 py-3 mb-3" style={{
+                                    backgroundColor: '#FDEFE1',
+                                    color: '#F4983F'
+                                }}>
+                                    <p className="">1000AOA / 24h</p>
+                                    <p className="m-0">por dia de destaque</p>
+                                </div>
+                                <button type="button" className="btn btn-warning text-white w-100 py-2">Destacar agora</button>
+                            </div>
+                            <div className={`${styles.highlightPropertyImages} col-lg-8`}>
+                                <div className="border border-dark border-1 row-cols-4"></div>
+                                <div className="border border-danger border-1"></div>
+                                <div className="border border-warning border-1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
                 <RecentSearchs />
             </main>
         </>
