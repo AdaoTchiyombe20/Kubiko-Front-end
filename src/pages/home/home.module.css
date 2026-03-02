@@ -22,9 +22,14 @@
     box-shadow: none !important;
     background-color: #F0F1F1;
 }
-
 .homePageForm button{
     height: 50px;
+}
+.realStateCardsContainer{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    justify-content: center;
+    gap: 20px;
 }
 .highlightPropertyImages{
     display: grid;
@@ -37,4 +42,14 @@
 }
 .highlightPropertyImages div:first-child{
     grid-row: 1 / span 2;
+}
+.plansContainer{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 450px));
+    justify-content: center;
+    gap: 70px;
+    margin: 100px 0 50px 0;
+}
+.plansContainer div{
+    box-shadow: 1px 0px 40px 10px rgba(77, 71, 71, 0.103);
 }

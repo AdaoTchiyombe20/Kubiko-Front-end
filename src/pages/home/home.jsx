@@ -1,18 +1,79 @@
-import Carrousel from "../../components/carousel/carousel";
-import Cards from "../../components/cards/cards";
-import RandomText from "../../components/randomTextAndSvg/randomText";
-import PublicityCards from "../../components/publicityCards/publicityCards";
-import Tab from "../../components/tab/tab";
-import RecentSearchs from "../../components/recentSearchs/recentSearchs";
-import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, House01Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
-import { Theme } from "@radix-ui/themes";
-import styles from './home.module.css'
-import { Form } from "react-bootstrap";
-import VariousModal from "../../components/modal/modal";
 import { Link } from "react-router-dom";
+import { Form } from "react-bootstrap";
+import { Theme } from "@radix-ui/themes";
+import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, House01Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
+import house5 from '../../assets/imgs/house5.png'
+import Tab from "../../components/tab/tab";
+import Cards from "../../components/cards/cards";
+import Carrousel from "../../components/carousel/carousel";
+import PlanCards from "../../components/planCards/planCards";
+import RandomText from "../../components/randomTextAndSvg/randomText";
+import RecentSearchs from "../../components/recentSearchs/recentSearchs";
+import PublicityCards from "../../components/publicityCards/publicityCards";
 import FeaturedProperties from "../../components/ featuredProperties/ featuredProperties";
+import styles from './home.module.css'
 
 export default function Home(){
+
+    const plans = [
+        {
+            name: 'Fácil 24h',
+            price: 1000,
+            description: 'Built for teams that need speed, structure, and real-time collaboration',
+            features: [
+                'Up to 10 users',
+                'Advanced Task management',
+                'Up to 10 users',
+                'Up to 10 users',
+                'Up to 10 users',
+            ]
+        },
+        {
+            name: 'Promo Kubiko',
+            price: 2500,
+            description: 'Perfect for individuals or small teams starting with task management',
+            features: [
+                'Up to 10 users',
+                'Advanced Task management',
+                'Up to 10 users',
+                'Up to 10 users',
+                'Up to 10 users',
+                'Up to 10 users',
+                'Up to 10 users'
+            ]
+        },
+        {
+            name: 'Profissional',
+            price: 5500,
+            description: 'Perfect for individuals or small teams starting with task management',
+            features: [
+                'Up to 5 users',
+                'Basic Task management',
+                'Up to 5 users',
+                'Up to 5 users',
+                'Up to 5 users',   
+            ]
+        }
+    ]
+
+    const publicityCards = [
+        {
+            icon: <Home12Icon color="#ffff" />,
+            text: "Pesquise casas, apartamentos, terrenos e espaços comerciais com informações completas, fotos reais e dados verificados",
+            title: "Encontre imóveis com confiança"
+        },
+        {
+            icon: <SearchingIcon color="#ffff" />,
+            text: "Cada imóvel passa por um processo de validação para reduzir fraudes e anúncios falsos. Mais segurança para quem procura, mais credibilidade para quem anuncia.",
+            title: "Anúncios validados e transparentes"
+        },
+        {
+            icon: <PinLocation03Icon color="#ffff"/>,
+            text: "Encontre imóveis por município, bairro ou zona específica.Ideal para quem já sabe onde quer morar ou investir, sem perder tempo.",
+            title: "Busca inteligente por localização"
+        }
+    ]
+
     return(
         <>
             <div className="d-flex flex-column pb-4 position-relative mb-5">
@@ -66,14 +127,12 @@ export default function Home(){
                     <Tab />
                 </Theme>
                 <div className="my-4">
-                    <div className="row mb-4 realStateCards">
+                    <div className={`mb-4 ${styles.realStateCardsContainer}`}>
                         <Cards />
                         <Cards />
                         <Cards />
                         <Cards />
                         <Cards />
-                    </div>
-                    <div className="row realStateCards">
                         <Cards />
                         <Cards />
                         <Cards />
@@ -107,9 +166,12 @@ export default function Home(){
                     </div>
                     <h1 className="text-center mb-4">Confira o que podemos fazer por você</h1>
                     <div className="row gap-5">
-                        <PublicityCards icon={<Home12Icon color="#ffff" />} text={"Pesquise casas, apartamentos, terrenos e espaços comerciais com informações completas, fotos reais e dados verificados"} title={"Encontre imóveis com confiança"}/>
-                        <PublicityCards icon={<SearchingIcon color="#ffff" />} text={"Cada imóvel passa por um processo de validação para reduzir fraudes e anúncios falsos. Mais segurança para quem procura, mais credibilidade para quem anuncia."} title={"Anúncios validados e transparentes"}/>
-                        <PublicityCards icon={<PinLocation03Icon color="#ffff"/>} text={"Encontre imóveis por município, bairro ou zona específica.Ideal para quem já sabe onde quer morar ou investir, sem perder tempo."} title={"Busca inteligente por localização"}/>
+                        {
+                            publicityCards.map((item, index) => (
+                                <PublicityCards key={index} icon={item.icon} text={item.text} title={item.title}/>                                
+                            ))
+                        }
+                        
                     </div>
                 </div>
                 <div className="d-flex mb-4">
@@ -156,13 +218,28 @@ export default function Home(){
                                 <button type="button" className="btn btn-warning text-white w-100 py-2">Destacar agora</button>
                             </div>
                             <div className={`${styles.highlightPropertyImages} col-lg-8`}>
-                                <div className="border border-dark border-1 row-cols-4"></div>
-                                <div className="border border-danger border-1"></div>
-                                <div className="border border-warning border-1"></div>
+                                <div className="border"></div>
+                                <div className="border"></div>
+                                <div className="border"></div>
                             </div>
                         </div>
                     </div>
                 </div> 
+                <div className="my-5" >
+                    <h1 className="text-center display-4" style={{fontWeight: '500'}}>Planos que crescem com você</h1>
+                    <p className="text-center text-secondary mt-1 mb-5" style={{
+                        fontSize: '18px'
+                    }}>
+                        Escolha o plano perfeito para sua agência imobiliária. Desde iniciantes até profissionais experientes, temos a solução ideal. Ver planos
+                    </p>
+                    <div className={`${styles.plansContainer}`}>
+                        {
+                            plans.map((plan, index) => (
+                                <PlanCards key={index} index={index} name={plan.name} price={plan.price} description={plan.description} features={plan.features}/>
+                            ))
+                        }
+                    </div>
+                </div>
                 <RecentSearchs />
             </main>
         </>

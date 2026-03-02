@@ -10,7 +10,7 @@ export default function Cards() {
   const navigate = useNavigate()
   
   return (
-    <Card className='col p-0'>
+    <Card className='p-0'>
       <Card.Header className={`${styles.cardHeader} p-0 position-relative`}>
         <div className='border border-2 p-1 top d-flex align-items-center justify-content-center rounded-circle' style={{width: '50px', height: '50px'}}>
           <FavouriteIcon size={25} color='#FFFF' />
