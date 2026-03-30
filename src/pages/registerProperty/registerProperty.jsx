@@ -40,10 +40,28 @@ export default function RegisterProperty() {
             'image/*': []
         },
         multiple: true,
-        maxFiles: 6,
-        onDropRejected: () => alert('Apenas imagens são permitidas')
+        maxFiles: 2,
+        onDrop: (fileDropped) => {
+            setFiles(prev => [...prev, ...fileDropped])
+        },
+        onDropRejected: (files) => {
+            const errosAlert = []
+            files.forEach((files) => {
+                if(files.errors[0].code === 'too-many-files' && errosAlert.some((error) => error === 'too-many-files') === false)
+                    errosAlert.push('too-many-files')
+                else if(files.errors[0].code === 'file-invalid-type' && errosAlert.some((error) => error === 'file-invalid-type') === false)
+                    errosAlert.push('file-invalid-type')
+                else if(files.errors[0].code === 'file-too-large' && errosAlert.some((error) => error === 'file-too-large') === false)
+                    errosAlert.push('file-too-large')
+            })
+
+            errosAlert.forEach((error) => {
+                alert(error)
+            })
+        }
     });
-    const files = acceptedFiles.map(file => (
+    var [files, setFiles] = useState([]);
+    const fileItems = files.map(file => (
         <li 
             key={file.path}
             style={{
@@ -84,10 +102,14 @@ export default function RegisterProperty() {
                     <p className="m-0 fw-light text-secondary">{ Number((file.size / 1000000).toFixed(2)) } MB</p>
                 </div>
             </div>
-            <Cancel01Icon size={16}/>
+            <Cancel01Icon 
+                size={16}
+                onClick={() => {
+                    setFiles(prev => prev.filter(prevFile => prevFile.name !== file.name))
+                }}
+            />
         </li>
-    ));
-    console.log(acceptedFiles)
+    ))
 
     return (
         <>
@@ -241,7 +263,7 @@ export default function RegisterProperty() {
                                                 <RegisterPropertyCounter
                                                     text={"Cozinha"}
                                                     register={register}
-                                                    registerLabel={"Kitchen"}
+                                                    registerLabel={"kitchen"}
                                                 />
                                             </div>
                                             <div className="mb-4">
@@ -361,13 +383,17 @@ export default function RegisterProperty() {
                                             >
                                                 <Download04Icon size={38} strokeWidth={'1'}/>
                                                 <p className='m-0 mt-2'>Clique para adicionar imagens</p>
-                                                <input {...getInputProps()} className="border" multiple maxLength={5}/>
+                                                <input 
+                                                    {...getInputProps()}
+                                                    className="border"
+                                                    multiple maxLength={5}
+                                                />
                                             </div>
                                             <aside>
                                                 <ul
                                                     className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
                                                 >
-                                                    {files}
+                                                    {fileItems}
                                                 </ul>
                                             </aside>
                                         </section>
