@@ -1,13 +1,16 @@
 :root{
-    --carrousel-slide-radio-button-color: #F28C28;
+    --carrousel-slide-radio-button-color: #3541A9;
     --text-base-color: #3541A9;
-    --black-text-base-color: #323131;
+    --bg-default-color: #3541A9;
+}
+.root{
+    isolation: isolate;
 }
 .text-default-color{
     color: var(--text-base-color) !important;
 }
 .bg-default-color{
-    background-color: var(--black-text-base-color);
+    background-color: var(--bg-default-color) !important;
 }
 .outline-none{
     outline: none !important;

@@ -29,7 +29,7 @@ const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} 
             showLocalModal == 'phone' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('login')} /> )
         }
         {
-            showLocalModal == 'scheduleRequested' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('login')} />)
+            showLocalModal == 'scheduleRequested' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('scheduleVisit')} />)
         }
         <Modal.Header className='border-0 p-0' closeButton = {showLocalModal == 'scheduleVisit' ? true : false}>
           <Modal.Title className='fw-semibold fs-3'>

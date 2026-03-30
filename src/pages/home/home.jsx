@@ -12,6 +12,9 @@ import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import PublicityCards from "../../components/publicityCards/publicityCards";
 import FeaturedProperties from "../../components/ featuredProperties/ featuredProperties";
 import styles from './home.module.css'
+import { useEffect, useState } from "react";
+import Header from "../../components/header/header";
+import Footer from "../../components/footer/footer";
 
 export default function Home(){
 
@@ -74,14 +77,40 @@ export default function Home(){
         }
     ]
 
+    var [realState, setRealState] = useState([])
+    useEffect(() => {
+        async function ListRealState(){
+            const endpoint = 'http://localhost:3001/properties'
+
+            try{
+                const data = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'content-application': 'application/json'
+                    }
+                })
+
+                var resposta = await data.json()
+                setRealState(resposta)
+                console.log(resposta)
+            }
+            catch(error){
+                console.log("Erro: ", erro)
+            }
+        }
+        ListRealState()
+    }, [])
+
     return(
         <>
+            <Header />
+
             <div className="d-flex flex-column pb-4 position-relative mb-5">
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
                     <div>
-                        <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-warning">Kubiko</span></h2>
-                        <h1 className="text-center lh-1 text-warning">Invista Hoje no <br /> Sonho da sua casa</h1>
+                        <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
+                        <h1 className="text-center lh-1 text-primary">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
                     <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
                         <div className="col border-end border-2 pe-4 d-flex flex-column">
@@ -109,7 +138,7 @@ export default function Home(){
                             </Form.Select>
                         </div>
                         <div className="col">
-                            <button className="btn btn-warning text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
+                            <button className="btn btn-primary bg-primary border-0 text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
                                 Pesquisar
                                 <Search01Icon />
                             </button>
@@ -128,19 +157,14 @@ export default function Home(){
                 </Theme>
                 <div className="my-4">
                     <div className={`mb-4 ${styles.realStateCardsContainer}`}>
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
-                        <Cards />
+                        {
+                            realState?.map((_, index) => (
+                                <Cards index={index+1}/>
+                            ))
+                        }
                     </div>
                     <div>
-                        <Link to={'/filters'} className="d-flex align-items-center gap-2 text-decoration-none text-warning my-4">
+                        <Link to={'/filters'} className="d-flex align-items-center gap-2 text-decoration-none text-default-color my-4">
                             <span>Ver mais</span>
                             <ArrowRight02Icon />
                         </Link>
@@ -181,7 +205,7 @@ export default function Home(){
                     <FeaturedProperties />
                 </div>
                 <div>
-                    <h1 className="text-center display-1" style={{fontWeight: '500'}}>Destaque o seu <span className="text-warning">imóvel</span></h1>
+                    <h1 className="text-center display-1" style={{fontWeight: '500'}}>Destaque o seu <span className="text-default-color">imóvel</span></h1>
                     <p className="text-center my-3" style={{
                         fontSize: '18px'
                     }}>
@@ -191,7 +215,7 @@ export default function Home(){
                         <div className="row gx-5 my-5 px-5">
                             <div className="col-lg-4 shadow-lg rounded-4 px-4 py-4">
                                 <div className="d-flex align-items-center gap-2 mb-4">
-                                    <div className="d-flex justify-content-center align-items-center bg-warning text-white rounded-circle" style={{
+                                    <div className="d-flex justify-content-center align-items-center text-default-color text-white rounded-circle" style={{
                                         height: '50px',
                                         width: '50px'
                                     }}>
@@ -242,6 +266,9 @@ export default function Home(){
                 </div>
                 <RecentSearchs />
             </main>
+
+            <Footer />
+
         </>
     )
 }

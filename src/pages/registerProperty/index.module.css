@@ -1,0 +1,36 @@
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 170px;
+    border-radius: 5px;
+    background-color: #EDEFFD;
+}
+.nav :global(.nav-item){
+    display: flex;
+    justify-content: center;
+    width: 50%;
+    height: 34px;
+}
+.nav :global(.nav-link){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0px;
+    color: #3541A9;
+    font-size: 14px;
+    border-radius: 5px;
+
+}
+.nav :global(.nav-link.active){
+    background-color: #3541A9 !important;
+    color: white;
+}
+.dropzone:hover{
+    cursor: pointer;
+}
+.dropzone:focus, .dropzone:active{
+    border: none;
+    outline: none;
+}

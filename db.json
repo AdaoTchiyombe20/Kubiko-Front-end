@@ -1,0 +1,196 @@
+{
+  "properties": [
+    {
+      "id": 1,
+      "title": "Apartamento T3 em Talatona",
+      "description": "Apartamento moderno com varanda ampla e ótima iluminação natural.",
+      "type": "APARTMENT",
+      "purpose": "RENT",
+      "price": 150000,
+      "area": 120,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Talatona",
+        "address": "Rua das Acácias, nº 12"
+      },
+      "status": "PENDING",
+      "ownerId": 5,
+      "createdAt": "2026-02-14T12:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Residência T2 no Cazenga",
+      "description": "Casa acolhedora ideal para família pequena, próxima a escolas e mercados.",
+      "type": "HOUSE",
+      "purpose": "RENT",
+      "price": 30000,
+      "area": 95,
+      "bedrooms": 2,
+      "bathrooms": 1,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Cazenga",
+        "address": "Rua Principal nº 45"
+      },
+      "status": "PENDING",
+      "ownerId": 3,
+      "createdAt": "2026-02-15T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Vivenda no Patriota",
+      "description": "Vivenda espaçosa com quintal amplo e garagem para dois carros.",
+      "type": "HOUSE",
+      "purpose": "SALE",
+      "price": 250000,
+      "area": 200,
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Benfica",
+        "address": "Rua do Patriota nº 8"
+      },
+      "status": "PENDING",
+      "ownerId": 2,
+      "createdAt": "2026-02-16T09:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Apartamento T1 na Maianga",
+      "description": "Apartamento compacto ideal para solteiros ou estudantes.",
+      "type": "APARTMENT",
+      "purpose": "RENT",
+      "price": 80000,
+      "area": 70,
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Maianga",
+        "address": "Rua 28 de Maio"
+      },
+      "status": "PENDING",
+      "ownerId": 4,
+      "createdAt": "2026-02-17T08:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Moradia T4 no Kilamba",
+      "description": "Moradia nova com acabamentos modernos e segurança 24h.",
+      "type": "HOUSE",
+      "purpose": "SALE",
+      "price": 420000,
+      "area": 240,
+      "bedrooms": 4,
+      "bathrooms": 4,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Kilamba",
+        "address": "Avenida Principal"
+      },
+      "status": "PENDING",
+      "ownerId": 6,
+      "createdAt": "2026-02-18T11:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Loja Comercial no Alvalade",
+      "description": "Espaço comercial bem localizado ideal para restaurante ou loja.",
+      "type": "COMMERCIAL",
+      "purpose": "RENT",
+      "price": 180000,
+      "area": 150,
+      "bedrooms": 0,
+      "bathrooms": 2,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Alvalade",
+        "address": "Avenida Revolução de Outubro"
+      },
+      "status": "PENDING",
+      "ownerId": 7,
+      "createdAt": "2026-02-19T14:00:00.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Terreno no Zango 3",
+      "description": "Terreno amplo pronto para construção em zona em crescimento.",
+      "type": "LAND",
+      "purpose": "SALE",
+      "price": 95000,
+      "area": 300,
+      "bedrooms": 0,
+      "bathrooms": 0,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Viana",
+        "address": "Zango 3, Quadra B"
+      },
+      "status": "PENDING",
+      "ownerId": 8,
+      "createdAt": "2026-02-20T10:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "title": "Escritório no Centro da Cidade",
+      "description": "Escritório moderno ideal para empresas e startups.",
+      "type": "COMMERCIAL",
+      "purpose": "RENT",
+      "price": 220000,
+      "area": 130,
+      "bedrooms": 0,
+      "bathrooms": 1,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Ingombota",
+        "address": "Rua Rainha Ginga"
+      },
+      "status": "PENDING",
+      "ownerId": 9,
+      "createdAt": "2026-02-21T09:30:00.000Z"
+    },
+    {
+      "id": 9,
+      "title": "Apartamento T2 no Morro Bento",
+      "description": "Apartamento com vista privilegiada e estacionamento privado.",
+      "type": "APARTMENT",
+      "purpose": "SALE",
+      "price": 175000,
+      "area": 110,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Morro Bento",
+        "address": "Rua Nova Esperança"
+      },
+      "status": "PENDING",
+      "ownerId": 10,
+      "createdAt": "2026-02-22T15:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "title": "Vivenda T5 no Benfica",
+      "description": "Vivenda luxuosa com piscina e jardim amplo.",
+      "type": "HOUSE",
+      "purpose": "SALE",
+      "price": 600000,
+      "area": 350,
+      "bedrooms": 5,
+      "bathrooms": 5,
+      "location": {
+        "province": "Luanda",
+        "municipality": "Benfica",
+        "address": "Rua das Palmeiras"
+      },
+      "status": "PENDING",
+      "ownerId": 11,
+      "createdAt": "2026-02-23T12:00:00.000Z"
+    }
+  ]
+}
+
+

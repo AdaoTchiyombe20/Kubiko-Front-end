@@ -1,5 +1,5 @@
 :root{
-    --text-details-color: #F28C28;
+    --text-details-color: #3541A9;
 }
 .realStateDetails{
     padding: 64px;
@@ -8,8 +8,11 @@
         font-family: 'Parkinsans';
     }
 }
-.realStateDetailsContainerCards{
-    margin-bottom: 64px;
+.realStateContainerCards{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    justify-content: center;
+    gap: 20px;
 }
 .realStatePrice{
     margin-top: 24px;

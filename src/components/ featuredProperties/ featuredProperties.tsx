@@ -98,7 +98,7 @@ export default function FeaturedProperties() {
                 </AnimatePresence>
             </div>
             <section className="intro-section">
-                <h1 className="impact">Imóveis em <span className="text-warning">destaque</span></h1>
+                <h1 className="impact">Imóveis em <span className="text-default-color">destaque</span></h1>
             </section>
 
             <div ref={containerRef} className="scroll-container">
