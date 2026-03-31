@@ -11,6 +11,7 @@ import BackButton from "../../navigateBackButton/navigateBackButton";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
+import { toast } from "react-toastify";
 
 export default function RegisterProperty() {
     const navigate = useNavigate();
@@ -45,18 +46,18 @@ export default function RegisterProperty() {
             setFiles(prev => [...prev, ...fileDropped])
         },
         onDropRejected: (files) => {
-            const errosAlert = []
+            let errosAlert = []
             files.forEach((files) => {
-                if(files.errors[0].code === 'too-many-files' && errosAlert.some((error) => error === 'too-many-files') === false)
-                    errosAlert.push('too-many-files')
-                else if(files.errors[0].code === 'file-invalid-type' && errosAlert.some((error) => error === 'file-invalid-type') === false)
-                    errosAlert.push('file-invalid-type')
-                else if(files.errors[0].code === 'file-too-large' && errosAlert.some((error) => error === 'file-too-large') === false)
-                    errosAlert.push('file-too-large')
+                if(files.errors[0].code === 'too-many-files' && errosAlert.some((error) => error === 'Só podem ser carregados no máximo 5 arquivos') === false)
+                    errosAlert.push('Só podem ser carregados no máximo 5 arquivos')
+                else if(files.errors[0].code === 'file-invalid-type' && errosAlert.some((error) => error === 'Apenas arquivos de imagem são permitidos, por favor selecione arquivos com as seguintes extensões: .jpg, .jpeg, .png, .gif') === false)
+                    errosAlert.push('Apenas arquivos de imagem são permitidos, por favor selecione arquivos com as seguintes extensões: .jpg, .jpeg, .png, .gif')
+                else if(files.errors[0].code === 'file-too-large' && errosAlert.some((error) => error === 'O arquivo é muito grande, o limite é de 5MB por arquivo') === false)
+                    errosAlert.push('O arquivo é muito grande, o limite é de 5MB por arquivo')
             })
 
             errosAlert.forEach((error) => {
-                alert(error)
+                toast.error(error)
             })
         }
     });
@@ -68,7 +69,7 @@ export default function RegisterProperty() {
                 height: '70px',
                 minWidth: '320px'
             }}
-            className="d-flex align-items-center justify-content-between border rounded-3 px-3"
+            className="d-flex align-items-center justify-content-between border rounded-3 px-2"
         >
             <div className="d-flex gap-3 align-items-center h-100">
                 <div>
@@ -104,9 +105,7 @@ export default function RegisterProperty() {
             </div>
             <Cancel01Icon 
                 size={16}
-                onClick={() => {
-                    setFiles(prev => prev.filter(prevFile => prevFile.name !== file.name))
-                }}
+                onClick={() => setFiles(prev => prev.filter(prevFile => prevFile.name !== file.name)) }
             />
         </li>
     ))
