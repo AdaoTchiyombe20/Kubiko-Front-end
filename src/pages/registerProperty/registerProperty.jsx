@@ -12,6 +12,7 @@ import RegisterPropertyCounter from "../../components/registerPropertyCounter/re
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
 import { toast } from "react-toastify";
+import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 
 export default function RegisterProperty() {
     const navigate = useNavigate();
@@ -33,19 +34,16 @@ export default function RegisterProperty() {
     const onSubmit = (data) => {
         data["purpose"] = rentOrSell;
         data["furnished"] = furnished;
-        console.log(data);
     };
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
-    const {acceptedFiles, getRootProps, getInputProps} = useDropzone({
+    const { getRootProps, getInputProps} = useDropzone({
         accept: {
             'image/*': []
         },
         multiple: true,
         maxFiles: 2,
         onDrop: (fileDropped) => {
-            if(files.length > 1)
-                return toast.error('Só podem ser carregados no máximo 2 arquivos')
-            setFiles(prev => [...prev, ...fileDropped])
+            files.length > 1 ? toast.error('Só podem ser carregados no máximo 2 arquivos') : setFiles(prev => [...prev, ...fileDropped])
         },
         onDropRejected: (files) => {
             let errosAlert = []
@@ -58,9 +56,7 @@ export default function RegisterProperty() {
                     errosAlert.push('O arquivo é muito grande, o limite é de 5MB por arquivo')
             })
 
-            errosAlert.forEach((error) => {
-                toast.error(error)
-            })
+            errosAlert.forEach( error => { toast.error(error) })
         }
     });
     var [files, setFiles] = useState([]);
@@ -105,12 +101,39 @@ export default function RegisterProperty() {
                     <p className="m-0 fw-light text-secondary">{ Number((file.size / 1000000).toFixed(2)) } MB</p>
                 </div>
             </div>
-            <Cancel01Icon 
+            <Cancel01Icon
                 size={16}
                 onClick={() => setFiles(prev => prev.filter(prevFile => prevFile.name !== file.name)) }
             />
         </li>
     ))
+
+    const showTitle = (key, title, descripiton) => {
+        return(
+            <motion.div
+                key={key}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: -1 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.4 }}
+                className="d-flex flex-column align-items-center gap-2"
+            >
+                <h1
+                    className="m-0"
+                    style={{
+                        fontFamily: "Parkinsans",
+                        fontSize: "38px",
+                        fontWeight: "700",
+                    }}
+                >
+                    {title}
+                </h1>
+                <p className="m-0 text-secondary">
+                    {descripiton}
+                </p>
+            </motion.div>
+        )
+    }
 
     return (
         <>
@@ -120,292 +143,315 @@ export default function RegisterProperty() {
                 </Link>
             </header>
             <div className="container-fluid p-0">
-                <div
-                    className="row w-100 m-0"
-                    style={{
-                        height: "calc(100vh - 160px)",
-                    }}
-                >
-                    <div className="col d-flex flex-column justify-content-center align-items-center ">
-                        <AnimatePresence mode="wait">
-                            {
-                                propertyInfo === 'informacoes' ? (
-                                    <motion.div
-                                        key="informacoes"
-                                        initial={{ opacity: 0, y: -30 }}
-                                        animate={{ opacity: 1, y: -1 }}
-                                        exit={{ opacity: 0, y: 50 }}
-                                        transition={{ duration: 0.4 }}
-                                        className="d-flex flex-column align-items-center gap-2"
-                                    >
-                                        <h1
-                                            className="m-0"
-                                            style={{
-                                                fontFamily: "Parkinsans",
-                                                fontSize: "38px",
-                                                fontWeight: "700",
-                                            }}
-                                        >
-                                            Informações do imóvel
-                                        </h1>
-                                        <p className="m-0 text-secondary">
-                                            Fique à vontade para editar os dados do seu imóvel.
-                                        </p>
-                                    </motion.div>
-                                ) : propertyInfo === 'fotografias' ? (
-                                    <motion.div
-                                        key="fotografias"
-                                        initial={{ opacity: 0, x: -30 }}
-                                        animate={{ opacity: 1, x: -1 }}
-                                        exit={{ opacity: 0, x: 50 }}
-                                        transition={{ duration: 0.4 }}
-                                        className="d-flex flex-column align-items-center gap-2"
-                                    >
-                                        <h1
-                                            className="m-0"
-                                            style={{
-                                                fontFamily: "Parkinsans",
-                                                fontSize: "38px",
-                                                fontWeight: "700",
-                                            }}
-                                        >
-                                            Fotografias do imóvel
-                                        </h1>
-                                        <p className="m-0 text-secondary">
-                                            Adicione fotografias que destaquem o melhor do seu imóvel.
-                                        </p>
-                                    </motion.div>
-                                ) : ''
-                            }
-                        </AnimatePresence>
-                    </div>
-                    <div className="col p-0 overflow-hidden">
-                        <AnimatePresence mode="wait">
-                            {
-                                propertyInfo === 'informacoes' ? (
-                                    <motion.div
-                                        key="informacoes"
-                                        initial={{ opacity: 0, x: -50 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -50 }}
-                                        transition={{ duration: 0.4 }}
-                                        className="w-100 h-100 d-flex justify-content-center align-items-center"
-                                    >
-                                        <form
-                                            id="form"
-                                            onSubmit={handleSubmit(onSubmit)}
-                                            action="#"
-                                            style={{
-                                                width: "80%",
-                                            }}
-                                        >
-                                            <div className="d-flex justify-content-between gap-4 mb-3">
-                                                <div className="form-floating w-100">
-                                                    <input
-                                                        {...register("title")}
-                                                        type="text"
-                                                        className="form-control text-secondary shadow-none outline-none"
-                                                        id="floatingInputGrid"
-                                                        defaultValue={"Ex: Casa no talatona"}
-                                                    />
-                                                    <label className="text-black" htmlFor="floatingInputGrid">
-                                                        Título do imóvel
-                                                    </label>
-                                                    {errors.title && ( <small className="text-danger">{errors.title.message}</small> )}
-                                                </div>
-                                                <div className="form-floating w-100">
-                                                    <input
-                                                        {...register("price")}
-                                                        type="number"
-                                                        className="form-control text-secondary shadow-none outline-none"
-                                                        id="floatingPriceInput"
-                                                        placeholder="Kz"
-                                                        min={'1000'}
-                                                        defaultValue={"1000"}
-                                                    />
-                                                    <label className="text-black" htmlFor="floatingPriceInput">
-                                                        Preço
-                                                    </label>
-                                                    {errors.price && ( <small className="text-danger">{errors.price.message}</small> )}
-                                                </div>
-                                            </div>
-                                            <div className="form-floating mb-4">
-                                                <textarea
-                                                    {...register("description")}
-                                                    className="form-control text-secondary shadow-none"
-                                                    defaultValue="Insira a descrição do imóvel"
-                                                    id="floatingTextarea2Disabled"
-                                                    style={{ 
-                                                        height: "180px",
-                                                        resize: "none"
+                {
+                    propertyInfo !== 'finish' ? (
+                        <div
+                            className="row w-100 m-0"
+                            style={{
+                                height: "calc(100vh - 160px)",
+                            }}
+                        >
+                            <div className="col d-flex flex-column justify-content-center align-items-center h-100">
+                                <AnimatePresence mode="wait">
+                                    {
+                                        propertyInfo === 'informacoes' ? showTitle('informacoes', 'Informações de imóvel', 'Fique à vontade para editar os dados do seu imóvel.') : propertyInfo === 'fotografias' ? showTitle('fotografias', 'Fotografias do imóvel', 'Adicione fotografias que destaquem o melhor do seu imóvel.') : ''
+                                    }
+                                </AnimatePresence>
+                            </div>
+                            <div className="col p-0 overflow-hidden">
+                                <AnimatePresence mode="wait">
+                                    {
+                                        propertyInfo === 'informacoes' ? (
+                                            <motion.div
+                                                key="informacoes"
+                                                initial={{ opacity: 0, x: -50 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                exit={{ opacity: 0, x: -50 }}
+                                                transition={{ duration: 0.4 }}
+                                                className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                            >
+                                                <form
+                                                    id="form"
+                                                    onSubmit={handleSubmit(onSubmit)}
+                                                    action="#"
+                                                    style={{
+                                                        width: "80%",
                                                     }}
                                                 >
-                                                </textarea>
-                                                <label
-                                                    className="text-black"
-                                                    htmlFor="floatingTextarea2Disabled"
-                                                >
-                                                    Descrição
-                                                </label>
-                                                {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
-                                            </div>
-                                            
-                                            <div className="mb-3">
-                                                <RegisterPropertyCounter
-                                                    text={"Quartos"}
-                                                    register={register}
-                                                    registerLabel={"bedroom"}
-                                                />
-                                                <RegisterPropertyCounter
-                                                    text={"Quartos de banho"}
-                                                    register={register}
-                                                    registerLabel={"bathroom"}
-                                                />
-                                                <RegisterPropertyCounter
-                                                    text={"Cozinha"}
-                                                    register={register}
-                                                    registerLabel={"kitchen"}
-                                                />
-                                            </div>
-                                            <div className="mb-4">
-                                                <div className="d-flex align-items-center justify-content-between mb-2">
-                                                    <div>
-                                                        <Tab.Container
-                                                            activeKey={furnished}
-                                                            onSelect={(k) => setFurnished(k)}
-                                                            defaultActiveKey="Não"
-                                                        >
-                                                            <Nav className={styles.nav}>
-                                                                <Nav.Item>
-                                                                    <Nav.Link eventKey={"Sim"}>Sim</Nav.Link>
-                                                                </Nav.Item>
-                                                                <Nav.Item>
-                                                                    <Nav.Link eventKey={"Não"}>Não</Nav.Link>
-                                                                </Nav.Item>
-                                                            </Nav>
-                                                        </Tab.Container>
+                                                    <div className="d-flex justify-content-between gap-4 mb-3">
+                                                        <div className="form-floating w-100">
+                                                            <input
+                                                                {...register("title")}
+                                                                type="text"
+                                                                className="form-control text-secondary shadow-none outline-none"
+                                                                id="floatingInputGrid"
+                                                                defaultValue={"Ex: Casa no talatona"}
+                                                            />
+                                                            <label className="text-black" htmlFor="floatingInputGrid">
+                                                                Título do imóvel
+                                                            </label>
+                                                            {errors.title && ( <small className="text-danger">{errors.title.message}</small> )}
+                                                        </div>
+                                                        <div className="form-floating w-100">
+                                                            <input
+                                                                {...register("price")}
+                                                                type="number"
+                                                                className="form-control text-secondary shadow-none outline-none"
+                                                                id="floatingPriceInput"
+                                                                placeholder="Kz"
+                                                                min={'1000'}
+                                                                defaultValue={"1000"}
+                                                            />
+                                                            <label className="text-black" htmlFor="floatingPriceInput">
+                                                                Preço
+                                                            </label>
+                                                            {errors.price && ( <small className="text-danger">{errors.price.message}</small> )}
+                                                        </div>
                                                     </div>
-                                                    <p
-                                                        className="m-0"
-                                                        style={{
-                                                            fontFamily: "Parkinsans",
-                                                            fontSize: "16px",
-                                                            fontWeight: "500",
-                                                        }}
-                                                    >
-                                                        Mobilado
-                                                    </p>
-                                                </div>
-                                                <div className="d-flex align-items-center justify-content-between mb-2">
-                                                    <div>
-                                                        <Tab.Container
-                                                            activeKey={rentOrSell}
-                                                            onSelect={(k) => setRentOrSell(k)}
-                                                            defaultActiveKey="Aluguel"
+                                                    <div className="form-floating mb-4">
+                                                        <textarea
+                                                            {...register("description")}
+                                                            className="form-control text-secondary shadow-none"
+                                                            defaultValue="Insira a descrição do imóvel"
+                                                            id="floatingTextarea2Disabled"
+                                                            style={{ 
+                                                                height: "180px",
+                                                                resize: "none"
+                                                            }}
                                                         >
-                                                            <Nav className={styles.nav}>
-                                                                <Nav.Item>
-                                                                    <Nav.Link eventKey={"Aluguel"}>Aluguel</Nav.Link>
-                                                                </Nav.Item>
-                                                                <Nav.Item>
-                                                                    <Nav.Link eventKey={"Venda"}>Venda</Nav.Link>
-                                                                </Nav.Item>
-                                                            </Nav>
-                                                        </Tab.Container>
+                                                        </textarea>
+                                                        <label
+                                                            className="text-black"
+                                                            htmlFor="floatingTextarea2Disabled"
+                                                        >
+                                                            Descrição
+                                                        </label>
+                                                        {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
                                                     </div>
-                                                    <p
-                                                        className="m-0"
-                                                        style={{
-                                                            fontFamily: "Parkinsans",
-                                                            fontSize: "16px",
-                                                            fontWeight: "500",
-                                                        }}
-                                                    >
-                                                        Finalidade
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="d-flex justify-content-between gap-4 mb-3">
-                                                <div className="form-floating w-100">
-                                                    <select
-                                                        className="form-select text-secondary cursor-pointer outline-none shadow-none"
-                                                        id="floatingSelectMunicipality"
-                                                        defaultValue={"0"}
-                                                        {...register("municipality", {required: true})}
-                                                    >
-                                                        <option value={"0"} hidden disabled>
-                                                        Selecione o munícipio
-                                                        </option>
-                                                        <option value="Kilamba-Kiaxi">Kilamba-Kiaxi</option>
-                                                        <option value="Talatona">Talatona</option>
-                                                        <option value="Ingombotas">Ingombotas</option>
-                                                    </select>
-                                                    <label
-                                                        className="text-black"
-                                                        htmlFor="floatingSelectMunicipality"
-                                                    >
-                                                        Munícipio
-                                                    </label>
-                                                    {errors.municipality && ( <small className="text-danger">{errors.municipality.message}</small> )}
-                                                </div>
-                                                <div className="form-floating w-100">
-                                                    <input
-                                                        type="text"
-                                                        {...register("neighborhood")}
-                                                        className="form-control text-secondary shadow-none outline-none"
-                                                        id="floatingInputGrid"
-                                                        defaultValue="Golf2"
-                                                    />
-                                                    <label className="text-black" htmlFor="floatingInputGrid">
-                                                        Bairro
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </motion.div>
-                                ) :  propertyInfo === 'fotografias' ? (
-                                    <motion.div
-                                        key="fotografias"
-                                        initial={{ opacity: 0, y: -30 }}
-                                        animate={{ opacity: 1, y: -1 }}
-                                        exit={{ opacity: 0, y: 50 }}
-                                        transition={{ duration: 0.4 }}
-                                        className="w-100 h-100 d-flex justify-content-center align-items-center"
-                                    >
-                                        <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center p-0`}>
-                                            <div 
-                                                {...getRootProps({className: 'dropzone d-flex flex-column align-items-center h-100 py-5'})}
-                                                style={{
-                                                    width: '90%',
-                                                    border: '2px dashed #ECECF2',
-                                                    borderRadius: '8px',
-                                                }}
-                                            
+                                                    
+                                                    <div className="mb-3">
+                                                        <RegisterPropertyCounter
+                                                            text={"Quartos"}
+                                                            register={register}
+                                                            registerLabel={"bedroom"}
+                                                        />
+                                                        <RegisterPropertyCounter
+                                                            text={"Quartos de banho"}
+                                                            register={register}
+                                                            registerLabel={"bathroom"}
+                                                        />
+                                                        <RegisterPropertyCounter
+                                                            text={"Cozinha"}
+                                                            register={register}
+                                                            registerLabel={"kitchen"}
+                                                        />
+                                                    </div>
+                                                    <div className="mb-4">
+                                                        <div className="d-flex align-items-center justify-content-between mb-2">
+                                                            <div>
+                                                                <Tab.Container
+                                                                    activeKey={furnished}
+                                                                    onSelect={(k) => setFurnished(k)}
+                                                                    defaultActiveKey="Não"
+                                                                >
+                                                                    <Nav className={styles.nav}>
+                                                                        <Nav.Item>
+                                                                            <Nav.Link eventKey={"Sim"}>Sim</Nav.Link>
+                                                                        </Nav.Item>
+                                                                        <Nav.Item>
+                                                                            <Nav.Link eventKey={"Não"}>Não</Nav.Link>
+                                                                        </Nav.Item>
+                                                                    </Nav>
+                                                                </Tab.Container>
+                                                            </div>
+                                                            <p
+                                                                className="m-0"
+                                                                style={{
+                                                                    fontFamily: "Parkinsans",
+                                                                    fontSize: "16px",
+                                                                    fontWeight: "500",
+                                                                }}
+                                                            >
+                                                                Mobilado
+                                                            </p>
+                                                        </div>
+                                                        <div className="d-flex align-items-center justify-content-between mb-2">
+                                                            <div>
+                                                                <Tab.Container
+                                                                    activeKey={rentOrSell}
+                                                                    onSelect={(k) => setRentOrSell(k)}
+                                                                    defaultActiveKey="Aluguel"
+                                                                >
+                                                                    <Nav className={styles.nav}>
+                                                                        <Nav.Item>
+                                                                            <Nav.Link eventKey={"Aluguel"}>Aluguel</Nav.Link>
+                                                                        </Nav.Item>
+                                                                        <Nav.Item>
+                                                                            <Nav.Link eventKey={"Venda"}>Venda</Nav.Link>
+                                                                        </Nav.Item>
+                                                                    </Nav>
+                                                                </Tab.Container>
+                                                            </div>
+                                                            <p
+                                                                className="m-0"
+                                                                style={{
+                                                                    fontFamily: "Parkinsans",
+                                                                    fontSize: "16px",
+                                                                    fontWeight: "500",
+                                                                }}
+                                                            >
+                                                                Finalidade
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="d-flex justify-content-between gap-4 mb-3">
+                                                        <div className="form-floating w-100">
+                                                            <select
+                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                id="floatingSelectMunicipality"
+                                                                defaultValue={"0"}
+                                                                {...register("municipality", {required: true})}
+                                                            >
+                                                                <option value={"0"} hidden disabled>
+                                                                Selecione o munícipio
+                                                                </option>
+                                                                <option value="Kilamba-Kiaxi">Kilamba-Kiaxi</option>
+                                                                <option value="Talatona">Talatona</option>
+                                                                <option value="Ingombotas">Ingombotas</option>
+                                                            </select>
+                                                            <label
+                                                                className="text-black"
+                                                                htmlFor="floatingSelectMunicipality"
+                                                            >
+                                                                Munícipio
+                                                            </label>
+                                                            {errors.municipality && ( <small className="text-danger">{errors.municipality.message}</small> )}
+                                                        </div>
+                                                        <div className="form-floating w-100">
+                                                            <input
+                                                                type="text"
+                                                                {...register("neighborhood")}
+                                                                className="form-control text-secondary shadow-none outline-none"
+                                                                id="floatingInputGrid"
+                                                                defaultValue="Golf2"
+                                                            />
+                                                            <label className="text-black" htmlFor="floatingInputGrid">
+                                                                Bairro
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </motion.div>
+                                        ) :  propertyInfo === 'fotografias' ? (
+                                            <motion.div
+                                                key="fotografias"
+                                                initial={{ opacity: 0, y: -30 }}
+                                                animate={{ opacity: 1, y: -1 }}
+                                                exit={{ opacity: 0, y: 50 }}
+                                                transition={{ duration: 0.4 }}
+                                                className="w-100 h-100 d-flex justify-content-center align-items-center"
                                             >
-                                                <Download04Icon size={38} strokeWidth={'1'}/>
-                                                <p className='m-0 mt-2'>Clique para adicionar imagens</p>
-                                                <input 
-                                                    {...getInputProps()}
-                                                    className="border"
-                                                    multiple maxLength={5}
-                                                />
-                                            </div>
-                                            <aside>
-                                                <ul
-                                                    className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
-                                                >
-                                                    {fileItems}
-                                                </ul>
-                                            </aside>
-                                        </section>
-                                    </motion.div>
-                                ) : ''
-                            }
+                                                <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center p-0`}>
+                                                    <div 
+                                                        {...getRootProps({className: 'dropzone d-flex flex-column align-items-center h-100 py-5'})}
+                                                        style={{
+                                                            width: '90%',
+                                                            border: '2px dashed #ECECF2',
+                                                            borderRadius: '8px',
+                                                        }}
+                                                    
+                                                    >
+                                                        <Download04Icon size={38} strokeWidth={'1'}/>
+                                                        <p className='m-0 mt-2'>Clique para adicionar imagens</p>
+                                                        <input 
+                                                            {...getInputProps()}
+                                                            className="border"
+                                                            multiple maxLength={5}
+                                                        />
+                                                    </div>
+                                                    <aside>
+                                                        <ul
+                                                            className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
+                                                        >
+                                                            {fileItems}
+                                                        </ul>
+                                                    </aside>
+                                                </section>
+                                            </motion.div>
+                                        ) : ''
+                                    }
 
-                        </AnimatePresence>
-                        
-                    </div>
-                </div>
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    ) : (
+                        <div 
+                            className="row w-100 m-0"
+                            style={{
+                                height: "calc(100vh - 160px)",
+                                padding: '40px 64px 64px 64px'
+                            }}
+                        >
+                            <AnimatePresence mode="wait">                       
+                                <motion.div
+                                    key={'finish'}
+                                    initial={{ opacity: 0, y: -30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 30 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="w-100 h-100"
+                                >
+                                    <h1
+                                        className="text-center mb-5"
+                                        style={{
+                                            fontFamily: "Parkinsans",
+                                            fontSize: "58px",
+                                            fontWeight: "700",
+                                        }}
+                                    >
+                                        Cadastrar o seu imóvel
+                                    </h1>
+                                    <RealStateDetailsCard 
+                                        whatIsThis="registerProperty"
+                                        realStateInformations={{
+                                            title: 'Casa no talatona',
+                                            description: 'Casa com 4 quartos, 3 casas de banho, 1 cozinha, mobilada, localizada no talatona, com um preço acessível e ótima localização.',
+                                            price: 1000000,
+                                            bedrooms: 4,
+                                            bathrooms: 3,
+                                            kitchen: 1
+                                        }} 
+                                    />
+                                    <form 
+                                        className="mt-4 d-flex align-items-center gap-2"
+                                        id="finishRegisterPropertyForm"
+                                    >
+                                        <input 
+                                            type="checkbox"
+                                            className="outline-none"
+                                            name="terms"
+                                            id="terms"
+                                            style={{
+                                                width: '18px',
+                                                height: '18px'
+                                            }}
+                                            required
+                                        />
+                                        <label 
+                                            htmlFor="terms"
+                                            className="cursor-pointer"
+                                            style={{
+                                                fontSize: '18px'
+                                            }}
+                                        >
+                                            Ao prosseguir com o cadastro, informo que li e concordo com os Termos e condições de cadastro e utilização desta plataforma e dos serviços prestados através do mesmo. *
+                                        </label>
+                                    </form>
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+                    )
+                }
             </div>
             <footer
                 className="d-flex align-items-center justify-content-between border px-5"
@@ -414,20 +460,20 @@ export default function RegisterProperty() {
                 }}
             >
                 <div>
-                <BackButton
-                    icon={<ArrowLeft02Icon />}
-                    onClick={() => {
-                        setPropertyInfo('informacoes')
-                        // navigate("/")
-                    }}
-                />
+                    <BackButton
+                        icon={<ArrowLeft02Icon />}
+                        onClick={() => {
+                            propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''
+                            // navigate("/")
+                        }}
+                    />
                 </div>
                 <div>
                 <button
                     type="submit"
-                    form="form"
+                    form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
-                    onClick={() => setPropertyInfo('fotografias')}
+                    onClick={() => propertyInfo === 'informacoes' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('finish') : ''}
                 >
                     Continuar
                     <ArrowRight02Icon />
