@@ -17,23 +17,35 @@ import RealStateDetailsCard from "../../components/realStateDetailsCard/realStat
 export default function RegisterProperty() {
     const navigate = useNavigate();
     const propertySchema = z.object({
-        title: z.string().min(20, 'Pelo menos 10 caracteres'),
+        title: z.string().trim().min(20, 'Pelo menos 20 caracteres'),
         price: z.coerce.number().min(1000, 'O preço mínimo é de 1000kz'),
-        description: z.string().min(255, 'Descrição muito curta'),
-        bedroom: z.coerce.number().min(1, 'Número inválido'),
-        bathroom: z.coerce.number().min(1, 'Número inválido'),
-        kitchen: z.coerce.number().min(1, 'Número inválido'),
-        municipality: z.string().min(1, 'Selecione um município'),
-        neighborhood: z.string().min(4, 'O bairro deve conter pelo menos 4 caracteres'),
+        description: z.string().trim().min(25, 'Descrição muito curta'),
+        municipality: z.string().refine(value => value !== '0', 'Selecione um munícipio'),
+        neighborhood: z.string().trim().min(4, 'O bairro deve conter pelo menos 4 caracteres'),
     })
     const { register, handleSubmit, formState : {errors} } = useForm({
         resolver: zodResolver(propertySchema)
     });
     const [furnished, setFurnished] = useState("Não");
     const [rentOrSell, setRentOrSell] = useState("Aluguel");
+    const [compartments, setCompartments] = useState({
+        bedroom: 1,
+        bathroom: 1,
+        kitchen: 1
+    })
+    const handleCompartmentChange = (compartment, value) => {
+        setCompartments(prev => ({
+            ...prev,
+            [compartment]: value
+        }))
+    }
     const onSubmit = (data) => {
         data["purpose"] = rentOrSell;
         data["furnished"] = furnished;
+        Object.entries(compartments).forEach(([key, value]) => data[key] = value )
+        propertyInfo === 'informacoes' && setPropertyInfo('fotografias')
+
+        console.log(data);
     };
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
     const { getRootProps, getInputProps} = useDropzone({
@@ -184,10 +196,10 @@ export default function RegisterProperty() {
                                                                 {...register("title")}
                                                                 type="text"
                                                                 className="form-control text-secondary shadow-none outline-none"
-                                                                id="floatingInputGrid"
-                                                                defaultValue={"Ex: Casa no talatona"}
+                                                                id="floatingTitleInput"
+                                                                placeholder="Ex: Casa no talatona"
                                                             />
-                                                            <label className="text-black" htmlFor="floatingInputGrid">
+                                                            <label className="text-black" htmlFor="floatingTitleInput">
                                                                 Título do imóvel
                                                             </label>
                                                             {errors.title && ( <small className="text-danger">{errors.title.message}</small> )}
@@ -198,9 +210,8 @@ export default function RegisterProperty() {
                                                                 type="number"
                                                                 className="form-control text-secondary shadow-none outline-none"
                                                                 id="floatingPriceInput"
-                                                                placeholder="Kz"
+                                                                placeholder="1000"
                                                                 min={'1000'}
-                                                                defaultValue={"1000"}
                                                             />
                                                             <label className="text-black" htmlFor="floatingPriceInput">
                                                                 Preço
@@ -208,11 +219,12 @@ export default function RegisterProperty() {
                                                             {errors.price && ( <small className="text-danger">{errors.price.message}</small> )}
                                                         </div>
                                                     </div>
+
                                                     <div className="form-floating mb-4">
                                                         <textarea
                                                             {...register("description")}
                                                             className="form-control text-secondary shadow-none"
-                                                            defaultValue="Insira a descrição do imóvel"
+                                                            placeholder="Insira a descrição do imóvel"
                                                             id="floatingTextarea2Disabled"
                                                             style={{ 
                                                                 height: "180px",
@@ -232,20 +244,21 @@ export default function RegisterProperty() {
                                                     <div className="mb-3">
                                                         <RegisterPropertyCounter
                                                             text={"Quartos"}
-                                                            register={register}
-                                                            registerLabel={"bedroom"}
+                                                            handleCompartmentChange={handleCompartmentChange}
+                                                            key={"bedroom"}
                                                         />
                                                         <RegisterPropertyCounter
                                                             text={"Quartos de banho"}
-                                                            register={register}
-                                                            registerLabel={"bathroom"}
+                                                            handleCompartmentChange={handleCompartmentChange}
+                                                            key={"bathroom"}
                                                         />
                                                         <RegisterPropertyCounter
                                                             text={"Cozinha"}
-                                                            register={register}
-                                                            registerLabel={"kitchen"}
+                                                            handleCompartmentChange={handleCompartmentChange}
+                                                            key={"kitchen"}
                                                         />
                                                     </div>
+
                                                     <div className="mb-4">
                                                         <div className="d-flex align-items-center justify-content-between mb-2">
                                                             <div>
@@ -304,16 +317,17 @@ export default function RegisterProperty() {
                                                             </p>
                                                         </div>
                                                     </div>
+
                                                     <div className="d-flex justify-content-between gap-4 mb-3">
                                                         <div className="form-floating w-100">
                                                             <select
                                                                 className="form-select text-secondary cursor-pointer outline-none shadow-none"
                                                                 id="floatingSelectMunicipality"
                                                                 defaultValue={"0"}
-                                                                {...register("municipality", {required: true})}
+                                                                {...register("municipality")}
                                                             >
                                                                 <option value={"0"} hidden disabled>
-                                                                Selecione o munícipio
+                                                                    Selecione o munícipio
                                                                 </option>
                                                                 <option value="Kilamba-Kiaxi">Kilamba-Kiaxi</option>
                                                                 <option value="Talatona">Talatona</option>
@@ -333,11 +347,12 @@ export default function RegisterProperty() {
                                                                 {...register("neighborhood")}
                                                                 className="form-control text-secondary shadow-none outline-none"
                                                                 id="floatingInputGrid"
-                                                                defaultValue="Golf2"
+                                                                placeholder="Golf2"
                                                             />
                                                             <label className="text-black" htmlFor="floatingInputGrid">
                                                                 Bairro
                                                             </label>
+                                                            {errors.neighborhood && ( <small className="text-danger">{errors.neighborhood.message}</small> )}
                                                         </div>
                                                     </div>
                                                 </form>
@@ -473,7 +488,7 @@ export default function RegisterProperty() {
                     type="submit"
                     form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
-                    onClick={() => propertyInfo === 'informacoes' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('finish') : ''}
+                    onClick={() => propertyInfo === 'fotografias' ? setPropertyInfo('finish') : ''}
                 >
                     Continuar
                     <ArrowRight02Icon />

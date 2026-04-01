@@ -3,7 +3,7 @@ import { Add01Icon, MinusSignIcon } from "hugeicons-react"
 
 export default function RegisterPropertyCounter({
     text,
-    register,
+    handleCompartmentChange,
     registerLabel
 }){
     return(
@@ -19,7 +19,11 @@ export default function RegisterPropertyCounter({
                 {text}
             </p>
             <div>
-                <NumberField.Root defaultValue={1} min={0}>
+                <NumberField.Root
+                    defaultValue={1} 
+                    min={1}
+                    onValueChange = { e => handleCompartmentChange(registerLabel, e) } 
+                >
                     <NumberField.ScrubArea>
                         <NumberField.ScrubAreaCursor />
                     </NumberField.ScrubArea>
@@ -35,7 +39,6 @@ export default function RegisterPropertyCounter({
                             <MinusSignIcon size={14} color="#3541A9"/>
                         </NumberField.Decrement>
                         <NumberField.Input  
-                            {...register(registerLabel)}
                             className={"border-0 outline-none text-center"}
                             style={{
                                 width: '40px'
