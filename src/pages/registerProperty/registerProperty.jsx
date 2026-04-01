@@ -48,6 +48,7 @@ export default function RegisterProperty() {
         console.log(data);
     };
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
+
     const { getRootProps, getInputProps} = useDropzone({
         accept: {
             'image/*': []
@@ -55,7 +56,11 @@ export default function RegisterProperty() {
         multiple: true,
         maxFiles: 2,
         onDrop: (fileDropped) => {
-            files.length > 1 ? toast.error('Só podem ser carregados no máximo 2 arquivos') : setFiles(prev => [...prev, ...fileDropped])
+            files.some(file => file.name === fileDropped[0].name) ? 
+                toast.error('Este arquivo já foi adicionado') : 
+            files.length > 1 ? 
+                toast.error('Só podem ser carregados no máximo 2 arquivos') : 
+            setFiles(prev => [...prev, ...fileDropped])
         },
         onDropRejected: (files) => {
             let errosAlert = []
@@ -374,7 +379,6 @@ export default function RegisterProperty() {
                                                             border: '2px dashed #ECECF2',
                                                             borderRadius: '8px',
                                                         }}
-                                                    
                                                     >
                                                         <Download04Icon size={38} strokeWidth={'1'}/>
                                                         <p className='m-0 mt-2'>Clique para adicionar imagens</p>
@@ -395,7 +399,6 @@ export default function RegisterProperty() {
                                             </motion.div>
                                         ) : ''
                                     }
-
                                 </AnimatePresence>
                             </div>
                         </div>
