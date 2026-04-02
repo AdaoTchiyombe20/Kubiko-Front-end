@@ -56,11 +56,13 @@ export default function RegisterProperty() {
         multiple: true,
         maxFiles: 2,
         onDrop: (fileDropped) => {
-            files.some(file => file.name === fileDropped[0].name) ? 
+            files.some(file => file.name === fileDropped?.[0]?.name) ? 
                 toast.error('Este arquivo já foi adicionado') : 
             files.length > 1 ? 
                 toast.error('Só podem ser carregados no máximo 2 arquivos') : 
             setFiles(prev => [...prev, ...fileDropped])
+            // const img = URL.createObjectURL(files[0])
+            // console.log(img, files[0])
         },
         onDropRejected: (files) => {
             let errosAlert = []
@@ -386,6 +388,7 @@ export default function RegisterProperty() {
                                                             {...getInputProps()}
                                                             className="border"
                                                             multiple maxLength={5}
+                                                            // {...register("images")}
                                                         />
                                                     </div>
                                                     <aside>

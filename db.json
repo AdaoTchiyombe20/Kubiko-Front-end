@@ -15,6 +15,11 @@
         "municipality": "Talatona",
         "address": "Rua das Acácias, nº 12"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 5,
       "createdAt": "2026-02-14T12:00:00.000Z"
@@ -34,6 +39,11 @@
         "municipality": "Cazenga",
         "address": "Rua Principal nº 45"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 3,
       "createdAt": "2026-02-15T10:00:00.000Z"
@@ -53,6 +63,11 @@
         "municipality": "Benfica",
         "address": "Rua do Patriota nº 8"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 2,
       "createdAt": "2026-02-16T09:00:00.000Z"
@@ -72,6 +87,11 @@
         "municipality": "Maianga",
         "address": "Rua 28 de Maio"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 4,
       "createdAt": "2026-02-17T08:00:00.000Z"
@@ -91,6 +111,11 @@
         "municipality": "Kilamba",
         "address": "Avenida Principal"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 6,
       "createdAt": "2026-02-18T11:00:00.000Z"
@@ -110,6 +135,11 @@
         "municipality": "Alvalade",
         "address": "Avenida Revolução de Outubro"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 7,
       "createdAt": "2026-02-19T14:00:00.000Z"
@@ -129,6 +159,11 @@
         "municipality": "Viana",
         "address": "Zango 3, Quadra B"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 8,
       "createdAt": "2026-02-20T10:00:00.000Z"
@@ -148,6 +183,11 @@
         "municipality": "Ingombota",
         "address": "Rua Rainha Ginga"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 9,
       "createdAt": "2026-02-21T09:30:00.000Z"
@@ -167,6 +207,11 @@
         "municipality": "Morro Bento",
         "address": "Rua Nova Esperança"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 10,
       "createdAt": "2026-02-22T15:00:00.000Z"
@@ -186,6 +231,11 @@
         "municipality": "Benfica",
         "address": "Rua das Palmeiras"
       },
+      "images" : [
+        "@/assets/imgs/house2.jpg",
+        "@/assets/imgs/house3.jpg",
+        "@/assets/imgs/house4.jpg"
+      ],
       "status": "PENDING",
       "ownerId": 11,
       "createdAt": "2026-02-23T12:00:00.000Z"

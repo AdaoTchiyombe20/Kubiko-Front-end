@@ -20,7 +20,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                     )
                 }
                 <div>
-                    <DetailsCarrousel />
+                    <DetailsCarrousel images = {realStateInformations?.images} />
                 </div>
             </div>
             <div className="col-7">
