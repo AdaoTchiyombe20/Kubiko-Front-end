@@ -9,6 +9,7 @@ import styles from './realStateDetailsCard.module.css'
 
 export default function RealStateDetailsCard({whatIsThis, realStateInformations}){
     const navigate = useNavigate()
+    console.log(realStateInformations)
     return(
         <div className="row">
             <div className="col-5">
@@ -20,7 +21,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                     )
                 }
                 <div>
-                    <DetailsCarrousel images = {realStateInformations?.images} />
+                    <DetailsCarrousel images = {realStateInformations?.images} whatIsThis={whatIsThis} />
                 </div>
             </div>
             <div className="col-7">
@@ -32,17 +33,17 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                     <small className="bg-secondary-subtle px-3 py-1 rounded-5">641653</small>
                                 )
                             }
-                            <h2 className="mt-2">{realStateInformations?.title || 'Descrição não disponível'}</h2>
+                            <h2 className="mt-2 text-truncate">{realStateInformations?.title || 'Descrição não disponível'}</h2>
                         </div>
                         <div className={`${styles.realStatePrice}`}>
                             <p className="fw-semibold m-0 ">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">/mês</span></p>
                             <small>Valor mensal. Pagamento negociável.</small>
                         </div>
                         <div className={`${styles.detailsItem} d-flex gap-4`}>
-                            <DetailsItem icon={<BedIcon color="#808080" />} title={"Quarto:"} qtd={`${realStateInformations?.bedrooms}`} text={`Quarto (${realStateInformations?.bedrooms} suite)`} />
-                            <DetailsItem icon={<Bathtub01Icon color="#808080" />} title={"Banheiro:"} qtd={`${realStateInformations?.bathrooms}`} text={"Casas de banho"} />
-                            <DetailsItem icon={<Building02Icon color="#808080" />} title={"Edifício:"} qtd={"3"} text={"andares"} />
-                            <DetailsItem icon={<KitchenUtensilsIcon color="#808080" />} title={"Cozinha:"} qtd={"1"} text={"cozinha"} />
+                            <DetailsItem icon={<BedIcon color="#808080" />} title={"Quarto:"} qtd={realStateInformations?.bedrooms} text={`Quarto (${realStateInformations?.bedrooms} suite)`} />
+                            <DetailsItem icon={<Bathtub01Icon color="#808080" />} title={"Banheiro:"} qtd={realStateInformations?.bathrooms} text={"Casas de banho"} />
+                            {/* <DetailsItem icon={<Building02Icon color="#808080" />} title={"Edifício:"} qtd={"3"} text={"andares"} /> Posteriormente saber quantos andares tem a residência e tambbém se é de quintal comum */}
+                            <DetailsItem icon={<KitchenUtensilsIcon color="#808080" />} title={"Cozinha:"} qtd={realStateInformations?.kitchen} text={"cozinha"} />
                         </div>
                          <div className={`${styles.ownerDescription}`}>
                             <div className="lastUpdate d-flex align-items-center gap-1">

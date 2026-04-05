@@ -15,7 +15,9 @@ import { toast } from "react-toastify";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 
 export default function RegisterProperty() {
-    const navigate = useNavigate();
+
+    var date = new Date().toLocaleDateString('pt-AO')
+    const [payload, setPayload] = useState({})
     const propertySchema = z.object({
         title: z.string().trim().min(20, 'Pelo menos 20 caracteres'),
         price: z.coerce.number().min(1000, 'O preço mínimo é de 1000kz'),
@@ -24,13 +26,14 @@ export default function RegisterProperty() {
         neighborhood: z.string().trim().min(4, 'O bairro deve conter pelo menos 4 caracteres'),
     })
     const { register, handleSubmit, formState : {errors} } = useForm({
+        mode: 'onChange',
         resolver: zodResolver(propertySchema)
     });
     const [furnished, setFurnished] = useState("Não");
     const [rentOrSell, setRentOrSell] = useState("Aluguel");
     const [compartments, setCompartments] = useState({
-        bedroom: 1,
-        bathroom: 1,
+        bedrooms: 1,
+        bathrooms: 1,
         kitchen: 1
     })
     const handleCompartmentChange = (compartment, value) => {
@@ -43,9 +46,8 @@ export default function RegisterProperty() {
         data["purpose"] = rentOrSell;
         data["furnished"] = furnished;
         Object.entries(compartments).forEach(([key, value]) => data[key] = value )
-        propertyInfo === 'informacoes' && setPropertyInfo('fotografias')
-
-        console.log(data);
+        setPayload(data)
+        console.log(data)
     };
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
 
@@ -58,11 +60,9 @@ export default function RegisterProperty() {
         onDrop: (fileDropped) => {
             files.some(file => file.name === fileDropped?.[0]?.name) ? 
                 toast.error('Este arquivo já foi adicionado') : 
-            files.length > 1 ? 
+            files.length > 1 || files.length + fileDropped.length > 2 ? 
                 toast.error('Só podem ser carregados no máximo 2 arquivos') : 
             setFiles(prev => [...prev, ...fileDropped])
-            // const img = URL.createObjectURL(files[0])
-            // console.log(img, files[0])
         },
         onDropRejected: (files) => {
             let errosAlert = []
@@ -77,7 +77,7 @@ export default function RegisterProperty() {
 
             errosAlert.forEach( error => { toast.error(error) })
         }
-    });
+    })
     var [files, setFiles] = useState([]);
     const fileItems = files.map(file => (
         <li 
@@ -252,17 +252,17 @@ export default function RegisterProperty() {
                                                         <RegisterPropertyCounter
                                                             text={"Quartos"}
                                                             handleCompartmentChange={handleCompartmentChange}
-                                                            key={"bedroom"}
+                                                            registerLabel={"bedrooms"}
                                                         />
                                                         <RegisterPropertyCounter
                                                             text={"Quartos de banho"}
                                                             handleCompartmentChange={handleCompartmentChange}
-                                                            key={"bathroom"}
+                                                            registerLabel={"bathrooms"}
                                                         />
                                                         <RegisterPropertyCounter
                                                             text={"Cozinha"}
                                                             handleCompartmentChange={handleCompartmentChange}
-                                                            key={"kitchen"}
+                                                            registerLabel={"kitchen"}
                                                         />
                                                     </div>
 
@@ -387,8 +387,8 @@ export default function RegisterProperty() {
                                                         <input 
                                                             {...getInputProps()}
                                                             className="border"
-                                                            multiple maxLength={5}
-                                                            // {...register("images")}
+                                                            multiple
+                                                            maxLength={2}
                                                         />
                                                     </div>
                                                     <aside>
@@ -434,18 +434,14 @@ export default function RegisterProperty() {
                                     </h1>
                                     <RealStateDetailsCard 
                                         whatIsThis="registerProperty"
-                                        realStateInformations={{
-                                            title: 'Casa no talatona',
-                                            description: 'Casa com 4 quartos, 3 casas de banho, 1 cozinha, mobilada, localizada no talatona, com um preço acessível e ótima localização.',
-                                            price: 1000000,
-                                            bedrooms: 4,
-                                            bathrooms: 3,
-                                            kitchen: 1
-                                        }} 
+                                        realStateInformations={payload} 
                                     />
                                     <form 
                                         className="mt-4 d-flex align-items-center gap-2"
                                         id="finishRegisterPropertyForm"
+                                        onSubmit={()=>{
+                                            console.log("Enviando dados para o backend...")
+                                        }}
                                     >
                                         <input 
                                             type="checkbox"
@@ -477,16 +473,13 @@ export default function RegisterProperty() {
             <footer
                 className="d-flex align-items-center justify-content-between border px-5"
                 style={{
-                height: "80px",
+                    height: "80px",
                 }}
             >
                 <div>
                     <BackButton
                         icon={<ArrowLeft02Icon />}
-                        onClick={() => {
-                            propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''
-                            // navigate("/")
-                        }}
+                        onClick={() => propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''}
                     />
                 </div>
                 <div>
@@ -494,7 +487,22 @@ export default function RegisterProperty() {
                     type="submit"
                     form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
-                    onClick={() => propertyInfo === 'fotografias' ? setPropertyInfo('finish') : ''}
+                    onClick={() => {
+                        if (propertyInfo === 'informacoes') {
+                            setPropertyInfo('fotografias');
+                        } else if (propertyInfo === 'fotografias') {
+                            if(files.length < 2){
+                                toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
+                                return
+                            }
+                            setPayload(prev => ({
+                                ...prev, 
+                                images: files,
+                                createdAt: date
+                            }))
+                            setPropertyInfo('finish')
+                        }
+                    }}
                 >
                     Continuar
                     <ArrowRight02Icon />
@@ -502,5 +510,5 @@ export default function RegisterProperty() {
                 </div>
             </footer>
         </>
-    );
+    )
 }

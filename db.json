@@ -10,6 +10,7 @@
       "area": 120,
       "bedrooms": 3,
       "bathrooms": 2,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Talatona",
@@ -34,6 +35,7 @@
       "area": 95,
       "bedrooms": 2,
       "bathrooms": 1,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Cazenga",
@@ -58,6 +60,7 @@
       "area": 200,
       "bedrooms": 4,
       "bathrooms": 3,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Benfica",
@@ -82,6 +85,7 @@
       "area": 70,
       "bedrooms": 1,
       "bathrooms": 1,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Maianga",
@@ -106,6 +110,7 @@
       "area": 240,
       "bedrooms": 4,
       "bathrooms": 4,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Kilamba",
@@ -130,6 +135,7 @@
       "area": 150,
       "bedrooms": 0,
       "bathrooms": 2,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Alvalade",
@@ -154,6 +160,7 @@
       "area": 300,
       "bedrooms": 0,
       "bathrooms": 0,
+      "kitchen": 0,
       "location": {
         "province": "Luanda",
         "municipality": "Viana",
@@ -178,6 +185,7 @@
       "area": 130,
       "bedrooms": 0,
       "bathrooms": 1,
+      "kitchen": 1,
       "location": {
         "province": "Luanda",
         "municipality": "Ingombota",
@@ -202,6 +210,7 @@
       "area": 110,
       "bedrooms": 2,
       "bathrooms": 2,
+      "kitchen": 2,
       "location": {
         "province": "Luanda",
         "municipality": "Morro Bento",
@@ -226,6 +235,7 @@
       "area": 350,
       "bedrooms": 5,
       "bathrooms": 5,
+      "kitchen": 3,
       "location": {
         "province": "Luanda",
         "municipality": "Benfica",

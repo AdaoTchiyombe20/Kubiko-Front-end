@@ -5,7 +5,7 @@ export default function DetailsItem(props){
                 {props?.icon}
                 <p className="m-0 text-secondary">{props.title}</p>
             </div>
-            <p className="m-0">{`${props.qtd + " " + props.text}`}</p>
+            <p className="m-0">{props.qtd + " " + props.text}</p>
         </div>
     )
 }
