@@ -1,18 +1,18 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
-import { Link, useNavigate } from "react-router-dom";
 import { Nav, Tab, Tabs } from "react-bootstrap";
-import z from "zod";
+import { Link } from "react-router-dom";
+import z, { array } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft02Icon, ArrowRight02Icon, Cancel01Icon, Download04Icon } from "hugeicons-react";
 import BackButton from "../../navigateBackButton/navigateBackButton";
+import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
-import { toast } from "react-toastify";
-import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 
 export default function RegisterProperty() {
 
@@ -158,8 +158,19 @@ export default function RegisterProperty() {
         <>
             <header className="d-flex align-items-center justify-content-between border-bottom">
                 <Link to={"/"} className="img">
-                <img src={Logo} alt="" />
+                    <img src={Logo} alt="" />
                 </Link>
+                <div className={styles.steps}>
+                    {
+                        [...Array(3)].map((_, index) => (
+                            <div 
+                                key={index}
+                                className={`${styles.step} ${propertyInfo === 'informacoes' && index === 0 ? styles.active : propertyInfo === 'fotografias' && index === 1 ? styles.active : propertyInfo === 'finish' && index === 2 ? styles.active : ''}`}
+                            >
+                            </div>
+                        ))
+                    }
+                </div>
             </header>
             <div className="container-fluid p-0">
                 {

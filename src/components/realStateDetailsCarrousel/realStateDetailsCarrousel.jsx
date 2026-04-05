@@ -26,9 +26,9 @@ export default function DetailsCarrousel({
         ) : (
             <>
               {
-                images?.map((path, index) => (
+                images?.map((_, index) => (
                   <Carousel.Item key={index}>
-                    <img src={path} alt={`house${index + 1}`} className='rounded-3' style={{height: '500px'}}/>
+                    <img src={`house${index + 2}`} alt={`house${index + 1}`} className='rounded-3' style={{height: '500px'}}/>
                   </Carousel.Item>
                 ))
               }

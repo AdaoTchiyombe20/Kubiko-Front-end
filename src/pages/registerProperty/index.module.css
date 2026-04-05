@@ -27,6 +27,22 @@
     background-color: #3541A9 !important;
     color: white;
 }
+.steps{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.step{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: #ECECF2;
+}
+.active{
+    background-color: #4B5BEE;
+    width: 56px;
+    border-radius: 8px;
+}
 .dropzone:hover{
     cursor: pointer;
 }

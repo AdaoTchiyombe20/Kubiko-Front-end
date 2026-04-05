@@ -1,19 +1,14 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
-import { AppContext } from "../../components/context/appcontext"
 import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon, UserSearch02Icon } from "hugeicons-react";
 import Cards from "../../components/cards/cards";
-import DetailsItem from "../../components/detailsItem/detailsItem";
-import BackButton from "../../navigateBackButton/navigateBackButton";
-import RandomText from "../../components/randomTextAndSvg/randomText";
-import RecentSearchs from "../../components/recentSearchs/recentSearchs";
-import ActionButtons from "../../components/realStateDetailsActionButtons/actionButtons";
-import DetailsCarrousel from "../../components/realStateDetailsCarrousel/realStateDetailsCarrousel";
-import AdditionalInformation from "../../components/detailsAdditionalInformations/detailsAdditionInformations";
 import Footer from "../../components/footer/footer";
 import Header from "../../components/header/header";
-import styles from './realStateDetails.module.css'
+import { AppContext } from "../../components/context/appcontext"
+import RandomText from "../../components/randomTextAndSvg/randomText";
+import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
+import styles from './realStateDetails.module.css'
 
 export default function RealStateDetails(){
 

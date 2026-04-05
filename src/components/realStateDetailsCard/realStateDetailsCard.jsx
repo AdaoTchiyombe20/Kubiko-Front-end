@@ -36,8 +36,8 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                             <h2 className="mt-2 text-truncate">{realStateInformations?.title || 'Descrição não disponível'}</h2>
                         </div>
                         <div className={`${styles.realStatePrice}`}>
-                            <p className="fw-semibold m-0 ">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">/mês</span></p>
-                            <small>Valor mensal. Pagamento negociável.</small>
+                            <p className="fw-semibold m-0 ">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.purpose === 'Aluguel' ? '/mês' : ''}</span></p>
+                            <small>{realStateInformations?.purpose === 'Aluguel' ? "Valor mensal. Pagamento negociável." : "Valor único. Pagamento à vista."}</small>
                         </div>
                         <div className={`${styles.detailsItem} d-flex gap-4`}>
                             <DetailsItem icon={<BedIcon color="#808080" />} title={"Quarto:"} qtd={realStateInformations?.bedrooms} text={`Quarto (${realStateInformations?.bedrooms} suite)`} />
@@ -48,7 +48,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                          <div className={`${styles.ownerDescription}`}>
                             <div className="lastUpdate d-flex align-items-center gap-1">
                                 <Clock05Icon color="#808080" size={20} />
-                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>01/01/2026</p>
+                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>{realStateInformations?.createdAt}</p>
                             </div>
                             <h2 className="ownerDescriptionTitle fw-semibold">Descrição do proprietário</h2>
                             <p className="ownerDescriptionText text-wrap text-truncate text-secondary m-0">
