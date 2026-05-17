@@ -16,7 +16,7 @@ import styles from "./index.module.css";
 
 export default function RegisterProperty() {
 
-    var date = new Date().toLocaleDateString('pt-AO')
+    const date = new Date().toLocaleDateString('pt-AO')
     const [payload, setPayload] = useState({})
     const propertySchema = z.object({
         title: z.string().trim().min(20, 'Pelo menos 20 caracteres'),
@@ -47,6 +47,10 @@ export default function RegisterProperty() {
         data["furnished"] = furnished;
         Object.entries(compartments).forEach(([key, value]) => data[key] = value )
         setPayload(data)
+
+        if (propertyInfo === 'informacoes') 
+            setPropertyInfo('fotografias');
+                        
         console.log(data)
     };
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
@@ -78,7 +82,7 @@ export default function RegisterProperty() {
             errosAlert.forEach( error => { toast.error(error) })
         }
     })
-    var [files, setFiles] = useState([]);
+    const [files, setFiles] = useState([]);
     const fileItems = files.map(file => (
         <li 
             key={file.path}
@@ -279,6 +283,16 @@ export default function RegisterProperty() {
 
                                                     <div className="mb-4">
                                                         <div className="d-flex align-items-center justify-content-between mb-2">
+                                                            <p
+                                                                className="m-0"
+                                                                style={{
+                                                                    fontFamily: "Parkinsans",
+                                                                    fontSize: "16px",
+                                                                    fontWeight: "500",
+                                                                }}
+                                                            >
+                                                                Mobilado
+                                                            </p>
                                                             <div>
                                                                 <Tab.Container
                                                                     activeKey={furnished}
@@ -295,6 +309,8 @@ export default function RegisterProperty() {
                                                                     </Nav>
                                                                 </Tab.Container>
                                                             </div>
+                                                        </div>
+                                                        <div className="d-flex align-items-center justify-content-between mb-2">
                                                             <p
                                                                 className="m-0"
                                                                 style={{
@@ -303,10 +319,8 @@ export default function RegisterProperty() {
                                                                     fontWeight: "500",
                                                                 }}
                                                             >
-                                                                Mobilado
+                                                                Finalidade
                                                             </p>
-                                                        </div>
-                                                        <div className="d-flex align-items-center justify-content-between mb-2">
                                                             <div>
                                                                 <Tab.Container
                                                                     activeKey={rentOrSell}
@@ -323,16 +337,6 @@ export default function RegisterProperty() {
                                                                     </Nav>
                                                                 </Tab.Container>
                                                             </div>
-                                                            <p
-                                                                className="m-0"
-                                                                style={{
-                                                                    fontFamily: "Parkinsans",
-                                                                    fontSize: "16px",
-                                                                    fontWeight: "500",
-                                                                }}
-                                                            >
-                                                                Finalidade
-                                                            </p>
                                                         </div>
                                                     </div>
 
@@ -499,9 +503,7 @@ export default function RegisterProperty() {
                     form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
                     onClick={() => {
-                        if (propertyInfo === 'informacoes') {
-                            setPropertyInfo('fotografias');
-                        } else if (propertyInfo === 'fotografias') {
+                        if (propertyInfo === 'fotografias') {
                             if(files.length < 2){
                                 toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
                                 return

@@ -6,10 +6,14 @@ import ActionButtons from "../realStateDetailsActionButtons/actionButtons"
 import DetailsCarrousel from "../realStateDetailsCarrousel/realStateDetailsCarrousel"
 import AdditionalInformation from "../detailsAdditionalInformations/detailsAdditionInformations"
 import styles from './realStateDetailsCard.module.css'
+import { useContext } from "react"
+import { AppContext } from "../context/appcontext"
 
 export default function RealStateDetailsCard({whatIsThis, realStateInformations}){
     const navigate = useNavigate()
     console.log(realStateInformations)
+
+    const {setShowLocalModal, handleShowModal} = useContext(AppContext)
     return(
         <div className="row">
             <div className="col-5">

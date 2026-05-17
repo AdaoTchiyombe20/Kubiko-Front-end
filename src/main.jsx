@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'primereact/resources/primereact.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import Sign from './pages/signIn/sign.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
         path: 'cadastrar-imovel'
       } 
     ]
-  }
+  },
+  {
+    element: <Sign />,
+    path: '/sign',
+  },
 ])
 
 createRoot(document.getElementById('root')).render(

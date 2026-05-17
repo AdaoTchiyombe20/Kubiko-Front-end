@@ -61,7 +61,12 @@ export default function FilterPage(){
     return(
         <>
             <Header />
-            <div className="px-5">
+            <div 
+                className="px-5"
+                style={{
+                    marginTop: '80px'
+                }}    
+            >
                 <div className="d-flex flex-column">
                     <div className="d-flex justify-content-between align-items-center my-3 py-2 px-3 border rounded-3">
                         <div className="d-flex align-items-center gap-2 ">
@@ -115,7 +120,7 @@ export default function FilterPage(){
                                 <Slider value={rangePrice} onChange={(e) => setRangePrice(e.value)} max={25000000} className="w-14rem my-3" />
                                 <p className="m-0"><span className="text-secondary">Preço: </span>25.000 kz - {rangePrice.toLocaleString('pt-BR')} kz</p>
                             </div>
-                            <button type="submit" className="btn btn-warning text-white w-100">Aplicar filtro</button>
+                            <button type="submit" className="btn bg-default-color text-white w-100">Aplicar filtro</button>
                         </form>
                     </aside>
                     <div className={`${styles.cardsContainer} w-75 h-100`}>

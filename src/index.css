@@ -72,7 +72,6 @@
     align-self: center;
     background-color: var(--carrousel-slide-radio-button-color) !important;
 }
-
 .home-carrousel .carousel-control-next-icon, .home-carrousel .carousel-control-prev-icon{
     display: none;
 }

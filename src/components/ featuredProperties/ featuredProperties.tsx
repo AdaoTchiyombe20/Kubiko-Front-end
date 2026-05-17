@@ -120,7 +120,7 @@ export default function FeaturedProperties() {
                                         } as React.CSSProperties
                                     }
                                 >
-                                    <div className="item-content w-100 p-3">
+                                    <div className="item-content w-100 p-4">
                                         <span className="item-number">0{item.id}</span>
                                         <h2>{item.label}</h2>
                                     </div>
@@ -193,26 +193,72 @@ function StyleSheet() {
             }
 
             .gallery-item {
-                flex-shrink: 0;
-                width: 350px;
+                // flex-shrink: 0;
+                // width: 350px;
+
+                min-width: 320px;
                 height: 500px;
-                border-radius: 12px;
+
+                border-radius: 32px;
                 position: relative;
                 overflow: hidden;
+
                 background-image: var(--item-image);
                 background-size: cover;
                 background-position: center;
                 border-radius: 40px;
             }
             
+            .gallery-item::before {
+                content: "";
+
+                position: absolute;
+                inset: 0;
+
+                background: linear-gradient(
+                    to top,
+                    rgba(0, 0, 0, 0.75) 10%,
+                    rgba(0, 0, 0, 0.45) 35%,
+                    rgba(0, 0, 0, 0.1) 60%,
+                    transparent 100%
+                );
+
+                z-index: 1;
+            }
+
+            .gallery-item::after {
+                content: "";
+
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                height: 70%;
+
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+
+                background: rgba(255, 255, 255, 0.03);
+
+                mask-image: linear-gradient(
+                    to top,
+                    black 50%,
+                    transparent 100%
+                );
+
+                z-index: 2;
+            }
 
             .item-content {
-                height: 35%;
-                backdrop-filter: blur(8px);
                 position: absolute;
-                bottom: 0px;
-                left: 0px;
-                z-index: 1;
+                bottom: 0;
+
+                width: 100%;
+                padding: 24px;
+
+                z-index: 3;
+                color: white;
             }
 
             .item-number {

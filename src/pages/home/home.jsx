@@ -95,7 +95,7 @@ export default function Home(){
                 console.log(resposta)
             }
             catch(error){
-                console.log("Erro: ", erro)
+                console.log("Erro: ", error)
             }
         }
         ListRealState()
@@ -105,12 +105,17 @@ export default function Home(){
         <>
             <Header />
 
-            <div className="d-flex flex-column pb-4 position-relative mb-5">
+            <div 
+                className="d-flex flex-column pb-4 position-relative mb-5"
+                style={{
+                    marginTop: '80px'
+                }}
+            >
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
                     <div>
                         <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
-                        <h1 className="text-center lh-1 text-primary">Invista Hoje no <br /> Sonho da sua casa</h1>
+                        <h1 className="text-center lh-1 text-default-color">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
                     <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
                         <div className="col border-end border-2 pe-4 d-flex flex-column">
@@ -138,7 +143,7 @@ export default function Home(){
                             </Form.Select>
                         </div>
                         <div className="col">
-                            <button className="btn btn-primary bg-primary border-0 text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
+                            <button className="btn btn-primary bg-default-color border-0 text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
                                 Pesquisar
                                 <Search01Icon />
                             </button>

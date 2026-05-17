@@ -20,7 +20,7 @@ export default function PlanCards({
            <h1 className="fw-semibold display-6">AOA {price}<span className="fw-normal fs-4 fw-semibold">/mês</span></h1>
            <p className="text-secondary">{description}</p>
 
-           <button className="btn btn-primary text-white rounded-5 py-2 w-100">Try for free</button>
+           <button className="btn btn-primary bg-default-color text-white rounded-5 py-2 w-100">Try for free</button>
 
            <ul className="list-unstyled ps-2 mt-4 d-flex flex-column gap-3">
             {

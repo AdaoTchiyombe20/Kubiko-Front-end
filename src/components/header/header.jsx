@@ -11,13 +11,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import styles from './header.module.css'
+import { getDataFromStorage } from "../../utils/storage";
 
 export default function Header(){
     const { setShowLocalModal, handleShowModal, isLogged } = useContext(AppContext)
 
     return(
         <div className="d-flex flex-column">
-            <header className="d-flex align-items-center justify-content-between border">
+            <header className="position-fixed top-0 z-3 w-100 bg-white d-flex align-items-center justify-content-between border-bottom border-1">
                 <Link to={'/'} className="img">
                     <img src={Logo} alt=""/>
                 </Link>
@@ -52,14 +53,26 @@ export default function Header(){
                             <UserCircleIcon size={24} color="#3541A9"/>
                             <div className="d-flex flex-column align-items-start">
                                 <span className="m-0 text-decoration-none">Olá!</span>
-                                <span className="m-0 text-decoration-none fw-semibold">Entrar</span>
+                                <span className="m-0 text-decoration-none text-truncate fw-semibold">{getDataFromStorage('user') ? getDataFromStorage('user').email : 'Entrar'}</span>
                             </div>
                         </a>
                         <ul className={`${isLogged ? '' : 'd-none'} dropdown-menu border-0 shadow-lg mt-3`}>
                             <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><UserCircle02Icon /> Minha conta</a></li>
                             <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><Calendar02Icon /> Visitas agendadas</a></li>
                             <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><File02Icon /> Histórico</a></li>
-                            <li><a className="dropdown-item d-flex align-items-center gap-2 border-top py-3 pb-2" href="#"><LogoutCircle01Icon /> Terminar sessão</a></li>
+                            <li>
+                                <a 
+                                    className="dropdown-item d-flex align-items-center gap-2 border-top py-3 pb-2" 
+                                    href="#"
+                                    onClick={() => {
+                                        localStorage.removeItem('user')
+                                        window.location.reload()
+                                    }}
+                                >
+                                    <LogoutCircle01Icon />
+                                    Terminar sessão
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

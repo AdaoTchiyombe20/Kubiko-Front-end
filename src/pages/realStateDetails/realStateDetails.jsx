@@ -18,7 +18,7 @@ export default function RealStateDetails(){
     const [realStateInformations, setRealStateInformation] = useState([])
     console.log(id)
 
-    useEffect(()=>{
+    useEffect(() =>{
         async function realStateDetailShowInformation(){
             const endpoint = `http://localhost:3001/properties/${id}`
 
