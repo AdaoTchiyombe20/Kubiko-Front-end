@@ -1,0 +1,12 @@
+.sidebar_ul li{
+    /* border: 1px solid; */
+    padding: 8px 0 8px 10px;
+    border-radius: 8px;
+    transition-duration: .3s;
+}   
+.sidebar_ul li:hover{
+    background-color: #10265B;
+}
+.active{
+    background-color: #10265B;
+}

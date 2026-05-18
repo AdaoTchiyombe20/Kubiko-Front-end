@@ -1,6 +1,6 @@
 :root{
     --carrousel-slide-radio-button-color: #3541A9;
-    --text-base-color: #3541A9;
+    --text-base-color: #10265B;
     --bg-default-color: #3541A9;
 }
 .root{
@@ -121,4 +121,29 @@
 .p-datepicker::-webkit-scrollbar-thumb {
   background: #e1dddd;
   border-radius: 10px;
+}
+.prime_table .p-datatable-header{
+    background-color: white !important;
+    border: none;
+    padding: 20px 0;
+}
+.prime_table table thead :where([role="row"]){
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+.prime_table .p-sortable-column{
+    background-color: white !important;
+}
+.prime_table td, .prime_table th{
+    padding: 7px 16px;
+}
+.prime_table th{
+    color: #64748B;
+    font-weight: 500;
+}
+.prime_table tr{
+    border-bottom: 1px solid #E2E8F0;
+}
+.prime_table .id_column{
+    font-weight: 500;
+    color: #64748B;
 }

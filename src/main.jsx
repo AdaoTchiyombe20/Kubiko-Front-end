@@ -15,6 +15,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'primereact/resources/primereact.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import AdminHome from './pages/adminHome/adminHome.jsx';
+import UsersManagement from './pages/usersManagement/usersManagement.jsx';
+import RealStateManagement from './pages/realStateManagement/realStateManagement.jsx';
+import PaymentsManagement from './pages/paymentsManagement/paymentsManagement.jsx';
 
 const router = createBrowserRouter([
   {
@@ -46,6 +50,24 @@ const router = createBrowserRouter([
   {
     element: <Admin />,
     path: '/admin',
+    children: [
+      {
+        index: true,
+        element: <AdminHome />,
+      },
+      {
+        path: '/admin/users-management',
+        element: <UsersManagement />,
+      },
+      {
+        path: '/admin/realstate-management',
+        element: <RealStateManagement />,
+      },
+      {
+        path: '/admin/payments-management',
+        element: <PaymentsManagement />,
+      },
+    ]
   },
 ])
 
