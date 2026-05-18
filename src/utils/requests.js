@@ -4,7 +4,6 @@ import { setDataIntoStorage } from "./storage";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export async function signUser(data, setIsLoading, navigate, endpoint){
-    console.log("Dados enviados: ", data)
     setIsLoading(true);
     try {
         const response = await fetch(BASE_URL + endpoint, {
@@ -16,7 +15,9 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
         });
 
         if (!response.ok) {
-            throw new Error('Erro ao fazer login');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return;
         }
 
         const result = await response.json();
@@ -24,11 +25,12 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
             email: result.user.email,
             token: result.accessToken
         })
-        navigate('/')
-        console.log(result);
+        if(navigate)
+            navigate('/')
+        return result
     } catch (error) {
-        console.error(error);
-        toast.error('Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.');
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
     } finally {
         setIsLoading(false);
     }

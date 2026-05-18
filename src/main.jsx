@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import App from './App.jsx'
 import Home from './pages/home/home.jsx';
+import Sign from './pages/signIn/sign.jsx';
+import Admin from './pages/admin/admin.jsx';
 import FilterPage from './pages/filterPage/filterPage.jsx';
 import AppProvider from './components/context/appcontext.jsx';
 import RealStateDetails from './pages/realStateDetails/realStateDetails.jsx';
@@ -13,7 +15,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'primereact/resources/primereact.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import Sign from './pages/signIn/sign.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,11 +37,15 @@ const router = createBrowserRouter([
         element: <RegisterProperty />,
         path: 'cadastrar-imovel'
       } 
-    ]
+    ],
   },
   {
     element: <Sign />,
     path: '/sign',
+  },
+  {
+    element: <Admin />,
+    path: '/admin',
   },
 ])
 

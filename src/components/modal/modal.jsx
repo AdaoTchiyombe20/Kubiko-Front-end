@@ -1,26 +1,28 @@
 import { useContext, useState } from 'react';
-import { AppContext } from '../context/appcontext';
-import { ArrowLeft02Icon, Calendar04Icon, Call02Icon, GoogleIcon, Route03Icon, UserIcon } from 'hugeicons-react';
-import { MdOutlineLogin } from "react-icons/md";
-import Alert from '../alert/alert';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import PhoneInputAuth from '../phoneInput/phoneInput';
-import InputOtpAuth from '../inputOpt/inputOpt';
-import styles from './modal.module.css'
-import TimeChoose from '../timeChoose/timeChoose';
-import ScheduleCalendar from '../calendar/calendar';
-import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
-import BackButton from '../../navigateBackButton/navigateBackButton';
-import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { MdOutlineLogin } from "react-icons/md";
+import { AppContext } from '../context/appcontext';
+import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { ArrowLeft02Icon, Calendar04Icon, Call02Icon, GoogleIcon, Route03Icon, UserIcon } from 'hugeicons-react';
+import Alert from '../alert/alert';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import InputOtpAuth from '../inputOpt/inputOpt';
+import TimeChoose from '../timeChoose/timeChoose';
+import ScheduleCalendar from '../calendar/calendar';
+import PhoneInputAuth from '../phoneInput/phoneInput';
+import BackButton from '../../navigateBackButton/navigateBackButton';
+import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
+import styles from './modal.module.css'
+import { signUser } from '../../utils/requests';
 
 export default function VariousModal(props) {
 
     const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
-
+    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false)
     const loginForm = z.object({
         email: z.string().trim().email('Email inválido'),
         password: z.string().trim().min(6, 'A senha deve conter no mínimo 6 caracteres')
@@ -28,19 +30,21 @@ export default function VariousModal(props) {
     const {register, formState : {errors}, handleSubmit} = useForm({
         resolver: zodResolver(loginForm)
     })
-    const onSubmit = (data) => {
-        console.log(data)
-        handleShowModal()
+    const onSubmit = async (data) => {
+        const success = await signUser(data, setIsLoading, null, '/auth/login')
+        if (success) {
+            handleShowModal()
+            location.reload()
+        }
     }
-    const navigate = useNavigate()
-
+    
     return (
         <>
         <Modal
             show={showModal}
             onHide={handleShowModal}
-            backdrop="static"
-            keyboard={false}
+            backdrop={showLocalModal === 'login' ? true : 'static'}
+            keyboard={showLocalModal === 'login' ? true : false}
             centered
         >
             {
@@ -99,6 +103,7 @@ export default function VariousModal(props) {
                                 Não tem uma conta? 
                                 <Link 
                                     to={'/sign'}
+                                    onClick={handleShowModal}
                                     className='text-decoration-none text-primary'
                                     state={{
                                         showLogin: false
@@ -117,9 +122,12 @@ export default function VariousModal(props) {
                             <PhoneInputAuth />
                             <div className='d-flex flex-column align-items-center gap-3 mt-3 mb-3'>
                                 <div className='d-flex flex-column gap-2 w-100'>
-                                    <button className={`${styles.sendPhoneCodeButton} btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-2 border-0 rounded-3`} onClick={()=>{
-                                        setShowLocalModal('code')
-                                    }}>
+                                    <button 
+                                        className={`${styles.sendPhoneCodeButton} btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-2 border-0 rounded-3`}
+                                        onClick={()=>{
+                                            setShowLocalModal('code')
+                                        }}
+                                    >
                                         Enviar código
                                     </button>
                                 </div>
@@ -163,9 +171,10 @@ export default function VariousModal(props) {
                             </div>
                             <button 
                                 type='submit'
+                                disabled={isLoading}
                                 className={`${styles.sendPhoneCodeButton} btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-2 border-0 rounded-3`}
                             >
-                                Iniciar Sessão
+                                {isLoading ? 'Carregando...' : 'Iniciar Sessão'}
                             </button>
                         </form>
                     )

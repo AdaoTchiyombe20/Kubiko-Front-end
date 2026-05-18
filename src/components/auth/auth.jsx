@@ -1,16 +1,16 @@
-import styles from './auth.module.css'
-import loginImg from '../../assets/imgs/loginImg.png'
-import Logo from '../../assets/imgs/kubiko.png'
-import { Facebook01Icon, Facebook02Icon, InstagramIcon, Linkedin01Icon, Linkedin02Icon } from 'hugeicons-react';
-import { FaFacebook, FaLinkedin } from "react-icons/fa6";
-import { GrInstagram } from "react-icons/gr";
-import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { GrInstagram } from "react-icons/gr";
+import { FaFacebook, FaLinkedin } from "react-icons/fa6";
 import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Facebook01Icon, Facebook02Icon, InstagramIcon, Linkedin01Icon, Linkedin02Icon } from 'hugeicons-react';
+import loginImg from '../../assets/imgs/loginImg.png'
+import Logo from '../../assets/imgs/kubiko.png'
 import { signUser } from '../../utils/requests';
+import styles from './auth.module.css'
 
 export default function Auth() {
 
@@ -36,10 +36,6 @@ export default function Auth() {
         signUser(data, setIsLoading, navigate, showLogin ? '/auth/login' : '/auth/signup/individual')
         // console.log(data)
     }
-
-    useEffect(() => {
-
-    }, [])
 
     return (
         <div className="container-fluid vh-100">
@@ -172,7 +168,6 @@ export default function Auth() {
                         </a>
                     </div>
                 </div>
-                
             </div>
         </div>
     );

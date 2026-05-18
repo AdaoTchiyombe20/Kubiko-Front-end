@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { Theme } from "@radix-ui/themes";
@@ -5,6 +6,8 @@ import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, Favou
 import house5 from '../../assets/imgs/house5.png'
 import Tab from "../../components/tab/tab";
 import Cards from "../../components/cards/cards";
+import Header from "../../components/header/header";
+import Footer from "../../components/footer/footer";
 import Carrousel from "../../components/carousel/carousel";
 import PlanCards from "../../components/planCards/planCards";
 import RandomText from "../../components/randomTextAndSvg/randomText";
@@ -12,9 +15,6 @@ import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import PublicityCards from "../../components/publicityCards/publicityCards";
 import FeaturedProperties from "../../components/ featuredProperties/ featuredProperties";
 import styles from './home.module.css'
-import { useEffect, useState } from "react";
-import Header from "../../components/header/header";
-import Footer from "../../components/footer/footer";
 
 export default function Home(){
 

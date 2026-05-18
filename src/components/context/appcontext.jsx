@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { get } from "react-hook-form";
 import { getDataFromStorage } from "../../utils/storage";
 
@@ -18,6 +18,7 @@ export default function AppProvider({children}){
             showLocalModal,
             setShowLocalModal,
             isLogged,
+            setIsLogged
         }}>
             {children}
         </AppContext.Provider>
