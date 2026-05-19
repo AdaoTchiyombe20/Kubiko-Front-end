@@ -199,6 +199,130 @@ export default function Table({
                     </DataTable>
                 )
             }
+            {
+                isThisTableFor === 'users-management' && (
+                    <DataTable
+                        className='bg-white border p-1'
+                        value={customers}
+                        paginator
+                        rows={5}
+                        filters={filters}
+                        onFilter={(e) => setFilters(e.filters)}    
+                        selection={selectedCustomer} 
+                        onSelectionChange={(e) => setSelectedCustomer(e.value)} 
+                        selectionMode="single" 
+                        dataKey="id"
+                        stateStorage="session" 
+                        stateKey="dt-state-demo-local" 
+                        emptyMessage="No customers found." 
+                        tableStyle={{ minWidth: '50rem' }}
+                    >
+                        <Column field="id" header="#" filterPlaceholder="Search" sortable style={{ width: '5%' }} bodyClassName={'id_column'}></Column>
+                        <Column field="name" header="Nome" sortable filterPlaceholder="Search" style={{ width: '20%' }} body = {
+                            (item) => {
+                                return(
+                                    <span className='text-default-color text-truncate px-0'>
+                                        {item.name}
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column field="owner" header="Proprietário" sortable filterPlaceholder="Search" style={{ width: '20%' }} body = {
+                            (item) => {
+                                return(
+                                    <span className='text-default-color text-truncate px-0'>
+                                        {item.owner}
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column field="type" header="Tipo" sortable filterPlaceholder="Search" style={{ width: '20%' }} body = {
+                            (item) => {
+                                return(
+                                    <span className='text-default-color text-truncate px-0'>
+                                        {item.type}
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column field="price" header="Preço" sortable filterPlaceholder="Search" style={{ width: '20%' }} body = {
+                            (item) => {
+                                return(
+                                    <span className='text-default-color text-truncate px-0'>
+                                        {item.price.toLocaleString('pt')},00kz
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column field='date' header="Data" sortable style={{ width: '15%' }} body = {
+                            (item) => {
+                                return(
+                                    <span className='text-default-color text-truncate px-0'>
+                                        {new Date(item.date).toLocaleDateString('pt-AO')}
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column field='status' header="Estado" sortable style={{ width: '10%' }} body = {
+                            (item) => {
+                                return(
+                                    <span 
+                                        className='text-white'
+                                        style={{
+                                            backgroundColor: item.status === 'Inativo' ?  '#FFCC00' : item.status === 'Ativo' ?'#278BFF' : item.status === 'Pendente' ? '#E83337' : item.status === 'Publicado' ? '#34C759' : '#CCCCCC',
+                                            fontSize: '12px',
+                                            padding: '4px 8px',
+                                            borderRadius: '6px'
+                                        }}
+                                    >
+                                        {item.status}
+                                    </span>
+                                )}
+                            }
+                        >
+                        </Column>
+                        <Column body = {
+                                (item) => (
+                                    <Theme>
+                                        <DropdownMenu.Root>
+                                            <DropdownMenu.Trigger>
+                                                <GrMoreVertical />
+                                            </DropdownMenu.Trigger>
+                                            <DropdownMenu.Content>
+                                                <DropdownMenu.Item
+                                                    // onClick={() => {
+                                                    //     setIsDeleting(false)
+                                                    //     setSelectedEmployee(item)
+                                                    //     setIsEditing(true)
+                                                    //     handleShow()
+                                                    // }}
+                                                    className='cursor-pointer'
+                                                >
+                                                    Editar
+                                                </DropdownMenu.Item>
+                                                <DropdownMenu.Item 
+                                                    className='cursor-pointer'
+                                                    // onClick={() => {
+                                                    //     setIsDeleting(true)
+                                                    //     handleShow()
+                                                    // }}
+                                                > 
+                                                    Eliminar
+                                                </DropdownMenu.Item>
+                                            </DropdownMenu.Content>
+                                        </DropdownMenu.Root>
+                                    </Theme>
+                                )
+                            }>
+                            </Column>
+                    </DataTable>
+                )
+            }
         </div>
     )
 }

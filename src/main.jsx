@@ -14,6 +14,7 @@ import "@radix-ui/themes/styles.css";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'primereact/resources/primereact.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import 'primeicons/primeicons.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import AdminHome from './pages/adminHome/adminHome.jsx';
 import UsersManagement from './pages/usersManagement/usersManagement.jsx';

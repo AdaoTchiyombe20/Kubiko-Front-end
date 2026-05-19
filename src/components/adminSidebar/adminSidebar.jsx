@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
-import logo from '../../assets/imgs/kubiko.png'
+import { Link, useLocation } from "react-router-dom";
+import logo from '../../../public/imgs/logo_white.png'
 import styles from './adminSidebar.module.css'
 import { CheckmarkSquare02Icon, CustomerSupportIcon, DashboardSquare02Icon, File02Icon, Notification02Icon, SecurityIcon } from "hugeicons-react";
 export default function AdminSidebar(){
+
+    const location = useLocation()
 
     const adminRoutes = [
         {
@@ -40,8 +42,21 @@ export default function AdminSidebar(){
                 height: '100vh',
             }}
         >
-            <Link to={'/'} className='d-flex align-items-center py-3'>
-                <img src= {logo} alt="TISBOT_Logo" />
+            <Link 
+                to={'/'}
+                className='d-flex align-items-center pb-3 ps-3'
+                style={{
+                    paddingTop: '19px'
+                }}
+            >
+                <img
+                    src= {logo} alt="TISBOT_Logo" 
+                    className="object-fit-cover"
+                    style={{
+                        width: '130px',
+                        // height: '40px',
+                    }}
+                />
             </Link>
             <div className='ps-2 pe-3 mt-4'>
                 <ul className={`${styles.sidebar_ul} list-unstyled d-flex flex-column gap-1`}>
