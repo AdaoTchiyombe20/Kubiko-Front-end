@@ -1,11 +1,16 @@
 import { NumberField } from "@base-ui/react"
 import { Add01Icon, MinusSignIcon } from "hugeicons-react"
+import { FaTrash } from "react-icons/fa6"
 
 export default function RegisterPropertyCounter({
     text,
-    handleCompartmentChange,
-    registerLabel
+    handleChangeCompartment,
+    handleRemoveCompartment,
+    quantity
 }){
+
+    // const textRemovedUnderscore = text.replace(/_/g, ' ')
+
     return(
         <div className="d-flex justify-content-between mb-2">
             <p 
@@ -18,11 +23,11 @@ export default function RegisterPropertyCounter({
             >
                 {text}
             </p>
-            <div>
+            <div className="d-flex align-items-center gap-3">
                 <NumberField.Root
-                    defaultValue={1} 
+                    value={quantity} 
                     min={1}
-                    onValueChange = { e => handleCompartmentChange(registerLabel, e) } 
+                    onValueChange = {(value) => handleChangeCompartment(Number(value))} 
                 >
                     <NumberField.ScrubArea>
                         <NumberField.ScrubAreaCursor />
@@ -56,6 +61,11 @@ export default function RegisterPropertyCounter({
                         </NumberField.Increment>
                     </NumberField.Group>
                 </NumberField.Root>
+                <FaTrash
+                    color="red" 
+                    className="cursor-pointer"
+                    onClick={handleRemoveCompartment}
+                />
             </div>
         </div>
     )

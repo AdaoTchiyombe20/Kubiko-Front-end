@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { Nav, Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import z, { array } from "zod";
+import z, { array, set } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft02Icon, ArrowRight02Icon, Cancel01Icon, Download04Icon } from "hugeicons-react";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
@@ -16,36 +18,189 @@ import styles from "./index.module.css";
 
 export default function RegisterProperty() {
 
+    const type_of_property = [
+        {id: 1, name: 'APARTAMENTO'},
+        {id: 2, name: 'VIVENDA'},
+        {id: 3, name: 'ESCRITORIO'},
+        {id: 4, name: 'FAZENDA'},
+        {id: 5, name: 'TERRENO'},
+        {id: 6, name: 'LOJA'},
+        {id: 7, name: 'ARMAZEM'},
+        {id: 8, name: 'HOTEL'},
+        {id: 9, name: 'PENTHOUSE'},
+        {id: 10, name: 'DUPLEX'},
+        {id: 11, name: 'TRIPLEX'},
+        {id: 12, name: 'QUARTO'},
+        {id: 13, name: 'SUITE'},
+        {id: 14, name: 'CONDOMINIO'},
+        {id: 15, name: 'RESORT'},
+        {id: 16, name: 'HOSPITAL'},
+        {id: 17, name: 'ESCOLA'},
+        {id: 18, name: 'RESTAURANTE'},
+        {id: 19, name: 'CINEMA'},
+        {id: 20, name: 'SHOPPING'}
+    ]
+
+    const municipalities = [
+        {id: 1, name: 'Belas'},
+        {id: 2, name: 'Cacuaco'},
+        {id: 3, name: 'Camama'},
+        {id: 4, name: 'Cazenga'},
+        {id: 5, name: 'Hoji Ya Henda'},
+        {id: 6, name: 'Ingombota'},
+        {id: 7, name: 'Kilamba-Kiaxi'},
+        {id: 8, name: 'Kilamba'},
+        {id: 9, name: 'Maianga'},
+        {id: 10, name: 'Mulenvos'},
+        {id: 11, name: 'Mussulo'},
+        {id: 12, name: 'Rangel'},
+        {id: 13, name: 'Samba'},
+        {id: 14, name: 'Sambizanga'},
+        {id: 15, name: 'Talatona'},
+        {id: 16, name: 'Viana'},
+    ]
+
+    const compartments_types = [
+        {id: 1, name: 'QUARTO'},
+        {id: 2, name: 'SALA_DE_ESTAR'},
+        {id: 3, name: 'SALA_DE_LAZER'},
+        {id: 4, name: 'ESCRITORIO'},
+        {id: 5, name: 'QUARTO_DE_BANHO'},
+        {id: 6, name: 'COZINHA'},
+        {id: 7, name: 'LAVANDARIA'},
+        {id: 8, name: 'GARAGEM'},
+        {id: 9, name: 'VARANDA'},
+        {id: 10, name: 'CLOSET'},
+        {id: 11, name: 'DESPENSA'},
+        {id: 12, name: 'HALL_DE_ENTRADA'},
+        {id: 13, name: 'SALA_DE_JANTAR'},
+        {id: 14, name: 'BIBLIOTECA'},
+        {id: 15, name: 'QUARTO_DE_VISITAS'},
+        {id: 16, name: 'SUITE_PRINCIPAL'},
+        {id: 17, name: 'ADEGA'},
+        {id: 18, name: 'QUARTO_DE_EMPREGADOS'},
+        {id: 19, name: 'RECEPCAO'},
+        {id: 20, name: 'SALA_DE_REUNIOES'},
+        {id: 21, name: 'AUDITORIO'},
+        {id: 22, name: 'LOJA'},
+        {id: 23, name: 'ARMAZEM'},
+        {id: 24, name: 'CANTINA'},
+        {id: 25, name: 'GINASIO'},
+        {id: 26, name: 'SPA'},
+        {id: 27, name: 'PISCINA'},
+        {id: 28, name: 'TERRAÇO'}
+    ]
+
+    const cadastrarImovel = {
+        title: 'Nome do imovel', // já
+        description: 'Descrição do imóvel', // já
+        address_info: '[País], [Provincia], [Municipio]', // já
+        neighborhood: 'Golf2', // já
+        municipality: 'Belas', // já
+        price: '250.000', // já
+        is_negotiable: false, // já
+        type_purchase: 'for_sale || for_rent', // já
+        type_of_property: 'Loja', // já
+        compartments : [
+            {
+                type: 'Quarto',
+                quantity: 3
+            },
+            {
+                type: 'SALA_DE_ESTAR',
+                quantity: 1
+            }
+        ], // já
+        total_area: '0', // já 
+        latitude: '0', // já
+        longitude: '0', // já
+        images: [
+            {}
+        ], // já
+        video: {
+            url: 'https://www.youtube.com/watch?v=example',
+        }
+    }
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const date = new Date().toLocaleDateString('pt-AO')
     const [payload, setPayload] = useState({})
+
+    const [is_negotiable, setIsNegotiable] = useState(false);
+    const [type_purchase, setTypePurchase] = useState("for_rent"); 
+
+    const compartmentsSchema = z.object({
+        type: z.string().refine(value => value !== '0', 'Selecione um compartimento'),
+        quantity: z.string().min(1, 'A quantidade deve ser um número positivo')
+    })
     const propertySchema = z.object({
         title: z.string().trim().min(20, 'Pelo menos 20 caracteres'),
-        price: z.coerce.number().min(1000, 'O preço mínimo é de 1000kz'),
+        price: z.string().min(4, 'O preço mínimo é de 1000kz'),
         description: z.string().trim().min(25, 'Descrição muito curta'),
         municipality: z.string().refine(value => value !== '0', 'Selecione um munícipio'),
+        type_of_property: z.string().refine(value => value !== '0', 'Selecione um tipo de propriedade'),
         neighborhood: z.string().trim().min(4, 'O bairro deve conter pelo menos 4 caracteres'),
     })
     const { register, handleSubmit, formState : {errors} } = useForm({
         mode: 'onChange',
         resolver: zodResolver(propertySchema)
     });
-    const [furnished, setFurnished] = useState("Não");
-    const [rentOrSell, setRentOrSell] = useState("Aluguel");
-    const [compartments, setCompartments] = useState({
-        bedrooms: 1,
-        bathrooms: 1,
-        kitchen: 1
-    })
-    const handleCompartmentChange = (compartment, value) => {
-        setCompartments(prev => ({
-            ...prev,
-            [compartment]: value
-        }))
+    const { register: registerCompartments, handleSubmit: handleSubmitCompartments, formState : {errors: errorCompartments}, reset: resetCompartmentsFields} = useForm({
+        mode: 'onChange',
+        resolver: zodResolver(compartmentsSchema)
+    });
+    const [compartmentsList, setCompartmentsList] = useState([
+        {
+            type: 'Quarto',
+            quantity: 2
+        },
+        {
+            type: 'SALA_DE_ESTAR',
+            quantity: 1
+        },
+        {
+            type: 'COZINHA',
+            quantity: 1
+        }
+    ])
+    const addCompartment = (type, quantity) => {
+        setCompartmentsList(prev => [...prev, {
+            type,
+            quantity
+        }])
+    }
+    const handleRemoveCompartment = (index) => {
+
+        if(compartmentsList.length === 1)
+            return toast.error('Pelo menos um compartimento é necessário')
+        setCompartmentsList(prev => prev.filter((_, i) => i !== index))
+    }
+    const handleChangeCompartment = (index, field, value) => {
+        setCompartmentsList(prev => prev.map((compartment, i) => i === index ? {
+            ...compartment,
+            [field]: Number(value)
+        } : compartment))
+    }
+    const compartmentsPayload = (data) => {
+        if(compartmentsList.some(compartment => compartment.type === data.type))
+            return toast.error('Este compartimento já foi adicionado')
+        addCompartment(data.type, Number(data.quantity))
+        handleClose()
+        resetCompartmentsFields()
     }
     const onSubmit = (data) => {
-        data["purpose"] = rentOrSell;
-        data["furnished"] = furnished;
-        Object.entries(compartments).forEach(([key, value]) => data[key] = value )
+        data["type_purchase"] = type_purchase;
+        data["is_negotiable"] = Boolean(is_negotiable)
+        data["address_info"] = `Angola, Luanda, ${data.municipality}`
+        data["compartments"] = compartmentsList
+        data["total_area"] = '0'
+        data["latitude"] = '0'
+        data["longitude"] = '0'
+        console.log(compartmentsList)
         setPayload(data)
 
         if (propertyInfo === 'informacoes') 
@@ -53,8 +208,8 @@ export default function RegisterProperty() {
                         
         console.log(data)
     };
+   
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
-
     const { getRootProps, getInputProps} = useDropzone({
         accept: {
             'image/*': []
@@ -82,6 +237,7 @@ export default function RegisterProperty() {
             errosAlert.forEach( error => { toast.error(error) })
         }
     })
+
     const [files, setFiles] = useState([]);
     const fileItems = files.map(file => (
         <li 
@@ -130,7 +286,6 @@ export default function RegisterProperty() {
             />
         </li>
     ))
-
     const showTitle = (key, title, descripiton) => {
         return(
             <motion.div
@@ -212,6 +367,30 @@ export default function RegisterProperty() {
                                                         width: "80%",
                                                     }}
                                                 >
+                                                    <div className="form-floating w-100 mb-3">
+                                                            <select
+                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                id="floatingSelecttype_of_property"
+                                                                defaultValue={"0"}
+                                                                {...register("type_of_property")}
+                                                            >
+                                                                <option value={"0"} hidden disabled>
+                                                                    Selecione o tipo de propriedade
+                                                                </option>
+                                                                {
+                                                                    type_of_property.map(property => (
+                                                                        <option key={property.id} value={property.name}>{property.name.toLocaleString()}</option>
+                                                                    ))
+                                                                }
+                                                            </select>
+                                                            <label
+                                                                className="text-black"
+                                                                htmlFor="floatingSelecttype_of_property"
+                                                            >
+                                                                Tipo de Propriedade
+                                                            </label>
+                                                            {errors.type_of_property && ( <small className="text-danger">{errors.type_of_property.message}</small> )}
+                                                    </div>
                                                     <div className="d-flex justify-content-between gap-4 mb-3">
                                                         <div className="form-floating w-100">
                                                             <input
@@ -262,23 +441,95 @@ export default function RegisterProperty() {
                                                         </label>
                                                         {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
                                                     </div>
-                                                    
-                                                    <div className="mb-3">
-                                                        <RegisterPropertyCounter
-                                                            text={"Quartos"}
-                                                            handleCompartmentChange={handleCompartmentChange}
-                                                            registerLabel={"bedrooms"}
-                                                        />
-                                                        <RegisterPropertyCounter
-                                                            text={"Quartos de banho"}
-                                                            handleCompartmentChange={handleCompartmentChange}
-                                                            registerLabel={"bathrooms"}
-                                                        />
-                                                        <RegisterPropertyCounter
-                                                            text={"Cozinha"}
-                                                            handleCompartmentChange={handleCompartmentChange}
-                                                            registerLabel={"kitchen"}
-                                                        />
+
+                                                    <div>
+                                                        {
+                                                            compartmentsList.map((compartment, index) => (
+                                                                <RegisterPropertyCounter
+                                                                    key={index}
+                                                                    text={compartment.type}
+                                                                    handleChangeCompartment={(value) =>
+                                                                        handleChangeCompartment(index, 'quantity', Number(value))
+                                                                    }
+                                                                    quantity={compartment.quantity}
+                                                                    handleRemoveCompartment={() => handleRemoveCompartment(index)}
+                                                                />
+                                                            ))
+                                                        }
+                                                    </div>
+
+                                                    <div className="w-100 mb-3">
+                                                        <>
+                                                            <Button
+                                                                variant="primary" 
+                                                                onClick={handleShow}
+                                                                className="w-100 bg-default-color border-0"
+                                                            >
+                                                                Adicionar um compartimento
+                                                            </Button>
+
+                                                            <Modal show={show} onHide={handleClose} centered size="lg">
+                                                                <Modal.Header closeButton className="m-0 p-0 border-0">
+                                                                <Modal.Title>Adicionar um compartimento</Modal.Title>
+                                                                </Modal.Header>
+                                                                <Modal.Body className="p-0 pt-3">
+                                                                    <form 
+                                                                        action=""
+                                                                        id="addCompartmentsForm"
+                                                                    >
+                                                                        <div className="form-floating w-100 mb-3">
+                                                                            <select
+                                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                                id="floatingSelectCompartments"
+                                                                                defaultValue={"0"}
+                                                                                {...registerCompartments("type")}
+                                                                            >
+                                                                                <option value={"0"} hidden disabled>
+                                                                                    Selecione um compartimento
+                                                                                </option>
+                                                                                {
+                                                                                    compartments_types.map(compartment => (
+                                                                                        <option key={compartment.id} value={compartment.name}>{compartment.name}</option>
+                                                                                    ))
+                                                                                }
+                                                                            </select>
+                                                                            <label
+                                                                                className="text-black"
+                                                                                htmlFor="floatingSelectCompartments"
+                                                                            >
+                                                                                Tipo de compartimento
+                                                                            </label>
+                                                                        {errorCompartments.type && ( <small className="text-danger">{errorCompartments.type.message}</small> )}
+                                                                        </div>
+
+                                                                        <div className="form-floating w-100 mb-3">
+                                                                            <input
+                                                                                type="number"
+                                                                                className="form-control text-secondary shadow-none outline-none"
+                                                                                id="floatingInputCompartmentsQuantity"
+                                                                                placeholder="Ex: 3"
+                                                                                min={1}
+                                                                                {...registerCompartments("quantity")}
+                                                                            />
+                                                                            <label className="text-black" htmlFor="floatingInputCompartmentsQuantity">
+                                                                                Quantidade
+                                                                            </label>
+                                                                            {errorCompartments.quantity && ( <small className="text-danger">{errorCompartments.quantity.message}</small> )}
+                                                                        </div>
+                                                                    </form>
+                                                                </Modal.Body>
+                                                                <Modal.Footer className="p-0 m-0 border-0">
+                                                                <button
+                                                                    className="btn btn-primary bg-default-color py-2 border-0 w-100"
+                                                                    onClick={handleSubmitCompartments(compartmentsPayload)}
+                                                                    variant="primary"
+                                                                    // onClick={handleClose}
+                                                                >
+                                                                    Adicionar compartimento
+                                                                </button>
+                                                                </Modal.Footer>
+                                                            </Modal>
+                                                        </>
                                                     </div>
 
                                                     <div className="mb-4">
@@ -291,20 +542,20 @@ export default function RegisterProperty() {
                                                                     fontWeight: "500",
                                                                 }}
                                                             >
-                                                                Mobilado
+                                                                Negociável
                                                             </p>
                                                             <div>
                                                                 <Tab.Container
-                                                                    activeKey={furnished}
-                                                                    onSelect={(k) => setFurnished(k)}
-                                                                    defaultActiveKey="Não"
+                                                                    activeKey={is_negotiable}
+                                                                    onSelect={(k) => setIsNegotiable(k)}
+                                                                    defaultActiveKey={false}
                                                                 >
                                                                     <Nav className={styles.nav}>
                                                                         <Nav.Item>
-                                                                            <Nav.Link eventKey={"Sim"}>Sim</Nav.Link>
+                                                                            <Nav.Link eventKey={true}>Sim</Nav.Link>
                                                                         </Nav.Item>
                                                                         <Nav.Item>
-                                                                            <Nav.Link eventKey={"Não"}>Não</Nav.Link>
+                                                                            <Nav.Link eventKey={false}>Não</Nav.Link>
                                                                         </Nav.Item>
                                                                     </Nav>
                                                                 </Tab.Container>
@@ -323,16 +574,16 @@ export default function RegisterProperty() {
                                                             </p>
                                                             <div>
                                                                 <Tab.Container
-                                                                    activeKey={rentOrSell}
-                                                                    onSelect={(k) => setRentOrSell(k)}
-                                                                    defaultActiveKey="Aluguel"
+                                                                    activeKey={type_purchase}
+                                                                    onSelect={(k) => setTypePurchase(k)}
+                                                                    defaultActiveKey="for_rent"
                                                                 >
                                                                     <Nav className={styles.nav}>
                                                                         <Nav.Item>
-                                                                            <Nav.Link eventKey={"Aluguel"}>Aluguel</Nav.Link>
+                                                                            <Nav.Link eventKey={"for_rent"}>Aluguel</Nav.Link>
                                                                         </Nav.Item>
                                                                         <Nav.Item>
-                                                                            <Nav.Link eventKey={"Venda"}>Venda</Nav.Link>
+                                                                            <Nav.Link eventKey={"for_sale"}>Venda</Nav.Link>
                                                                         </Nav.Item>
                                                                     </Nav>
                                                                 </Tab.Container>
@@ -351,9 +602,11 @@ export default function RegisterProperty() {
                                                                 <option value={"0"} hidden disabled>
                                                                     Selecione o munícipio
                                                                 </option>
-                                                                <option value="Kilamba-Kiaxi">Kilamba-Kiaxi</option>
-                                                                <option value="Talatona">Talatona</option>
-                                                                <option value="Ingombotas">Ingombotas</option>
+                                                                {
+                                                                    municipalities.map(municipality => (
+                                                                        <option key={municipality.id} value={municipality.name}>{municipality.name}</option>
+                                                                    ))
+                                                                }
                                                             </select>
                                                             <label
                                                                 className="text-black"

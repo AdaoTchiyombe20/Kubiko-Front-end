@@ -35,3 +35,33 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
         setIsLoading(false);
     }
 }
+
+
+export async function registerProperty(data, setIsLoading, navigate){
+    setIsLoading(true);
+    try {
+        const response = await fetch(BASE_URL + '/properties', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+        }
+
+        const result = await response.json();
+        toast.success('Imóvel cadastrado com sucesso!');
+        navigate('/')
+        return result
+    } catch (error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    } finally {
+        setIsLoading(false);
+    }
+}
