@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
@@ -13,8 +13,11 @@ import Modal from 'react-bootstrap/Modal';
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
+import { refreshToken, registerProperty } from "../../utils/requests";
+import VariousModal from "../../components/modal/modal";
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
+import { AppContext } from "../../components/context/appcontext";
 
 export default function RegisterProperty() {
 
@@ -122,6 +125,15 @@ export default function RegisterProperty() {
         }
     }
 
+    const {setShowModal, setShowLocalModal} = useContext(AppContext)
+
+    useEffect(() =>{
+        setShowModal(true)
+        setShowLocalModal('registerProperty')
+        refreshToken()
+    }, [])
+
+    const  [isLoading, setIsLoading] = useState(false)
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -212,11 +224,20 @@ export default function RegisterProperty() {
     const [propertyInfo, setPropertyInfo] = useState('informacoes');
     const { getRootProps, getInputProps} = useDropzone({
         accept: {
-            'image/*': []
+            'image/*': [],
+            'video/*': []
         },
         multiple: true,
         maxFiles: 2,
+        maxSize: 5 * 1024 * 1024, // 5MB
         onDrop: (fileDropped) => {
+            const newVideos = fileDropped.filter(f => f.type.startsWith('video/'))
+            const existingVideos = files.filter(f => f.type.startsWith('video/'))
+
+            if (existingVideos.length + newVideos.length > 1) {
+                toast.error('Só é permitido 1 vídeo')
+                return
+            }
             files.some(file => file.name === fileDropped?.[0]?.name) ? 
                 toast.error('Este arquivo já foi adicionado') : 
             files.length > 1 || files.length + fileDropped.length > 2 ? 
@@ -251,10 +272,20 @@ export default function RegisterProperty() {
             <div className="d-flex gap-3 align-items-center h-100">
                 <div>
                     {
-                        file.type.startsWith('image/') && (
+                        file.type.startsWith('image/') ? (
                             <img
                                 src={URL.createObjectURL(file)}
                                 alt={file.name}
+                                style={{
+                                    width: '50px',
+                                    height: '50px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px'
+                                }}
+                            />
+                        ) : (
+                            <video
+                                src={URL.createObjectURL(file)}
                                 style={{
                                     width: '50px',
                                     height: '50px',
@@ -315,6 +346,8 @@ export default function RegisterProperty() {
 
     return (
         <>
+            <VariousModal />
+
             <header className="d-flex align-items-center justify-content-between border-bottom">
                 <Link to={"/"} className="img">
                     <img src={Logo} alt="" />
@@ -707,7 +740,10 @@ export default function RegisterProperty() {
                                     <form 
                                         className="mt-4 d-flex align-items-center gap-2"
                                         id="finishRegisterPropertyForm"
-                                        onSubmit={()=>{
+                                        onSubmit={(e)=>{
+                                            e.preventDefault()
+                                            
+                                            registerProperty(payload, setIsLoading)
                                             console.log("Enviando dados para o backend...")
                                         }}
                                     >
@@ -754,6 +790,7 @@ export default function RegisterProperty() {
                 <button
                     type="submit"
                     form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
+                    disabled={isLoading}
                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
                     onClick={() => {
                         if (propertyInfo === 'fotografias') {
@@ -761,16 +798,31 @@ export default function RegisterProperty() {
                                 toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
                                 return
                             }
+
+                            const images = files.filter(f => f.type.startsWith('image/'))
+                            const videos = files.filter(f => f.type.startsWith('video/'))
+
+                            if (images.length < 1) {
+                                toast.error('Adicione pelo menos 1 imagem do imóvel')
+                                return
+                            }
+
+                            if (videos.length > 1) {
+                                toast.error('Só é permitido 1 vídeo')
+                                return
+                            }
+
                             setPayload(prev => ({
                                 ...prev, 
-                                images: files,
+                                images,
+                                videos,
                                 createdAt: date
                             }))
                             setPropertyInfo('finish')
                         }
                     }}
                 >
-                    Continuar
+                    {isLoading ? 'Enviando...' :  'Continuar'}
                     <ArrowRight02Icon />
                 </button>
                 </div>

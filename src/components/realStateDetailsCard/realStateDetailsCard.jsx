@@ -1,19 +1,24 @@
-import { useNavigate } from "react-router-dom"
-import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon } from "hugeicons-react"
+import { useNavigate, Link } from "react-router-dom"
+import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Tick03Icon, Time04Icon } from "hugeicons-react"
 import DetailsItem from "../detailsItem/detailsItem"
 import BackButton from "../../navigateBackButton/navigateBackButton"
 import ActionButtons from "../realStateDetailsActionButtons/actionButtons"
 import DetailsCarrousel from "../realStateDetailsCarrousel/realStateDetailsCarrousel"
 import AdditionalInformation from "../detailsAdditionalInformations/detailsAdditionInformations"
 import styles from './realStateDetailsCard.module.css'
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { AppContext } from "../context/appcontext"
+import { Modal } from "react-bootstrap"
+import { TfiLock } from "react-icons/tfi";
 
 export default function RealStateDetailsCard({whatIsThis, realStateInformations}){
     const navigate = useNavigate()
+    const {setShowLocalModal, handleShowModal} = useContext(AppContext)
     console.log(realStateInformations)
 
-    const {setShowLocalModal, handleShowModal} = useContext(AppContext)
+    const [show, setShow] = useState(false);
+    const handleShow = () => setShow(!show)
+    const [whatModal, setWhatModal] = useState('sendProposal')
     return(
         <div className="row">
             <div className="col-5">
@@ -67,12 +72,231 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                         {
                             whatIsThis === 'realStateDetails' && (
                                 <div className="d-flex align-items-center gap-3 mt-3">
-                                    <ActionButtons  icon={<Calendar04Icon />} text={'Agendar visita'} backgroundColor={'#3541A9'} border={'none'} onClick={() => {
+                                    <ActionButtons 
+                                        icon={<Calendar04Icon />} 
+                                        text={'Agendar visita'} 
+                                        backgroundColor={'#3541A9'} 
+                                        border={'none'} 
+                                        onClick={() => {
                                             setShowLocalModal('scheduleVisit')
                                             handleShowModal()
                                         }}
                                     />
-                                    <ActionButtons icon={<Call02Icon />} text={'Falar com o anunciante'} color={'#3541A9'} backgroundColor={'#FFFF'} border={'1px solid #3541A9'} />
+                                    <ActionButtons 
+                                        icon={<Call02Icon />}
+                                        text={'Negociar Preço'} 
+                                        onClick={handleShow}
+                                        color={'#3541A9'} 
+                                        backgroundColor={'#FFFF'} 
+                                        border={'1px solid #3541A9'} 
+                                    />
+                                    <Modal
+                                        show={show} 
+                                        onHide={handleShow} 
+                                        centered 
+                                        size={whatModal === 'sendProposal' ? "xl" : 'lg'}
+                                    >
+                                        <Modal.Body
+                                            className="px-0 py-2"
+                                        >
+                                        {   
+                                            whatModal === 'sendProposal' ?
+                                                (
+                                                    <div className="row">
+                                                        <div className="col-6 pe-4">
+                                                            <div className="mb-5">
+                                                                <DetailsCarrousel images = {realStateInformations?.images} whatIsThis={whatIsThis} />
+                                                            </div>
+                                                            <h2 className="m-0">{realStateInformations?.title || 'Título não disponível'}</h2>
+                                                            <p className="text-secondary m-0">{'Talatona, Luanda'}</p>
+                                                            <div className="mt-4">
+                                                                <div className="border-bottom border-2 pb-2">
+                                                                    <p className="text-secondary m-0">Preço anunciado</p>
+                                                                    <p className="text-default-color fw-semibold fs-3 m-0">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || '85.000,00kz'}</p>
+                                                                </div>
+                                                                <div className={`${styles.detailsItem} d-flex flex-column gap-3`}>
+                                                                    <DetailsItem
+                                                                        icon={<BedIcon color="#808080" />}
+                                                                        title={"Quartos"}
+                                                                        qtd={realStateInformations?.bedrooms}
+                                                                        whatIsThis={'negotiationModal'}
+                                                                    />
+                                                                    <DetailsItem
+                                                                        icon={<Bathtub01Icon color="#808080" />}
+                                                                        title={"Banheiro:"}
+                                                                        qtd={realStateInformations?.bathrooms}
+                                                                        whatIsThis={'negotiationModal'}
+                                                                    />
+                                                                    <DetailsItem
+                                                                        icon={<KitchenUtensilsIcon color="#808080" />}
+                                                                        title={"Cozinha:"}
+                                                                        qtd={realStateInformations?.kitchen}
+                                                                        whatIsThis={'negotiationModal'}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-6 border-start border-2 ps-4">
+                                                            <h2 className="fw-semibold">Enviar Proposta ao Proprietário</h2>
+                                                            <p className="text-secondary fw-sem">Envie o valor que pretende oferecer pelo imóvel. <br />O proprietário irá analisar e responder directamente pela plataforma</p>
+                                                            <form 
+                                                                action=""
+                                                            >
+                                                                <div className='d-flex flex-column gap-2 w-100 mb-3'>
+                                                                    <label htmlFor="" className='ps-1 fw-semibold'>Valor da Proposta</label>
+                                                                    <input type="number" className="form-control shadow-none outline-none" placeholder="20.000,00kz" />
+                                                                </div>
+                                                                <div className='d-flex flex-column gap-2 w-100 mb-4'>
+                                                                    <label htmlFor="" className='ps-1 fw-semibold'>Mensagem Opcional</label>
+                                                                    <textarea 
+                                                                        name="" 
+                                                                        id="" 
+                                                                        cols="10" 
+                                                                        rows="4"
+                                                                        className="form-control outline-none shadow-none"
+                                                                        style={{
+                                                                            resize: 'none'
+                                                                        }}
+                                                                    >
+                                                                    </textarea>
+                                                                </div>
+                                                                <div className="d-flex justify-content-between gap-2">
+                                                                    <div className="form-floating w-100">
+                                                                        <select
+                                                                            className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                            id="floatingSelectPayment"
+                                                                            defaultValue={"0"}
+                                                                        >
+                                                                            <option value={"0"} hidden disabled>
+                                                                                Selecione a forma de pagamento
+                                                                            </option>
+                                                                            <option value={'Pagamento à vista'}>Pagamento à vista</option>
+                                                                            <option value={'Pagamento à vista'}>Transferência Bancária</option>
+
+                                                                        </select>
+                                                                        <label
+                                                                            className="text-black"
+                                                                            htmlFor="floatingSelectPayment"
+                                                                        >
+                                                                            Forma de Pagamento
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="form-floating w-100">
+                                                                        <select
+                                                                            className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                            id="floatingSelectMunicipality"
+                                                                            defaultValue={"0"}
+                                                                        >
+                                                                            <option value={"0"} hidden disabled>
+                                                                                Selecione o prazo
+                                                                            </option>
+                                                                            <option value={'Imediato'}>Imediato</option>
+                                                                            <option value={'6 meses'}>6 Meses</option>
+                                                                        </select>
+                                                                        <label
+                                                                            className="text-black"
+                                                                            htmlFor="floatingSelectMunicipality"
+                                                                        >
+                                                                            Prazo Pretendido
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="d-flex align-items-center gap-3 mt-4">
+                                                                    <button 
+                                                                        className="btn btn-outline-dark"
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault()
+                                                                            handleShow()
+                                                                        }}
+                                                                        style={{
+                                                                            width: '40%'
+                                                                        }}
+                                                                    >
+                                                                        Cancelar
+                                                                    </button>
+                                                                    <button 
+                                                                        className="btn btn-primary bg-default-color border-0"
+                                                                        onClick={() => {
+                                                                            setWhatModal('sucessProposal')
+                                                                        }} 
+                                                                        style={{
+                                                                            width: '60%'
+                                                                        }}
+                                                                    >
+                                                                        Enviar Proposta
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                            <div className="d-flex mt-3 gap-2">
+                                                                <TfiLock className="fw-semibold mt-1"/>
+                                                                <p
+                                                                    className="text-secondary m-0"
+                                                                    style={{
+                                                                        fontSize: '13px'
+                                                                    }}
+                                                                >
+                                                                    O proprietário poderá aceitar ou recusar a sua proposta. <br />
+                                                                    Todas as negociações são feitas de forma segura dentro da plataforma.
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            :
+                                                (
+                                                    <div>
+                                                        <div className="d-flex justify-content-center w-100 mb-3">
+                                                            <div
+                                                                className="d-flex justify-content-center align-items-center bg-success rounded-circle"
+                                                                style={{
+                                                                    height: '70px',
+                                                                    width: '70px'
+                                                                }}
+                                                            >
+                                                                <Tick03Icon color="white" size={'35'}/>
+                                                            </div>
+                                                        </div>
+                                                        <h2 className="text-center fw-semibold">Proposta enviada com Sucesso</h2>
+                                                        <p className="text-secondary m-0 text-center">O proprietário foi notificado e irá responder <br />o mais breve possível</p>
+                                                        <div className="border rounded-2 p-3 mt-3">
+                                                            <p className="fw-semibold fs-6">Resumo da sua Proposta</p>
+                                                            <div className="d-flex flex-column gap-2">
+                                                                <div className="d-flex align-items-center justify-content-between">
+                                                                    <p className="text-secondary m-0">Imóvel</p>
+                                                                    <p className="m-0">{realStateInformations?.title || 'Titulo não disponível'}</p>
+                                                                </div>
+                                                                <div className="d-flex align-items-center justify-content-between">
+                                                                    <p className="text-secondary m-0">Valor da Proposta</p>
+                                                                    <p className="m-0">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || 'Preço não disponível'}</p>
+                                                                </div>
+                                                                <div className="d-flex align-items-center justify-content-between">
+                                                                    <p className="text-secondary m-0">Data de envio</p>
+                                                                    <p className="m-0">{new Date().toLocaleString('pt-PT')}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="d-flex flex-column gap-2 mt-4">
+                                                                <Link
+                                                                    className="d-flex align-items-center justify-content-center rounded-2 text-decoration-none text-light fw-semibold bg-default-color py-2"
+                                                                >
+                                                                    Ver minhas propostas
+                                                                </Link>
+                                                                <Link
+                                                                    className="d-flex align-items-center justify-content-center rounded-2 text-decoration-none text-dark fw-semibold border-dark border-2 border py-2"
+                                                                    onClick={() => {
+                                                                        handleShow()
+                                                                        setWhatModal('sendProposal')
+                                                                        // colocar aqui o reset do RHF pra limpar os form do envio de proposta ...
+                                                                    }}
+                                                                >
+                                                                    Voltar ao imóvel
+                                                                </Link>
+                                                        </div>
+                                                    </div>
+                                                )
+                                        }
+                                        </Modal.Body>
+                                    </Modal>
                                 </div>
                             )
                         }

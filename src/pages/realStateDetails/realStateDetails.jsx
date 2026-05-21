@@ -44,7 +44,10 @@ export default function RealStateDetails(){
         <>
             <Header />
             <div className={`${styles.realStateDetails}`}>
-                <RealStateDetailsCard whatIsThis="realStateDetails" realStateInformations={realStateInformations} />
+                <RealStateDetailsCard 
+                    whatIsThis="realStateDetails"
+                    realStateInformations={realStateInformations}
+                />
                 <h2 className="my-4">Similares na mesma região</h2>
                 <div className={`${styles.realStateDetailsContainerCards} container-fluid mb-4`}>
                     <div className={`${styles.realStateContainerCards}`}>

@@ -14,6 +14,7 @@ export default function AppProvider({children}){
     return(
         <AppContext.Provider value={{
             showModal,
+            setShowModal,
             handleShowModal,
             showLocalModal,
             setShowLocalModal,

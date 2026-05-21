@@ -13,16 +13,79 @@ import InputOtpAuth from '../inputOpt/inputOpt';
 import TimeChoose from '../timeChoose/timeChoose';
 import ScheduleCalendar from '../calendar/calendar';
 import PhoneInputAuth from '../phoneInput/phoneInput';
+import { InputMask } from "primereact/inputmask";
 import BackButton from '../../navigateBackButton/navigateBackButton';
 import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
 import styles from './modal.module.css'
-import { signUser } from '../../utils/requests';
+import { signUser, assumeOwner } from '../../utils/requests';
 
 export default function VariousModal(props) {
 
     const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
+    const [isFetchingBI, setIsFetchingBI] = useState(false)
+
+    const assumeIndividualForm = z.object({
+        ownerName: z.string().trim().min(9, 'O nome deve conter no mínimo 9 caracteres'),
+        bi: z.string().trim().min(14, 'O BI deve conter no mínimo 14 caracteres').max(14, 'O BI deve conter no máximo 14 caracteres'),
+        phone: z.string().trim().min(12, 'O número de telefone deve conter no mínimo 9 caracteres').max(12, 'O número de telefone deve conter no máximo 9 caracteres'),
+        bankAccount: z.string().trim().min(31, 'O IBAN deve conter no mínimo 25 caracteres').max(31, 'O IBAN deve conter no máximo 25 caracteres'),
+        dateofbirth: z.string().min(10, "Data inválida")
+    })
+
+    const {
+        register: registerAssumeIndividual,
+        formState : {errors: errorsAssumeIndividual}, 
+        handleSubmit: handleSubmitAssumeIndividualForm,
+        setValue,
+        watch
+    } = useForm({
+        resolver: zodResolver(assumeIndividualForm),
+        mode: 'onChange',
+        defaultValues: {
+            phone: '',
+            ownerName: ''
+        }
+     })
+
+    const onSubmitAssumeIndividualForm = async (data) => {
+        const payload = {
+            ...data,
+            phone: data.phone?.replace(/^244/, '') // remove só no início
+        }
+        console.log(payload)
+        assumeOwner(payload, setIsLoading, '/profile/individual-owner')
+        // setIsLoading(true)
+        // const success = await signUser(data, setIsLoading, null, '/auth/register/individual')
+    }
+    const handleBIChange = async (e) => {
+        const bi = e.target.value
+
+        if (bi.length === 14) {
+            try {
+                setIsFetchingBI(true)
+                const response = await fetch(`http://consulta.edgarsingui.ao/consultar/${bi}`)
+                const result = await response.json()
+                console.log(result)
+                setValue('ownerName', result.name || '', {
+                    shouldValidate: true,
+                    shouldDirty: true
+                })
+                const date = new Date(result.data_de_nascimento).toLocaleDateString('pt-PT').replaceAll("/", "-") 
+                setValue('dateofbirth', date || '', {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                })
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetchingBI(false)
+            }
+        }
+    }
+    const phoneValue = watch('phone')
+
     const loginForm = z.object({
         email: z.string().trim().email('Email inválido'),
         password: z.string().trim().min(6, 'A senha deve conter no mínimo 6 caracteres')
@@ -37,7 +100,7 @@ export default function VariousModal(props) {
             location.reload()
         }
     }
-    
+
     return (
         <>
         <Modal
@@ -61,6 +124,7 @@ export default function VariousModal(props) {
                 {showLocalModal == 'login' && 'Entre ou crie sua conta'}
                 {showLocalModal == 'phone' && 'Informe seu número'}
                 {showLocalModal == 'code' && 'Código de Verificação'}
+                {showLocalModal == 'registerProperty' && 'Cadastro de imóvel'}
                 {showLocalModal == 'setProfile' && 'Iniciar Sessão'}
                 {showLocalModal == 'scheduleVisit' && 'Quando deseja visitar?'}
                 {showLocalModal == 'scheduleRequested' && 'Detalhes da Visita'}
@@ -74,6 +138,9 @@ export default function VariousModal(props) {
             }
             {
                 showLocalModal == 'code' && <small className='text-secondary mb-4'>Insira o código de 6 dígitos que enviamos para o número <span className='fw-semibold text-black'>+244925332928</span>.</small>
+            }
+            {
+                showLocalModal == 'registerProperty' && <small className='text-secondary mb-4'>Para cadastrar seu imóvel, preencha os campos abaixo.</small>
             }
             {
                 showLocalModal == 'setProfile' && <small className='text-secondary mb-4'>Bem-vindo ao Kubibo, configure a sua conta para buscares ou anunciares imóveis.</small>
@@ -149,6 +216,80 @@ export default function VariousModal(props) {
                                 <a href="#" className='text-black'>Não recebi um código</a>
                             </div>
                         </div>
+                    )
+                }
+                {
+                    showLocalModal == 'registerProperty' && 
+                    (
+                        <form 
+                            className={`${styles.setProfileForm} d-flex flex-column align-items-center gap-2`}
+                            id='assumeIndividualForm'
+                            onSubmit={handleSubmitAssumeIndividualForm(onSubmitAssumeIndividualForm)}
+                        >
+                            <div className='d-flex flex-column gap-2 w-100 mb-2'>
+                                <label htmlFor="" className='ps-1'>Bilhete de Identidade*</label>
+                                <input
+                                    type="text" 
+                                    {...registerAssumeIndividual('bi')} 
+                                    placeholder='Insira o seu BI' 
+                                    onChange={(e) => {
+                                        registerAssumeIndividual('bi').onChange(e)
+                                        handleBIChange(e)
+                                    }}
+                                />
+                                {errorsAssumeIndividual.bi && <p className='text-danger'>{errorsAssumeIndividual.bi.message}</p>}
+                            </div>
+                            <div className='d-flex flex-column gap-2 w-100 mb-2'>
+                                <label htmlFor="" className='ps-1 text-secondary'>Nome</label>
+                                <input type="text" {...registerAssumeIndividual('ownerName')} placeholder='Nome completo' disabled />
+                                {/* {errorsAssumeIndividual.ownerName && <p className='text-danger'>{errorsAssumeIndividual.ownerName.message}</p>} */}
+                            </div>
+                            <div className='d-flex flex-column gap-2 w-100 mb-2'>
+                                <label htmlFor="" className='ps-1'>Número de telefone</label>
+                                <PhoneInputAuth
+                                    value={phoneValue}
+                                    onChange={(value) => 
+                                        setValue(
+                                            'phone', 
+                                            value, 
+                                            {
+                                                shouldValidate: true,
+                                                shouldDirty: true
+                                            }
+                                        )
+                                    }
+                                />
+                                {errorsAssumeIndividual.phone && <p className='text-danger'>{errorsAssumeIndividual.phone.message}</p>}
+                            </div>
+                            <div className='d-flex flex-column gap-2 w-100 mb-2'>
+                                <label htmlFor="" className='ps-1'>Data de Nascimento</label>
+                                <InputMask 
+                                    mask="99-99-9999" 
+                                    placeholder="MM-DD-AAAA" 
+                                    value={watch('dateofbirth') || ''}
+                                    onChange={(e) =>
+                                        setValue('dateofbirth', e.target.value, {
+                                            shouldValidate: true,
+                                            shouldDirty: true,
+                                        })
+                                    }
+                                    disabled
+                                />
+                                {errorsAssumeIndividual.dateofbirth && <p className='text-danger'>{errorsAssumeIndividual.dateofbirth.message}</p>}
+                            </div>
+                            <div className='d-flex flex-column gap-2 w-100 mb-3'>
+                                <label htmlFor="" className='ps-1 d-flex'>IBAN <span className='align-self-start'>*</span></label>
+                                <input type="text" {...registerAssumeIndividual('bankAccount')} placeholder='AO06 0000 0000 0000 0000 0000 0' />
+                                {errorsAssumeIndividual.bankAccount && <p className='text-danger'>{errorsAssumeIndividual.bankAccount.message}</p>}
+                            </div>
+                            <button 
+                                type='submit'
+                                disabled={isLoading}
+                                className={`${styles.sendPhoneCodeButton} btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-2 border-0 rounded-3`}
+                            >
+                                {isLoading ? 'Carregando...' : 'Continuar'}
+                            </button>
+                        </form>
                     )
                 }
                 {
