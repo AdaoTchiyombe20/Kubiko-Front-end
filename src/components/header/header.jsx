@@ -57,7 +57,14 @@ export default function Header(){
                             </div>
                         </a>
                         <ul className={`${isLogged ? '' : 'd-none'} dropdown-menu border-0 shadow-lg mt-3`}>
-                            <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><UserCircle02Icon /> Minha conta</a></li>
+                            <li>
+                                <Link 
+                                    to={"/my-profile"}
+                                    className="dropdown-item d-flex align-items-center gap-2 mb-2"
+                                >
+                                    <UserCircle02Icon /> Minha conta
+                                </Link>
+                            </li>
                             <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><Calendar02Icon /> Visitas agendadas</a></li>
                             <li><a className="dropdown-item d-flex align-items-center gap-2 mb-2" href="#"><File02Icon /> Histórico</a></li>
                             <li>

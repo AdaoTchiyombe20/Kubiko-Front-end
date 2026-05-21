@@ -11,6 +11,7 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(data)
         });
 
@@ -23,7 +24,7 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
         const result = await response.json();
         setDataIntoStorage('user', {
             email: result.user.email,
-            token: result.accessToken
+            accessToken: result.accessToken
         })
         if(navigate)
             navigate('/')
@@ -40,7 +41,7 @@ export async function refreshToken(){
     try {
         const response = await fetch(BASE_URL + '/auth/refresh', {
             method: 'GET',
-            'credentials' : 'include'
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -66,7 +67,7 @@ export async function assumeOwner(data, setIsLoading, endpoint){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.token}`
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
             },
             body: JSON.stringify(data)
         });
@@ -114,7 +115,7 @@ export async function registerProperty(payload, setIsLoading){
         const response = await fetch(BASE_URL + '/properties', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.token}`
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
             },
             body: formData
         });

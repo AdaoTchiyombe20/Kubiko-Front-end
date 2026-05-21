@@ -20,6 +20,12 @@ import AdminHome from './pages/adminHome/adminHome.jsx';
 import UsersManagement from './pages/usersManagement/usersManagement.jsx';
 import RealStateManagement from './pages/realStateManagement/realStateManagement.jsx';
 import PaymentsManagement from './pages/paymentsManagement/paymentsManagement.jsx';
+import MyProfile from './pages/my-profile/myProfile.jsx';
+import MyProposals from './pages/my-proposals/MyProposals.jsx';
+import ReceivedProposals from './pages/received-proposals/receivedProposals.jsx';
+import PurchaseHistory from './pages/purchase-history/purchaseHistory.jsx';
+import ProposalDetails from './pages/proposal-details/proposalDetails.jsx';
+import MyProfileHome from './pages/my-profile-home/myProfileHome.jsx';
 
 const router = createBrowserRouter([
   {
@@ -49,6 +55,32 @@ const router = createBrowserRouter([
     path: '/sign',
   },
   {
+    element: <MyProfile />,
+    path: '/my-profile',
+    children: [
+      {
+        index: true,
+        element: <MyProfileHome />,
+      },
+      {
+        path: 'my-proposals',
+        element: <MyProposals />,
+      },
+      {
+        path: 'received-proposals',
+        element: <ReceivedProposals />,
+      },
+      {
+        path: 'received-proposals/details-proposal/:id',
+        element: <ProposalDetails />,
+      },
+      {
+        path: 'purchase-history',
+        element: <PurchaseHistory />,
+      },
+    ],
+  },
+  {
     element: <Admin />,
     path: '/admin',
     children: [
@@ -57,15 +89,15 @@ const router = createBrowserRouter([
         element: <AdminHome />,
       },
       {
-        path: '/admin/users-management',
+        path: 'users-management',
         element: <UsersManagement />,
       },
       {
-        path: '/admin/realstate-management',
+        path: 'realstate-management',
         element: <RealStateManagement />,
       },
       {
-        path: '/admin/payments-management',
+        path: 'payments-management',
         element: <PaymentsManagement />,
       },
     ]
