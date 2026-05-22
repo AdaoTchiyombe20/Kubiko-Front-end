@@ -8,7 +8,7 @@ export default function MyProposals(){
                 marginTop: '95px'
             }}
         >
-            <h1 className="fw-semibold m-0">Minhas Propostas</h1>
+            <h1 className="fw-semibold m-0 text-default-color">Minhas Propostas</h1>
             <p className="text-secondary m-0">Acompanhe o estado das propostas que você enviou</p>
 
             <div className="mt-4">
@@ -33,13 +33,13 @@ export default function MyProposals(){
                     >
                         <div className="d-flex flex-column gap-3">
                             <div>
-                                <h3 className="m-0 fw-semibold mb-2">Apartamento T3 Moderno</h3>
+                                <h3 className="m-0 fw-semibold mb-2 text-default-color">Apartamento T3 Moderno</h3>
                                 <p className="text-secondary m-0 d-flex align-items-center gap-2"><span><Location09Icon /></span> Tatatona, Luanda</p>
                             </div>
                             <p className="text-secondary m-0 d-flex align-items-center gap-2"><span><Calendar04Icon /></span> Enviada em: {new Date().toLocaleString('pt-PT')}</p>
                         </div>
                         <div>
-                            <p className="m-0 fs-5 fw-semibold">78.000,00kz</p>
+                            <p className="m-0 fs-5 fw-semibold text-default-color">78.000,00kz</p>
                             <p className="text-secondary m-0 d-flex align-items-center gap-2">Valor da Proposta</p>
                         </div>
                         <div className="d-flex flex-column gap-4 w-25">
@@ -52,7 +52,7 @@ export default function MyProposals(){
                                 Pendente
                             </p>
                             <button
-                                className="btn btn-outline-dark fw-semibold border py-2 shadow-sm"
+                                className="btn btn-outline-dark text-default-color fw-semibold border py-2 shadow-sm"
                             >
                                 Ver Detalhes
                             </button>

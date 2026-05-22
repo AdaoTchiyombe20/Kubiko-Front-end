@@ -21,11 +21,13 @@ import UsersManagement from './pages/usersManagement/usersManagement.jsx';
 import RealStateManagement from './pages/realStateManagement/realStateManagement.jsx';
 import PaymentsManagement from './pages/paymentsManagement/paymentsManagement.jsx';
 import MyProfile from './pages/my-profile/myProfile.jsx';
-import MyProposals from './pages/my-proposals/MyProposals.jsx';
+import MyProposals from './pages/my-proposals/myProposals.jsx';
 import ReceivedProposals from './pages/received-proposals/receivedProposals.jsx';
 import PurchaseHistory from './pages/purchase-history/purchaseHistory.jsx';
 import ProposalDetails from './pages/proposal-details/proposalDetails.jsx';
 import MyProfileHome from './pages/my-profile-home/myProfileHome.jsx';
+import MakePayment from './pages/make-payment/makePayment.jsx';
+import MyPayments from './pages/my-payments/myPayments.jsx';
 
 const router = createBrowserRouter([
   {
@@ -47,7 +49,11 @@ const router = createBrowserRouter([
       {
         element: <RegisterProperty />,
         path: 'cadastrar-imovel'
-      } 
+      },
+      {
+        element: <MakePayment />,
+        path: 'payment',
+      },
     ],
   },
   {
@@ -65,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: 'my-proposals',
         element: <MyProposals />,
+      },
+      {
+        path: 'my-payments',
+        element: <MyPayments />,
       },
       {
         path: 'received-proposals',

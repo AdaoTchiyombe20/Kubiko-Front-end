@@ -12,7 +12,7 @@ export default function Cards({
 }) {
   const navigate = useNavigate()
   const [realStateInformation, setRealStateInformation] = useState([])
-  console.log(index)
+  
   useEffect(()=>{
         async function realStateDetailShowInformation(){
             const endpoint = `http://localhost:3001/properties/${index}`

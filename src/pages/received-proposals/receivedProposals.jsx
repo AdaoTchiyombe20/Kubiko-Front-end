@@ -12,7 +12,7 @@ export default function ReceivedProposals(){
                 marginTop: '95px'
             }}
         >
-            <h1 className="fw-semibold m-0">Propostas Recebidas</h1>
+            <h1 className="fw-semibold m-0 text-default-color">Propostas Recebidas</h1>
             <p className="text-secondary m-0">Veja e responda às propostas enviadas para os seus imóveis</p>
 
             <div className="mt-4">
@@ -28,7 +28,7 @@ export default function ReceivedProposals(){
                             A
                         </div>
                         <div>
-                            <p className="fw-semibold fs-5 m-0">António Da Silva</p>
+                            <p className="fw-semibold fs-5 m-0 text-default-color">António Da Silva</p>
                             <div className="d-flex gap-1 mb-3">
                                 {
                                     [...Array(5)].map(() => (
@@ -44,14 +44,14 @@ export default function ReceivedProposals(){
                     <div className="d-flex flex-column gap-3 border-end border-1 pe-5">
                         <div>
                             <p className="text-secondary m-0 mb-2">Imóvel</p>
-                            <p className="m-0 fw-semibold fs-5 mb-2">Apartamento T3 Moderno</p>
+                            <p className="m-0 fw-semibold fs-5 mb-2 text-default-color">Apartamento T3 Moderno</p>
                             <p className="text-secondary m-0 d-flex align-items-center gap-2"><span><Location09Icon /></span> Tatatona, Luanda</p>
                         </div>
                         <p className="text-secondary m-0 d-flex align-items-center gap-2"><span><Calendar04Icon /></span> Enviada em: {new Date().toLocaleString('pt-PT')}</p>
                     </div>
                     <div className="border-end border-1 pe-5">
                         <p className="text-secondary m-0 mb-2 d-flex align-items-center gap-2">Valor da Proposta</p>
-                        <p className="m-0 fs-4 fw-semibold">78.000,00kz</p>
+                        <p className="m-0 fs-4 fw-semibold text-default-color">78.000,00kz</p>
                         <p className="text-secondary m-0 gap-2 mt-3"> 
                             Enviada em: <br /> {new Date().toLocaleString('pt-PT')}
                         </p>
@@ -69,7 +69,7 @@ export default function ReceivedProposals(){
                         </p>
                         <Link
                             to={'details-proposal/1'}
-                            className="btn btn-outline-dark fw-semibold border py-2 shadow-sm"
+                            className="btn btn-outline-dark fw-semibold text-default-color border py-2 shadow-sm"
                         >
                             Ver Detalhes
                         </Link>

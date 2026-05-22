@@ -103,7 +103,7 @@ export default function ProposalDetails(){
                 </div>
             </div>
             <div className="d-flex align-items-center gap-4 mt-4">
-                <button className="btn btn-success w-50 py-3">
+                <button className="btn btn-primary bg-default-color border-0 w-50 py-3">
                     Aceitar
                 </button>
                 <button className="btn btn-danger w-50 py-3">

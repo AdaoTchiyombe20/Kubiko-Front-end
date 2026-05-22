@@ -12,6 +12,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import styles from './header.module.css'
 import { getDataFromStorage } from "../../utils/storage";
+import { logout } from "../../utils/requests";
 
 export default function Header(){
     const { setShowLocalModal, handleShowModal, isLogged } = useContext(AppContext)
@@ -72,8 +73,8 @@ export default function Header(){
                                     className="dropdown-item d-flex align-items-center gap-2 border-top py-3 pb-2" 
                                     href="#"
                                     onClick={() => {
+                                        logout()
                                         localStorage.removeItem('user')
-                                        window.location.reload()
                                     }}
                                 >
                                     <LogoutCircle01Icon />

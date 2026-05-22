@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router-dom"
-import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Tick03Icon, Time04Icon } from "hugeicons-react"
+import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Payment02Icon, Tick03Icon, Time04Icon } from "hugeicons-react"
 import DetailsItem from "../detailsItem/detailsItem"
 import BackButton from "../../navigateBackButton/navigateBackButton"
 import ActionButtons from "../realStateDetailsActionButtons/actionButtons"
@@ -82,6 +82,13 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                             handleShowModal()
                                         }}
                                     />
+                                    <Link
+                                        to={'/payment'}
+                                        className="text-decoration-none btn btn-primary border-0 bg-default-color py-2 gap-2 d-flex justify-content-center align-items-center"
+                                    >
+                                        <Payment02Icon />
+                                        Efectuar pagamento 
+                                    </Link>
                                     <ActionButtons 
                                         icon={<Call02Icon />}
                                         text={'Negociar Preço'} 
@@ -90,9 +97,12 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                         backgroundColor={'#FFFF'} 
                                         border={'1px solid #3541A9'} 
                                     />
+                                    
                                     <Modal
                                         show={show} 
-                                        onHide={handleShow} 
+                                        onHide={() => {
+                                            handleShow()
+                                        }} 
                                         centered 
                                         size={whatModal === 'sendProposal' ? "xl" : 'lg'}
                                     >
@@ -277,6 +287,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                                         </div>
                                                         <div className="d-flex flex-column gap-2 mt-4">
                                                                 <Link
+                                                                    to={'/my-profile/my-proposals'}
                                                                     className="d-flex align-items-center justify-content-center rounded-2 text-decoration-none text-light fw-semibold bg-default-color py-2"
                                                                 >
                                                                     Ver minhas propostas

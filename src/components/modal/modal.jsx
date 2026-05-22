@@ -17,7 +17,8 @@ import { InputMask } from "primereact/inputmask";
 import BackButton from '../../navigateBackButton/navigateBackButton';
 import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
 import styles from './modal.module.css'
-import { signUser, assumeOwner } from '../../utils/requests';
+import { signUser, verifyIndividualOwner } from '../../utils/requests';
+import { toast } from 'react-toastify';
 
 export default function VariousModal(props) {
 
@@ -31,7 +32,7 @@ export default function VariousModal(props) {
         bi: z.string().trim().min(14, 'O BI deve conter no mínimo 14 caracteres').max(14, 'O BI deve conter no máximo 14 caracteres'),
         phone: z.string().trim().min(12, 'O número de telefone deve conter no mínimo 9 caracteres').max(12, 'O número de telefone deve conter no máximo 9 caracteres'),
         bankAccount: z.string().trim().min(31, 'O IBAN deve conter no mínimo 25 caracteres').max(31, 'O IBAN deve conter no máximo 25 caracteres'),
-        dateofbirth: z.string().min(10, "Data inválida")
+        dateOfBirth: z.string().min(10, "Data inválida")
     })
 
     const {
@@ -47,15 +48,20 @@ export default function VariousModal(props) {
             phone: '',
             ownerName: ''
         }
-     })
+    })
 
+    
     const onSubmitAssumeIndividualForm = async (data) => {
         const payload = {
             ...data,
             phone: data.phone?.replace(/^244/, '') // remove só no início
         }
         console.log(payload)
-        assumeOwner(payload, setIsLoading, '/profile/individual-owner')
+        const success = await verifyIndividualOwner(payload, setIsLoading, '/profile/individual-owner')
+        console.log("Sucesso: ", success)
+        if(success !== null)
+            handleShowModal()
+            
         // setIsLoading(true)
         // const success = await signUser(data, setIsLoading, null, '/auth/register/individual')
     }
@@ -73,7 +79,7 @@ export default function VariousModal(props) {
                     shouldDirty: true
                 })
                 const date = new Date(result.data_de_nascimento).toLocaleDateString('pt-PT').replaceAll("/", "-") 
-                setValue('dateofbirth', date || '', {
+                setValue('dateOfBirth', date || '', {
                     shouldValidate: true,
                     shouldDirty: true,
                 })
@@ -266,16 +272,16 @@ export default function VariousModal(props) {
                                 <InputMask 
                                     mask="99-99-9999" 
                                     placeholder="MM-DD-AAAA" 
-                                    value={watch('dateofbirth') || ''}
+                                    value={watch('dateOfBirth') || ''}
                                     onChange={(e) =>
-                                        setValue('dateofbirth', e.target.value, {
+                                        setValue('dateOfBirth', e.target.value, {
                                             shouldValidate: true,
                                             shouldDirty: true,
                                         })
                                     }
                                     disabled
                                 />
-                                {errorsAssumeIndividual.dateofbirth && <p className='text-danger'>{errorsAssumeIndividual.dateofbirth.message}</p>}
+                                {errorsAssumeIndividual.dateOfBirth && <p className='text-danger'>{errorsAssumeIndividual.dateOfBirth.message}</p>}
                             </div>
                             <div className='d-flex flex-column gap-2 w-100 mb-3'>
                                 <label htmlFor="" className='ps-1 d-flex'>IBAN <span className='align-self-start'>*</span></label>

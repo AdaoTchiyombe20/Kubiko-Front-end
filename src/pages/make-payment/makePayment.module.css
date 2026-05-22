@@ -1,0 +1,7 @@
+.dropzone:hover{
+    cursor: pointer;
+}
+.dropzone:focus, .dropzone:active{
+    border: none;
+    outline: none;
+}

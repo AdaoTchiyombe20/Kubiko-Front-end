@@ -13,11 +13,12 @@ import Modal from 'react-bootstrap/Modal';
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
-import { refreshToken, registerProperty } from "../../utils/requests";
+import { assumeOwner, refreshToken, registerProperty } from "../../utils/requests";
 import VariousModal from "../../components/modal/modal";
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
 import { AppContext } from "../../components/context/appcontext";
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function RegisterProperty() {
 
@@ -125,13 +126,26 @@ export default function RegisterProperty() {
         }
     }
 
+    const [isLoadingPage, setIsLoadingPage] = useState(true)
     const {setShowModal, setShowLocalModal} = useContext(AppContext)
 
     useEffect(() =>{
-        setShowModal(true)
-        setShowLocalModal('registerProperty')
-        refreshToken()
+        async function load() {
+            const response = await assumeOwner();
+            console.log(response);
+
+            if (response === null) {
+                setShowModal(true)
+                setShowLocalModal('registerProperty')
+            }
+            setIsLoadingPage(false)
+            refreshToken()
+        }
+
+        load();
     }, [])
+    
+    
 
     const  [isLoading, setIsLoading] = useState(false)
     const [show, setShow] = useState(false);
@@ -209,7 +223,7 @@ export default function RegisterProperty() {
         data["is_negotiable"] = Boolean(is_negotiable)
         data["address_info"] = `Angola, Luanda, ${data.municipality}`
         data["compartments"] = compartmentsList
-        data["total_area"] = '0'
+        // data["total_area"] = '0'
         data["latitude"] = '0'
         data["longitude"] = '0'
         console.log(compartmentsList)
@@ -364,469 +378,491 @@ export default function RegisterProperty() {
                     }
                 </div>
             </header>
-            <div className="container-fluid p-0">
-                {
-                    propertyInfo !== 'finish' ? (
-                        <div
-                            className="row w-100 m-0"
-                            style={{
-                                height: "calc(100vh - 160px)",
-                            }}
+            {
+                isLoadingPage ? (
+                    <div 
+                        className="w-100 d-flex justify-content-center align-items-center"
+                        style={{
+                            height: '80vh'
+                        }}                    
+                    >
+                        <Spinner 
+                            animation="border"
+                            role="status" 
+                            variant="primary"
+                            style={{ width: "3rem", height: "3rem" }}
                         >
-                            <div className="col d-flex flex-column justify-content-center align-items-center h-100">
-                                <AnimatePresence mode="wait">
-                                    {
-                                        propertyInfo === 'informacoes' ? showTitle('informacoes', 'Informações de imóvel', 'Fique à vontade para editar os dados do seu imóvel.') : propertyInfo === 'fotografias' ? showTitle('fotografias', 'Fotografias do imóvel', 'Adicione fotografias que destaquem o melhor do seu imóvel.') : ''
-                                    }
-                                </AnimatePresence>
-                            </div>
-                            <div className="col p-0 overflow-hidden">
-                                <AnimatePresence mode="wait">
-                                    {
-                                        propertyInfo === 'informacoes' ? (
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
+                ) : (
+                    <>
+                        <div className="container-fluid p-0">
+                            {
+                                propertyInfo !== 'finish' ? (
+                                    <div
+                                        className="row w-100 m-0"
+                                        style={{
+                                            height: "calc(100vh - 160px)",
+                                        }}
+                                    >
+                                        <div className="col d-flex flex-column justify-content-center align-items-center h-100">
+                                            <AnimatePresence mode="wait">
+                                                {
+                                                    propertyInfo === 'informacoes' ? showTitle('informacoes', 'Informações de imóvel', 'Fique à vontade para editar os dados do seu imóvel.') : propertyInfo === 'fotografias' ? showTitle('fotografias', 'Fotografias do imóvel', 'Adicione fotografias que destaquem o melhor do seu imóvel.') : ''
+                                                }
+                                            </AnimatePresence>
+                                        </div>
+                                        <div className="col p-0 overflow-hidden">
+                                            <AnimatePresence mode="wait">
+                                                {
+                                                    propertyInfo === 'informacoes' ? (
+                                                        <motion.div
+                                                            key="informacoes"
+                                                            initial={{ opacity: 0, x: -50 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            exit={{ opacity: 0, x: -50 }}
+                                                            transition={{ duration: 0.4 }}
+                                                            className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                                        >
+                                                            <form
+                                                                id="form"
+                                                                onSubmit={handleSubmit(onSubmit)}
+                                                                action="#"
+                                                                style={{
+                                                                    width: "80%",
+                                                                }}
+                                                            >
+                                                                <div className="form-floating w-100 mb-3">
+                                                                        <select
+                                                                            className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                            id="floatingSelecttype_of_property"
+                                                                            defaultValue={"0"}
+                                                                            {...register("type_of_property")}
+                                                                        >
+                                                                            <option value={"0"} hidden disabled>
+                                                                                Selecione o tipo de propriedade
+                                                                            </option>
+                                                                            {
+                                                                                type_of_property.map(property => (
+                                                                                    <option key={property.id} value={property.name}>{property.name.toLocaleString()}</option>
+                                                                                ))
+                                                                            }
+                                                                        </select>
+                                                                        <label
+                                                                            className="text-black"
+                                                                            htmlFor="floatingSelecttype_of_property"
+                                                                        >
+                                                                            Tipo de Propriedade
+                                                                        </label>
+                                                                        {errors.type_of_property && ( <small className="text-danger">{errors.type_of_property.message}</small> )}
+                                                                </div>
+                                                                <div className="d-flex justify-content-between gap-4 mb-3">
+                                                                    <div className="form-floating w-100">
+                                                                        <input
+                                                                            {...register("title")}
+                                                                            type="text"
+                                                                            className="form-control text-secondary shadow-none outline-none"
+                                                                            id="floatingTitleInput"
+                                                                            placeholder="Ex: Casa no talatona"
+                                                                        />
+                                                                        <label className="text-black" htmlFor="floatingTitleInput">
+                                                                            Título do imóvel
+                                                                        </label>
+                                                                        {errors.title && ( <small className="text-danger">{errors.title.message}</small> )}
+                                                                    </div>
+                                                                    <div className="form-floating w-100">
+                                                                        <input
+                                                                            {...register("price")}
+                                                                            type="number"
+                                                                            className="form-control text-secondary shadow-none outline-none"
+                                                                            id="floatingPriceInput"
+                                                                            placeholder="1000"
+                                                                            min={'1000'}
+                                                                        />
+                                                                        <label className="text-black" htmlFor="floatingPriceInput">
+                                                                            Preço
+                                                                        </label>
+                                                                        {errors.price && ( <small className="text-danger">{errors.price.message}</small> )}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="form-floating mb-4">
+                                                                    <textarea
+                                                                        {...register("description")}
+                                                                        className="form-control text-secondary shadow-none"
+                                                                        placeholder="Insira a descrição do imóvel"
+                                                                        id="floatingTextarea2Disabled"
+                                                                        style={{ 
+                                                                            height: "180px",
+                                                                            resize: "none"
+                                                                        }}
+                                                                    >
+                                                                    </textarea>
+                                                                    <label
+                                                                        className="text-black"
+                                                                        htmlFor="floatingTextarea2Disabled"
+                                                                    >
+                                                                        Descrição
+                                                                    </label>
+                                                                    {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
+                                                                </div>
+
+                                                                <div>
+                                                                    {
+                                                                        compartmentsList.map((compartment, index) => (
+                                                                            <RegisterPropertyCounter
+                                                                                key={index}
+                                                                                text={compartment.type}
+                                                                                handleChangeCompartment={(value) =>
+                                                                                    handleChangeCompartment(index, 'quantity', Number(value))
+                                                                                }
+                                                                                quantity={compartment.quantity}
+                                                                                handleRemoveCompartment={() => handleRemoveCompartment(index)}
+                                                                            />
+                                                                        ))
+                                                                    }
+                                                                </div>
+
+                                                                <div className="w-100 mb-3">
+                                                                    <>
+                                                                        <Button
+                                                                            variant="primary" 
+                                                                            onClick={handleShow}
+                                                                            className="w-100 bg-default-color border-0"
+                                                                        >
+                                                                            Adicionar um compartimento
+                                                                        </Button>
+
+                                                                        <Modal show={show} onHide={handleClose} centered size="lg">
+                                                                            <Modal.Header closeButton className="m-0 p-0 border-0">
+                                                                            <Modal.Title>Adicionar um compartimento</Modal.Title>
+                                                                            </Modal.Header>
+                                                                            <Modal.Body className="p-0 pt-3">
+                                                                                <form 
+                                                                                    action=""
+                                                                                    id="addCompartmentsForm"
+                                                                                >
+                                                                                    <div className="form-floating w-100 mb-3">
+                                                                                        <select
+                                                                                            className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                                            id="floatingSelectCompartments"
+                                                                                            defaultValue={"0"}
+                                                                                            {...registerCompartments("type")}
+                                                                                        >
+                                                                                            <option value={"0"} hidden disabled>
+                                                                                                Selecione um compartimento
+                                                                                            </option>
+                                                                                            {
+                                                                                                compartments_types.map(compartment => (
+                                                                                                    <option key={compartment.id} value={compartment.name}>{compartment.name}</option>
+                                                                                                ))
+                                                                                            }
+                                                                                        </select>
+                                                                                        <label
+                                                                                            className="text-black"
+                                                                                            htmlFor="floatingSelectCompartments"
+                                                                                        >
+                                                                                            Tipo de compartimento
+                                                                                        </label>
+                                                                                    {errorCompartments.type && ( <small className="text-danger">{errorCompartments.type.message}</small> )}
+                                                                                    </div>
+
+                                                                                    <div className="form-floating w-100 mb-3">
+                                                                                        <input
+                                                                                            type="number"
+                                                                                            className="form-control text-secondary shadow-none outline-none"
+                                                                                            id="floatingInputCompartmentsQuantity"
+                                                                                            placeholder="Ex: 3"
+                                                                                            min={1}
+                                                                                            {...registerCompartments("quantity")}
+                                                                                        />
+                                                                                        <label className="text-black" htmlFor="floatingInputCompartmentsQuantity">
+                                                                                            Quantidade
+                                                                                        </label>
+                                                                                        {errorCompartments.quantity && ( <small className="text-danger">{errorCompartments.quantity.message}</small> )}
+                                                                                    </div>
+                                                                                </form>
+                                                                            </Modal.Body>
+                                                                            <Modal.Footer className="p-0 m-0 border-0">
+                                                                            <button
+                                                                                className="btn btn-primary bg-default-color py-2 border-0 w-100"
+                                                                                onClick={handleSubmitCompartments(compartmentsPayload)}
+                                                                                variant="primary"
+                                                                                // onClick={handleClose}
+                                                                            >
+                                                                                Adicionar compartimento
+                                                                            </button>
+                                                                            </Modal.Footer>
+                                                                        </Modal>
+                                                                    </>
+                                                                </div>
+
+                                                                <div className="mb-4">
+                                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                                        <p
+                                                                            className="m-0"
+                                                                            style={{
+                                                                                fontFamily: "Parkinsans",
+                                                                                fontSize: "16px",
+                                                                                fontWeight: "500",
+                                                                            }}
+                                                                        >
+                                                                            Negociável
+                                                                        </p>
+                                                                        <div>
+                                                                            <Tab.Container
+                                                                                activeKey={is_negotiable}
+                                                                                onSelect={(k) => setIsNegotiable(k)}
+                                                                                defaultActiveKey={false}
+                                                                            >
+                                                                                <Nav className={styles.nav}>
+                                                                                    <Nav.Item>
+                                                                                        <Nav.Link eventKey={true}>Sim</Nav.Link>
+                                                                                    </Nav.Item>
+                                                                                    <Nav.Item>
+                                                                                        <Nav.Link eventKey={false}>Não</Nav.Link>
+                                                                                    </Nav.Item>
+                                                                                </Nav>
+                                                                            </Tab.Container>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                                        <p
+                                                                            className="m-0"
+                                                                            style={{
+                                                                                fontFamily: "Parkinsans",
+                                                                                fontSize: "16px",
+                                                                                fontWeight: "500",
+                                                                            }}
+                                                                        >
+                                                                            Finalidade
+                                                                        </p>
+                                                                        <div>
+                                                                            <Tab.Container
+                                                                                activeKey={type_purchase}
+                                                                                onSelect={(k) => setTypePurchase(k)}
+                                                                                defaultActiveKey="for_rent"
+                                                                            >
+                                                                                <Nav className={styles.nav}>
+                                                                                    <Nav.Item>
+                                                                                        <Nav.Link eventKey={"for_rent"}>Aluguel</Nav.Link>
+                                                                                    </Nav.Item>
+                                                                                    <Nav.Item>
+                                                                                        <Nav.Link eventKey={"for_sale"}>Venda</Nav.Link>
+                                                                                    </Nav.Item>
+                                                                                </Nav>
+                                                                            </Tab.Container>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="d-flex justify-content-between gap-4 mb-3">
+                                                                    <div className="form-floating w-100">
+                                                                        <select
+                                                                            className="form-select text-secondary cursor-pointer outline-none shadow-none"
+                                                                            id="floatingSelectMunicipality"
+                                                                            defaultValue={"0"}
+                                                                            {...register("municipality")}
+                                                                        >
+                                                                            <option value={"0"} hidden disabled>
+                                                                                Selecione o munícipio
+                                                                            </option>
+                                                                            {
+                                                                                municipalities.map(municipality => (
+                                                                                    <option key={municipality.id} value={municipality.name}>{municipality.name}</option>
+                                                                                ))
+                                                                            }
+                                                                        </select>
+                                                                        <label
+                                                                            className="text-black"
+                                                                            htmlFor="floatingSelectMunicipality"
+                                                                        >
+                                                                            Munícipio
+                                                                        </label>
+                                                                        {errors.municipality && ( <small className="text-danger">{errors.municipality.message}</small> )}
+                                                                    </div>
+                                                                    <div className="form-floating w-100">
+                                                                        <input
+                                                                            type="text"
+                                                                            {...register("neighborhood")}
+                                                                            className="form-control text-secondary shadow-none outline-none"
+                                                                            id="floatingInputGrid"
+                                                                            placeholder="Golf2"
+                                                                        />
+                                                                        <label className="text-black" htmlFor="floatingInputGrid">
+                                                                            Bairro
+                                                                        </label>
+                                                                        {errors.neighborhood && ( <small className="text-danger">{errors.neighborhood.message}</small> )}
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </motion.div>
+                                                    ) :  propertyInfo === 'fotografias' ? (
+                                                        <motion.div
+                                                            key="fotografias"
+                                                            initial={{ opacity: 0, y: -30 }}
+                                                            animate={{ opacity: 1, y: -1 }}
+                                                            exit={{ opacity: 0, y: 50 }}
+                                                            transition={{ duration: 0.4 }}
+                                                            className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                                        >
+                                                            <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center p-0`}>
+                                                                <div 
+                                                                    {...getRootProps({className: 'dropzone d-flex flex-column align-items-center h-100 py-5'})}
+                                                                    style={{
+                                                                        width: '90%',
+                                                                        border: '2px dashed #ECECF2',
+                                                                        borderRadius: '8px',
+                                                                    }}
+                                                                >
+                                                                    <Download04Icon size={38} strokeWidth={'1'}/>
+                                                                    <p className='m-0 mt-2'>Clique para adicionar imagens</p>
+                                                                    <input 
+                                                                        {...getInputProps()}
+                                                                        className="border"
+                                                                        multiple
+                                                                        maxLength={2}
+                                                                    />
+                                                                </div>
+                                                                <aside>
+                                                                    <ul
+                                                                        className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
+                                                                    >
+                                                                        {fileItems}
+                                                                    </ul>
+                                                                </aside>
+                                                            </section>
+                                                        </motion.div>
+                                                    ) : ''
+                                                }
+                                            </AnimatePresence>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div 
+                                        className="row w-100 m-0"
+                                        style={{
+                                            height: "calc(100vh - 160px)",
+                                            padding: '40px 64px 64px 64px'
+                                        }}
+                                    >
+                                        <AnimatePresence mode="wait">                       
                                             <motion.div
-                                                key="informacoes"
-                                                initial={{ opacity: 0, x: -50 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -50 }}
+                                                key={'finish'}
+                                                initial={{ opacity: 0, y: -30 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 30 }}
                                                 transition={{ duration: 0.4 }}
-                                                className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                                className="w-100 h-100"
                                             >
-                                                <form
-                                                    id="form"
-                                                    onSubmit={handleSubmit(onSubmit)}
-                                                    action="#"
+                                                <h1
+                                                    className="text-center mb-5"
                                                     style={{
-                                                        width: "80%",
+                                                        fontFamily: "Parkinsans",
+                                                        fontSize: "58px",
+                                                        fontWeight: "700",
                                                     }}
                                                 >
-                                                    <div className="form-floating w-100 mb-3">
-                                                            <select
-                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
-                                                                id="floatingSelecttype_of_property"
-                                                                defaultValue={"0"}
-                                                                {...register("type_of_property")}
-                                                            >
-                                                                <option value={"0"} hidden disabled>
-                                                                    Selecione o tipo de propriedade
-                                                                </option>
-                                                                {
-                                                                    type_of_property.map(property => (
-                                                                        <option key={property.id} value={property.name}>{property.name.toLocaleString()}</option>
-                                                                    ))
-                                                                }
-                                                            </select>
-                                                            <label
-                                                                className="text-black"
-                                                                htmlFor="floatingSelecttype_of_property"
-                                                            >
-                                                                Tipo de Propriedade
-                                                            </label>
-                                                            {errors.type_of_property && ( <small className="text-danger">{errors.type_of_property.message}</small> )}
-                                                    </div>
-                                                    <div className="d-flex justify-content-between gap-4 mb-3">
-                                                        <div className="form-floating w-100">
-                                                            <input
-                                                                {...register("title")}
-                                                                type="text"
-                                                                className="form-control text-secondary shadow-none outline-none"
-                                                                id="floatingTitleInput"
-                                                                placeholder="Ex: Casa no talatona"
-                                                            />
-                                                            <label className="text-black" htmlFor="floatingTitleInput">
-                                                                Título do imóvel
-                                                            </label>
-                                                            {errors.title && ( <small className="text-danger">{errors.title.message}</small> )}
-                                                        </div>
-                                                        <div className="form-floating w-100">
-                                                            <input
-                                                                {...register("price")}
-                                                                type="number"
-                                                                className="form-control text-secondary shadow-none outline-none"
-                                                                id="floatingPriceInput"
-                                                                placeholder="1000"
-                                                                min={'1000'}
-                                                            />
-                                                            <label className="text-black" htmlFor="floatingPriceInput">
-                                                                Preço
-                                                            </label>
-                                                            {errors.price && ( <small className="text-danger">{errors.price.message}</small> )}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="form-floating mb-4">
-                                                        <textarea
-                                                            {...register("description")}
-                                                            className="form-control text-secondary shadow-none"
-                                                            placeholder="Insira a descrição do imóvel"
-                                                            id="floatingTextarea2Disabled"
-                                                            style={{ 
-                                                                height: "180px",
-                                                                resize: "none"
-                                                            }}
-                                                        >
-                                                        </textarea>
-                                                        <label
-                                                            className="text-black"
-                                                            htmlFor="floatingTextarea2Disabled"
-                                                        >
-                                                            Descrição
-                                                        </label>
-                                                        {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
-                                                    </div>
-
-                                                    <div>
-                                                        {
-                                                            compartmentsList.map((compartment, index) => (
-                                                                <RegisterPropertyCounter
-                                                                    key={index}
-                                                                    text={compartment.type}
-                                                                    handleChangeCompartment={(value) =>
-                                                                        handleChangeCompartment(index, 'quantity', Number(value))
-                                                                    }
-                                                                    quantity={compartment.quantity}
-                                                                    handleRemoveCompartment={() => handleRemoveCompartment(index)}
-                                                                />
-                                                            ))
-                                                        }
-                                                    </div>
-
-                                                    <div className="w-100 mb-3">
-                                                        <>
-                                                            <Button
-                                                                variant="primary" 
-                                                                onClick={handleShow}
-                                                                className="w-100 bg-default-color border-0"
-                                                            >
-                                                                Adicionar um compartimento
-                                                            </Button>
-
-                                                            <Modal show={show} onHide={handleClose} centered size="lg">
-                                                                <Modal.Header closeButton className="m-0 p-0 border-0">
-                                                                <Modal.Title>Adicionar um compartimento</Modal.Title>
-                                                                </Modal.Header>
-                                                                <Modal.Body className="p-0 pt-3">
-                                                                    <form 
-                                                                        action=""
-                                                                        id="addCompartmentsForm"
-                                                                    >
-                                                                        <div className="form-floating w-100 mb-3">
-                                                                            <select
-                                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
-                                                                                id="floatingSelectCompartments"
-                                                                                defaultValue={"0"}
-                                                                                {...registerCompartments("type")}
-                                                                            >
-                                                                                <option value={"0"} hidden disabled>
-                                                                                    Selecione um compartimento
-                                                                                </option>
-                                                                                {
-                                                                                    compartments_types.map(compartment => (
-                                                                                        <option key={compartment.id} value={compartment.name}>{compartment.name}</option>
-                                                                                    ))
-                                                                                }
-                                                                            </select>
-                                                                            <label
-                                                                                className="text-black"
-                                                                                htmlFor="floatingSelectCompartments"
-                                                                            >
-                                                                                Tipo de compartimento
-                                                                            </label>
-                                                                        {errorCompartments.type && ( <small className="text-danger">{errorCompartments.type.message}</small> )}
-                                                                        </div>
-
-                                                                        <div className="form-floating w-100 mb-3">
-                                                                            <input
-                                                                                type="number"
-                                                                                className="form-control text-secondary shadow-none outline-none"
-                                                                                id="floatingInputCompartmentsQuantity"
-                                                                                placeholder="Ex: 3"
-                                                                                min={1}
-                                                                                {...registerCompartments("quantity")}
-                                                                            />
-                                                                            <label className="text-black" htmlFor="floatingInputCompartmentsQuantity">
-                                                                                Quantidade
-                                                                            </label>
-                                                                            {errorCompartments.quantity && ( <small className="text-danger">{errorCompartments.quantity.message}</small> )}
-                                                                        </div>
-                                                                    </form>
-                                                                </Modal.Body>
-                                                                <Modal.Footer className="p-0 m-0 border-0">
-                                                                <button
-                                                                    className="btn btn-primary bg-default-color py-2 border-0 w-100"
-                                                                    onClick={handleSubmitCompartments(compartmentsPayload)}
-                                                                    variant="primary"
-                                                                    // onClick={handleClose}
-                                                                >
-                                                                    Adicionar compartimento
-                                                                </button>
-                                                                </Modal.Footer>
-                                                            </Modal>
-                                                        </>
-                                                    </div>
-
-                                                    <div className="mb-4">
-                                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                                            <p
-                                                                className="m-0"
-                                                                style={{
-                                                                    fontFamily: "Parkinsans",
-                                                                    fontSize: "16px",
-                                                                    fontWeight: "500",
-                                                                }}
-                                                            >
-                                                                Negociável
-                                                            </p>
-                                                            <div>
-                                                                <Tab.Container
-                                                                    activeKey={is_negotiable}
-                                                                    onSelect={(k) => setIsNegotiable(k)}
-                                                                    defaultActiveKey={false}
-                                                                >
-                                                                    <Nav className={styles.nav}>
-                                                                        <Nav.Item>
-                                                                            <Nav.Link eventKey={true}>Sim</Nav.Link>
-                                                                        </Nav.Item>
-                                                                        <Nav.Item>
-                                                                            <Nav.Link eventKey={false}>Não</Nav.Link>
-                                                                        </Nav.Item>
-                                                                    </Nav>
-                                                                </Tab.Container>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                                            <p
-                                                                className="m-0"
-                                                                style={{
-                                                                    fontFamily: "Parkinsans",
-                                                                    fontSize: "16px",
-                                                                    fontWeight: "500",
-                                                                }}
-                                                            >
-                                                                Finalidade
-                                                            </p>
-                                                            <div>
-                                                                <Tab.Container
-                                                                    activeKey={type_purchase}
-                                                                    onSelect={(k) => setTypePurchase(k)}
-                                                                    defaultActiveKey="for_rent"
-                                                                >
-                                                                    <Nav className={styles.nav}>
-                                                                        <Nav.Item>
-                                                                            <Nav.Link eventKey={"for_rent"}>Aluguel</Nav.Link>
-                                                                        </Nav.Item>
-                                                                        <Nav.Item>
-                                                                            <Nav.Link eventKey={"for_sale"}>Venda</Nav.Link>
-                                                                        </Nav.Item>
-                                                                    </Nav>
-                                                                </Tab.Container>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="d-flex justify-content-between gap-4 mb-3">
-                                                        <div className="form-floating w-100">
-                                                            <select
-                                                                className="form-select text-secondary cursor-pointer outline-none shadow-none"
-                                                                id="floatingSelectMunicipality"
-                                                                defaultValue={"0"}
-                                                                {...register("municipality")}
-                                                            >
-                                                                <option value={"0"} hidden disabled>
-                                                                    Selecione o munícipio
-                                                                </option>
-                                                                {
-                                                                    municipalities.map(municipality => (
-                                                                        <option key={municipality.id} value={municipality.name}>{municipality.name}</option>
-                                                                    ))
-                                                                }
-                                                            </select>
-                                                            <label
-                                                                className="text-black"
-                                                                htmlFor="floatingSelectMunicipality"
-                                                            >
-                                                                Munícipio
-                                                            </label>
-                                                            {errors.municipality && ( <small className="text-danger">{errors.municipality.message}</small> )}
-                                                        </div>
-                                                        <div className="form-floating w-100">
-                                                            <input
-                                                                type="text"
-                                                                {...register("neighborhood")}
-                                                                className="form-control text-secondary shadow-none outline-none"
-                                                                id="floatingInputGrid"
-                                                                placeholder="Golf2"
-                                                            />
-                                                            <label className="text-black" htmlFor="floatingInputGrid">
-                                                                Bairro
-                                                            </label>
-                                                            {errors.neighborhood && ( <small className="text-danger">{errors.neighborhood.message}</small> )}
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </motion.div>
-                                        ) :  propertyInfo === 'fotografias' ? (
-                                            <motion.div
-                                                key="fotografias"
-                                                initial={{ opacity: 0, y: -30 }}
-                                                animate={{ opacity: 1, y: -1 }}
-                                                exit={{ opacity: 0, y: 50 }}
-                                                transition={{ duration: 0.4 }}
-                                                className="w-100 h-100 d-flex justify-content-center align-items-center"
-                                            >
-                                                <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center p-0`}>
-                                                    <div 
-                                                        {...getRootProps({className: 'dropzone d-flex flex-column align-items-center h-100 py-5'})}
+                                                    Cadastrar o seu imóvel
+                                                </h1>
+                                                <RealStateDetailsCard 
+                                                    whatIsThis="registerProperty"
+                                                    realStateInformations={payload} 
+                                                />
+                                                <form 
+                                                    className="mt-4 d-flex align-items-center gap-2"
+                                                    id="finishRegisterPropertyForm"
+                                                    onSubmit={(e)=>{
+                                                        e.preventDefault()
+                                                        
+                                                        registerProperty(payload, setIsLoading)
+                                                        console.log("Enviando dados para o backend...")
+                                                    }}
+                                                >
+                                                    <input 
+                                                        type="checkbox"
+                                                        className="outline-none"
+                                                        name="terms"
+                                                        id="terms"
                                                         style={{
-                                                            width: '90%',
-                                                            border: '2px dashed #ECECF2',
-                                                            borderRadius: '8px',
+                                                            width: '18px',
+                                                            height: '18px'
+                                                        }}
+                                                        required
+                                                    />
+                                                    <label 
+                                                        htmlFor="terms"
+                                                        className="cursor-pointer"
+                                                        style={{
+                                                            fontSize: '18px'
                                                         }}
                                                     >
-                                                        <Download04Icon size={38} strokeWidth={'1'}/>
-                                                        <p className='m-0 mt-2'>Clique para adicionar imagens</p>
-                                                        <input 
-                                                            {...getInputProps()}
-                                                            className="border"
-                                                            multiple
-                                                            maxLength={2}
-                                                        />
-                                                    </div>
-                                                    <aside>
-                                                        <ul
-                                                            className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
-                                                        >
-                                                            {fileItems}
-                                                        </ul>
-                                                    </aside>
-                                                </section>
+                                                        Ao prosseguir com o cadastro, informo que li e concordo com os Termos e condições de cadastro e utilização desta plataforma e dos serviços prestados através do mesmo. *
+                                                    </label>
+                                                </form>
                                             </motion.div>
-                                        ) : ''
-                                    }
-                                </AnimatePresence>
-                            </div>
+                                        </AnimatePresence>
+                                    </div>
+                                )
+                            }
                         </div>
-                    ) : (
-                        <div 
-                            className="row w-100 m-0"
+                        <footer
+                            className="d-flex align-items-center justify-content-between border px-5"
                             style={{
-                                height: "calc(100vh - 160px)",
-                                padding: '40px 64px 64px 64px'
+                                height: "80px",
                             }}
                         >
-                            <AnimatePresence mode="wait">                       
-                                <motion.div
-                                    key={'finish'}
-                                    initial={{ opacity: 0, y: -30 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 30 }}
-                                    transition={{ duration: 0.4 }}
-                                    className="w-100 h-100"
-                                >
-                                    <h1
-                                        className="text-center mb-5"
-                                        style={{
-                                            fontFamily: "Parkinsans",
-                                            fontSize: "58px",
-                                            fontWeight: "700",
-                                        }}
-                                    >
-                                        Cadastrar o seu imóvel
-                                    </h1>
-                                    <RealStateDetailsCard 
-                                        whatIsThis="registerProperty"
-                                        realStateInformations={payload} 
-                                    />
-                                    <form 
-                                        className="mt-4 d-flex align-items-center gap-2"
-                                        id="finishRegisterPropertyForm"
-                                        onSubmit={(e)=>{
-                                            e.preventDefault()
-                                            
-                                            registerProperty(payload, setIsLoading)
-                                            console.log("Enviando dados para o backend...")
-                                        }}
-                                    >
-                                        <input 
-                                            type="checkbox"
-                                            className="outline-none"
-                                            name="terms"
-                                            id="terms"
-                                            style={{
-                                                width: '18px',
-                                                height: '18px'
-                                            }}
-                                            required
-                                        />
-                                        <label 
-                                            htmlFor="terms"
-                                            className="cursor-pointer"
-                                            style={{
-                                                fontSize: '18px'
-                                            }}
-                                        >
-                                            Ao prosseguir com o cadastro, informo que li e concordo com os Termos e condições de cadastro e utilização desta plataforma e dos serviços prestados através do mesmo. *
-                                        </label>
-                                    </form>
-                                </motion.div>
-                            </AnimatePresence>
-                        </div>
-                    )
-                }
-            </div>
-            <footer
-                className="d-flex align-items-center justify-content-between border px-5"
-                style={{
-                    height: "80px",
-                }}
-            >
-                <div>
-                    <BackButton
-                        icon={<ArrowLeft02Icon />}
-                        onClick={() => propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''}
-                    />
-                </div>
-                <div>
-                <button
-                    type="submit"
-                    form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
-                    disabled={isLoading}
-                    className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
-                    onClick={() => {
-                        if (propertyInfo === 'fotografias') {
-                            if(files.length < 2){
-                                toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
-                                return
-                            }
+                            <div>
+                                <BackButton
+                                    icon={<ArrowLeft02Icon />}
+                                    onClick={() => propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''}
+                                />
+                            </div>
+                            <div>
+                            <button
+                                type="submit"
+                                form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
+                                disabled={isLoading}
+                                className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
+                                onClick={() => {
+                                    if (propertyInfo === 'fotografias') {
+                                        if(files.length < 2){
+                                            toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
+                                            return
+                                        }
 
-                            const images = files.filter(f => f.type.startsWith('image/'))
-                            const videos = files.filter(f => f.type.startsWith('video/'))
+                                        const images = files.filter(f => f.type.startsWith('image/'))
+                                        const video = files.filter(f => f.type.startsWith('video/'))
 
-                            if (images.length < 1) {
-                                toast.error('Adicione pelo menos 1 imagem do imóvel')
-                                return
-                            }
+                                        if (images.length < 1) {
+                                            toast.error('Adicione pelo menos 1 imagem do imóvel')
+                                            return
+                                        }
 
-                            if (videos.length > 1) {
-                                toast.error('Só é permitido 1 vídeo')
-                                return
-                            }
+                                        if (video.length > 1) {
+                                            toast.error('Só é permitido 1 vídeo')
+                                            return
+                                        }
 
-                            setPayload(prev => ({
-                                ...prev, 
-                                images,
-                                videos,
-                                createdAt: date
-                            }))
-                            setPropertyInfo('finish')
-                        }
-                    }}
-                >
-                    {isLoading ? 'Enviando...' :  'Continuar'}
-                    <ArrowRight02Icon />
-                </button>
-                </div>
-            </footer>
+                                        setPayload(prev => ({
+                                            ...prev, 
+                                            images,
+                                            video,
+                                            createdAt: date
+                                        }))
+                                        setPropertyInfo('finish')
+                                    }
+                                }}
+                            >
+                                {isLoading ? 'Enviando...' :  'Continuar'}
+                                <ArrowRight02Icon />
+                            </button>
+                            </div>
+                        </footer>
+                    </>
+                )
+            }
         </>
     )
 }
