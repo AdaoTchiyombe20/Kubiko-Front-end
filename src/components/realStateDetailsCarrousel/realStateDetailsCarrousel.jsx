@@ -31,7 +31,7 @@ export default function DetailsCarrousel({
                           src={image.url}
                           alt={image.public_id}
                           className='rounded-3'
-                          style={{ height: '500px' }}
+                          style={{ height: whatIsThis === 'sendProposal' ? '300px' : '500px' }}
                       />
                   </Carousel.Item>
               ) : (

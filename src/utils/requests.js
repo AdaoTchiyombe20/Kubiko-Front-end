@@ -341,7 +341,8 @@ export async function getAllProperties(setIsLoading, setAllProperties){
         return result
 
     } catch(error) {
-
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
     }finally{
         setIsLoading(false)
     }
@@ -382,7 +383,8 @@ export async function getPropertyDetails(setIsLoading, setPropertyDetails, id){
         return result
 
     } catch(error) {
-
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
     }finally{
         setIsLoading(false)
     }
@@ -412,7 +414,40 @@ export async function getPropertiesFilter(setIsLoading, setPropertiesFilter, fil
         return result
 
     } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function makeProposal(setIsLoading, data){
+    console.log('entrou')
+    setIsLoading(true)
 
+    try{
+        let response = await fetch(BASE_URL + `/negotiatons/init`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        console.log(result)
+        return result
+
+    } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
     }finally{
         setIsLoading(false)
     }

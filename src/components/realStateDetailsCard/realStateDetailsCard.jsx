@@ -10,6 +10,10 @@ import { useContext, useState } from "react"
 import { AppContext } from "../context/appcontext"
 import { Modal } from "react-bootstrap"
 import { TfiLock } from "react-icons/tfi";
+import z, { property } from "zod"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { makeProposal } from "../../utils/requests"
 
 export default function RealStateDetailsCard({
     whatIsThis, 
@@ -17,11 +21,35 @@ export default function RealStateDetailsCard({
 }){
     const navigate = useNavigate()
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)
-    console.log(realStateInformations)
 
+    const [isLoading, setIsloading] = useState(false)
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(!show)
     const [whatModal, setWhatModal] = useState('sendProposal')
+
+    const proposalSchema = z.object({
+        offer_price: z.string().min(5, 'O preço mínimo é de 25000kz'),
+        message: z.string().trim().min(25, 'Descrição muito curta'),
+        months: z.coerce.number({ invalid_type_error: "Valor inválido" }).min(1, "O mínimo é 1 mês"),
+    })
+    const {
+        handleSubmit,
+        register,
+        reset,
+        formState: {errors}
+    } = useForm({
+        resolver: zodResolver(proposalSchema),
+        defaultValues: {
+            offer_price: '',
+            months: 0
+        },
+        mode: 'onChange'
+    })
+    const onSubmit = async (data) => {
+        data["property_id"] = realStateInformations.id
+        await makeProposal(setIsloading, data)
+    }
+
     return(
         <div className="row">
             <div className="col-5">
@@ -120,36 +148,16 @@ export default function RealStateDetailsCard({
                                                 (
                                                     <div className="row">
                                                         <div className="col-6 pe-4">
-                                                            <div className="mb-5">
-                                                                <DetailsCarrousel images = {realStateInformations?.images} whatIsThis={whatIsThis} />
+                                                            <div className="mb-3">
+                                                                <DetailsCarrousel images = {realStateInformations?.property_medias} whatIsThis={whatModal} />
                                                             </div>
                                                             <h2 className="m-0">{realStateInformations?.title || 'Título não disponível'}</h2>
-                                                            <p className="text-secondary m-0">{'Talatona, Luanda'}</p>
-                                                            <div className="mt-4">
-                                                                <div className="border-bottom border-2 pb-2">
+                                                            <p className="text-secondary m-0 border-bottom border-2 pb-2">{'Talatona, Luanda'}</p>
+                                                            <div className="mt-3">
+                                                                <div className="pb-2">
                                                                     <p className="text-secondary m-0">Preço anunciado</p>
                                                                     <p className="text-default-color fw-semibold fs-3 m-0">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || '85.000,00kz'}</p>
                                                                 </div>
-                                                                {/* <div className={`${styles.detailsItem} d-flex flex-column gap-3`}>
-                                                                    <DetailsItem
-                                                                        icon={<BedIcon color="#808080" />}
-                                                                        title={"Quartos"}
-                                                                        qtd={realStateInformations?.bedrooms}
-                                                                        whatIsThis={'negotiationModal'}
-                                                                    />
-                                                                    <DetailsItem
-                                                                        icon={<Bathtub01Icon color="#808080" />}
-                                                                        title={"Banheiro:"}
-                                                                        qtd={realStateInformations?.bathrooms}
-                                                                        whatIsThis={'negotiationModal'}
-                                                                    />
-                                                                    <DetailsItem
-                                                                        icon={<KitchenUtensilsIcon color="#808080" />}
-                                                                        title={"Cozinha:"}
-                                                                        qtd={realStateInformations?.kitchen}
-                                                                        whatIsThis={'negotiationModal'}
-                                                                    />
-                                                                </div> */}
                                                             </div>
                                                         </div>
                                                         <div className="col-6 border-start border-2 ps-4">
@@ -157,26 +165,36 @@ export default function RealStateDetailsCard({
                                                             <p className="text-secondary fw-sem">Envie o valor que pretende oferecer pelo imóvel. <br />O proprietário irá analisar e responder directamente pela plataforma</p>
                                                             <form 
                                                                 action=""
+                                                                onSubmit={handleSubmit(onSubmit)}
                                                             >
                                                                 <div className='d-flex flex-column gap-2 w-100 mb-3'>
-                                                                    <label htmlFor="" className='ps-1 fw-semibold'>Valor da Proposta</label>
-                                                                    <input type="number" className="form-control shadow-none outline-none" placeholder="20.000,00kz" />
+                                                                    <label htmlFor="" className='ps-1 fw-semibold' >Valor da Proposta (mensal)<span className="text-danger">*</span></label>
+                                                                    <input type="number" className="form-control shadow-none outline-none" {...register('offer_price')} placeholder="25.000,00kz" min={25000}/>
+                                                                    {errors.offer_price && <p className="text-danger">{errors.offer_price.message}</p>}
                                                                 </div>
-                                                                <div className='d-flex flex-column gap-2 w-100 mb-4'>
+                                                                <div className='d-flex flex-column gap-2 w-100 mb-3'>
                                                                     <label htmlFor="" className='ps-1 fw-semibold'>Mensagem Opcional</label>
                                                                     <textarea 
-                                                                        name="" 
+                                                                        {...register('message')}
                                                                         id="" 
                                                                         cols="10" 
                                                                         rows="4"
-                                                                        className="form-control outline-none shadow-none"
+                                                                        className="form-control outline-none shadow-none pt-2"
+                                                                        placeholder="Adicione uma mensagem para o proprietário do imóvel"
                                                                         style={{
                                                                             resize: 'none'
                                                                         }}
                                                                     >
                                                                     </textarea>
+                                                                    {errors.message && <p className="text-danger">{errors.message.message}</p>
+                                                                    }
                                                                 </div>
-                                                                <div className="d-flex justify-content-between gap-2">
+                                                                <div className='d-flex flex-column gap-2 w-100 mb-3'>
+                                                                    <label htmlFor="" className='ps-1 fw-semibold'>Meses<span className="text-danger" >*</span></label>
+                                                                    <input type="number" {...register('months')} className="form-control shadow-none outline-none" placeholder="6 meses" min={1}/>
+                                                                    {errors.months && <p className="text-danger">{errors.months.message}</p>}
+                                                                </div>
+                                                                {/* <div className="d-flex justify-content-between gap-2">
                                                                     <div className="form-floating w-100">
                                                                         <select
                                                                             className="form-select text-secondary cursor-pointer outline-none shadow-none"
@@ -216,7 +234,7 @@ export default function RealStateDetailsCard({
                                                                             Prazo Pretendido
                                                                         </label>
                                                                     </div>
-                                                                </div>
+                                                                </div> */}
                                                                 <div className="d-flex align-items-center gap-3 mt-4">
                                                                     <button 
                                                                         className="btn btn-outline-dark"
@@ -231,15 +249,17 @@ export default function RealStateDetailsCard({
                                                                         Cancelar
                                                                     </button>
                                                                     <button 
-                                                                        className="btn btn-primary bg-default-color border-0"
-                                                                        onClick={() => {
-                                                                            setWhatModal('sucessProposal')
+                                                                        type="submit"
+                                                                        className="btn btn-primary bg-default-color border-0 shadow-none outline-none"
+                                                                        disabled={isLoading}
+                                                                        onClick={() => {                                                                       
+                                                                            // setWhatModal('sucessProposal')
                                                                         }} 
                                                                         style={{
                                                                             width: '60%'
                                                                         }}
                                                                     >
-                                                                        Enviar Proposta
+                                                                        {isLoading ? "Enviando" : 'Enviar Proposta'}
                                                                     </button>
                                                                 </div>
                                                             </form>
