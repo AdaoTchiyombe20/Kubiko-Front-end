@@ -224,8 +224,13 @@ export default function FilterPage(){
                         <span className="text-secondary">{filtersLength > 1 ? `${filtersLength} filtros aplicados` : `${filtersLength} filtro aplicado`}:</span>
                         <p 
                             className="text-black m-0 text-decoration-underline cursor-pointer"
-                            onClick={() => {
+                            onClick={() => {                                
+                                if(filtersLength === 0){
+                                    toast.info("Não há nenhum filtro aplicado!")
+                                    return
+                                }
                                 getPropertiesFilter(setIsLoading, setPropertyFilter)
+                                setRangePrice(25000)
                                 setFiltersLength(0)
                                 reset()
                             }}
