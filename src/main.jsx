@@ -28,6 +28,7 @@ import ProposalDetails from './pages/proposal-details/proposalDetails.jsx';
 import MyProfileHome from './pages/my-profile-home/myProfileHome.jsx';
 import MakePayment from './pages/make-payment/makePayment.jsx';
 import MyPayments from './pages/my-payments/myPayments.jsx';
+import MyProperties from './pages/my-properties/myProperties.jsx';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: 'my-payments',
         element: <MyPayments />,
+      },
+      {
+        path: 'my-properties',
+        element: <MyProperties />,
       },
       {
         path: 'received-proposals',

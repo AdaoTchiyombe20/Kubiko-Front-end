@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "../../components/header/header";
 import Sidebar from "../../components/sidebar/sidebar";
-import { MailDownload01Icon, MailUpload01Icon, Payment02Icon, ShoppingBasket01Icon, UserCircleIcon } from "hugeicons-react";
+import { MailDownload01Icon, MailUpload01Icon, Payment02Icon, RealEstate01Icon, ShoppingBasket01Icon, UserCircleIcon } from "hugeicons-react";
 
 export default function MyProfile(){
 
@@ -10,6 +10,11 @@ export default function MyProfile(){
             name: 'Minha conta',
             url : '/my-profile',
             icon: UserCircleIcon
+        },
+        {
+            name: 'Meus imóveis',
+            url: 'my-properties',
+            icon: RealEstate01Icon
         },
         {
             name: 'Minhas Propostas',

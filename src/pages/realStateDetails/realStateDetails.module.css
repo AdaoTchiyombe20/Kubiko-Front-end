@@ -2,7 +2,7 @@
     --text-details-color: #3541A9;
 }
 .realStateDetails{
-    padding: 64px;
+    padding: 64px 24px 64px 64px;
     margin-top: 80px;
     h2{
         font-family: 'Parkinsans';

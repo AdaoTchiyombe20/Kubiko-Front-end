@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowDown01Icon, GridViewIcon, Menu07Icon, Search01Icon } from "hugeicons-react";
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Slider } from "primereact/slider";
@@ -7,26 +7,81 @@ import styles from './filterPage.module.css'
 import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import Footer from "../../components/footer/footer";
 import Header from "../../components/header/header";
+import { getPropertiesFilter } from "../../utils/requests";
+import Cards from "../../components/cards/cards";
+import SpinnerLoading from "../../components/spinner/spinner";
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function FilterPage(){
 
+    const navigate = useNavigate()
     const [rangePrice, setRangePrice] = useState(25000);
     const [pageSize, setPageSize] = useState(1)
     const filterSelectsArray = [
         {
-            name: 'Tipologia',
-            option: ['T1', 'T2', 'T3']
+            name: 'type_of_purchase',
+            label: 'Propósito',
+            option: ['FOR_RENT', 'FOR_SALE']
         },
         {
-            name: 'Alugar imóveis',
-            option: ['Alugar imóveis', 'Comprar imóveis']
+            name: 'municipality',
+            label: 'Município',
+            option: [
+                'Belas',
+                'Cacuaco',
+                'Camama',
+                'Cazenga',
+                'Hoji Ya Henda',
+                'Ingombota',
+                'Kilamba-Kiaxi',
+                'Kilamba',
+                'Maianga',
+                'Mulenvos',
+                'Mussulo',
+                'Rangel',
+                'Samba',
+                'Sambizanga',
+                'Talatona',
+                'Viana',
+            ]
         },
         {
-            name: 'Apartamento',
-            option: ['Apartamento', 'Fazenda', 'Vivenda', 'Residência']
-        }
+            name: 'type_of_property',
+            label: 'Tipo de propriedade',
+            option: [
+                'APARTAMENTO',
+                'VIVENDA',
+                'ESCRITORIO',
+                'FAZENDA',
+                'TERRENO',
+                'LOJA',
+                'ARMAZEM',
+                'HOTEL',
+                'PENTHOUSE',
+                'DUPLEX',
+                'TRIPLEX',
+                'QUARTO',
+                'SUITE',
+                'CONDOMINIO',
+                'RESORT',
+                'HOSPITAL',
+                'ESCOLA',
+                'RESTAURANTE',
+                'CINEMA',
+                'SHOPPING',
+            ]
+        },
+        {
+            name: 'is_negotiable',
+            label: 'É Negociável',
+            option: ['true', 'false']
+        },
     ]
-    const realstates =[
+    const realstates = [
         {
             id: 1
         },
@@ -57,7 +112,77 @@ export default function FilterPage(){
         {
             id: 10
         }
-    ]
+    ] 
+    const [filtersLength, setFiltersLength] = useState(0)
+    const [propertyFilter, setPropertyFilter] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
+    const filterSchema = z.object({
+        type_of_property: z.string().optional(),
+        type_of_purchase: z.string().optional(),
+        municipality: z.string().optional(),
+        is_negotiable: z.preprocess(
+            (val) => val === "true" ? true : val === "false" ? false : undefined,
+            z.boolean().optional()
+        )
+    }).refine(
+        (data) => {
+            return (
+            data.type_of_property ||
+            data.type_of_purchase ||
+            data.municipality ||
+            data.is_negotiable !== undefined
+            );
+        },
+        {
+            message: "Selecione pelo menos um filtro",
+            path: ["root"],
+        }
+    )
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm({
+        resolver: zodResolver(filterSchema),
+        defaultValues: {
+            type_of_property : '',
+            type_of_purchase: '',
+            municipality: ''
+        }
+    })
+    const onSubmit = async (data) => {
+        if(rangePrice != 25000)
+            data['max_price'] = rangePrice.toString()
+
+        const hasAnyFilter = Object.values(data).some((v) => {
+            return v !== "" && v !== null && v !== undefined;
+        });
+
+        if (!hasAnyFilter) {
+            toast.error("Selecione pelo menos um filtro")
+            return
+        }
+
+        const cleanedData = Object.fromEntries(
+            Object.entries(data).filter(([_, v]) => {
+                return v !== "" && v !== null && v !== undefined;
+            })
+        );
+        const queryString = new URLSearchParams(cleanedData).toString()
+        await getPropertiesFilter(setIsLoading, setPropertyFilter, queryString)
+        setFiltersLength(Object.keys(cleanedData).length)
+        console.log("Filter object:", cleanedData, queryString)
+    }
+    const onError = () => {
+        toast.error("Preencha os campos corretamente")
+    }
+
+    useEffect(() => {
+        getPropertiesFilter(setIsLoading, setPropertyFilter)
+    }, [])
+    console.log(errors)
     return(
         <>
             <Header />
@@ -96,14 +221,32 @@ export default function FilterPage(){
                         </div>
                     </div>
                     <div className="d-flex align-items-center gap-1">
-                        <span className="text-secondary">3 filtros aplicados:</span>
-                        <a href="#" className="text-black">Limpar tudo</a>
+                        <span className="text-secondary">{filtersLength > 1 ? `${filtersLength} filtros aplicados` : `${filtersLength} filtro aplicado`}:</span>
+                        <p 
+                            className="text-black m-0 text-decoration-underline cursor-pointer"
+                            onClick={() => {
+                                getPropertiesFilter(setIsLoading, setPropertyFilter)
+                                setFiltersLength(0)
+                                reset()
+                            }}
+                        >
+                            Limpar tudo
+                        </p>
                     </div>
                 </div>
                 <div className="d-flex gap-4 w-100 my-4">
-                    <aside className="w-25">
+                    <aside 
+                        className="w-25 position-sticky bg-white"
+                        style={{
+                            top: '100px',
+                            height: 'fit-content'
+                        }}
+                    >
                         <h3 className="mb-4">Filtros</h3>
-                        <form action="#">
+                        <form 
+                            action="#"
+                            onSubmit={handleSubmit(onSubmit, onError)}
+                        >
                             <div className="d-flex align-items-center position-relative">
                                 <input type="text" className="form-control shadow-none" placeholder="Digite cidade, municípios, ou bairros" style={{padding: '8px 35px'}} />
                                 <Search01Icon size={16} className="position-absolute" style={{left: '10px'}}/>
@@ -111,7 +254,12 @@ export default function FilterPage(){
                             <div className="d-flex flex-column gap-3 mt-3">
                                 {
                                     filterSelectsArray.map((filter) =>(
-                                        <FilterSelect name={filter.name} options={filter.option}/>
+                                        <FilterSelect 
+                                            name={filter.name}
+                                            label={filter.label} 
+                                            options={filter.option}
+                                            register={register}
+                                        />
                                     ))
                                 }
                             </div>
@@ -123,15 +271,41 @@ export default function FilterPage(){
                             <button type="submit" className="btn bg-default-color text-white w-100">Aplicar filtro</button>
                         </form>
                     </aside>
-                    <div className={`${styles.cardsContainer} w-75 h-100`}>
+                    <div 
+                        className={`${styles.cardsContainer} w-75 h-100`}        
+                    >
                         {
-                            realstates.map((realState) => (
-                                <div className="border border-1 rounded-2 d-flex justify-content-center align-items-center" style={{height: '330px'}}>
-                                    {
-                                        realState.id
-                                    }
+                            isLoading ? (
+                                <div 
+                                    className="w-100 d-flex justify-content-center align-items-end"
+                                    style={{
+                                        height: '30vh'
+                                    }}
+                                >
+                                    <SpinnerLoading
+                                        width={'5'}
+                                        height={'5'}
+                                    />
                                 </div>
-                            ))
+                            ) : (
+                                propertyFilter.length > 0 ? (
+                                     propertyFilter?.map((property, index) => (
+                                        <Cards 
+                                            index={index}
+                                            data={property.property}
+                                        />
+                                    ))
+                                ) : (
+                                    <div 
+                                        className="w-100 d-flex justify-content-center align-items-end"
+                                        style={{
+                                            height: '33vh'
+                                        }}
+                                    >
+                                        <h1 className="fw-semibold display-4">Ups! Sem resultados ...</h1>
+                                    </div>
+                                )
+                            )
                         }
                     </div>
                 </div>

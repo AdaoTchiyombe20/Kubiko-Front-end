@@ -11,7 +11,10 @@ import { AppContext } from "../context/appcontext"
 import { Modal } from "react-bootstrap"
 import { TfiLock } from "react-icons/tfi";
 
-export default function RealStateDetailsCard({whatIsThis, realStateInformations}){
+export default function RealStateDetailsCard({
+    whatIsThis, 
+    realStateInformations
+}){
     const navigate = useNavigate()
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)
     console.log(realStateInformations)
@@ -25,15 +28,15 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                 {
                     whatIsThis === 'realStateDetails' && (
                         <div className="mb-3">
-                            <BackButton icon={<ArrowLeft02Icon />} onClick={() => navigate('/')} />
+                            <BackButton icon={<ArrowLeft02Icon />} onClick={() => navigate(-1)} />
                         </div>
                     )
                 }
-                <div>
-                    <DetailsCarrousel images = {realStateInformations?.images} whatIsThis={whatIsThis} />
+                <div> 
+                    <DetailsCarrousel images = {realStateInformations?.property_medias} whatIsThis={whatIsThis} />
                 </div>
             </div>
-            <div className="col-7">
+            <div className="col-7 ps-3">
                 {
                     <>
                         <div>
@@ -45,19 +48,19 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                             <h2 className="mt-2 text-truncate">{realStateInformations?.title || 'Descrição não disponível'}</h2>
                         </div>
                         <div className={`${styles.realStatePrice}`}>
-                            <p className="fw-semibold m-0 ">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.purpose === 'Aluguel' ? '/mês' : ''}</span></p>
-                            <small>{realStateInformations?.purpose === 'Aluguel' ? "Valor mensal. Pagamento negociável." : "Valor único. Pagamento à vista."}</small>
+                            <p className="fw-semibold m-0 ">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.type_property_purchase === 'FOR_RENT' ? '/mês' : ''}</span></p>
+                            <small>{realStateInformations?.type_property_purchase === 'FOR_RENT' ? "Valor mensal. Pagamento negociável." : "Valor único. Pagamento à vista."}</small>
                         </div>
-                        <div className={`${styles.detailsItem} d-flex gap-4`}>
+                        {/* <div className={`${styles.detailsItem} d-flex gap-4`}>
                             <DetailsItem icon={<BedIcon color="#808080" />} title={"Quarto:"} qtd={realStateInformations?.bedrooms} text={`Quarto (${realStateInformations?.bedrooms} suite)`} />
                             <DetailsItem icon={<Bathtub01Icon color="#808080" />} title={"Banheiro:"} qtd={realStateInformations?.bathrooms} text={"Casas de banho"} />
-                            {/* <DetailsItem icon={<Building02Icon color="#808080" />} title={"Edifício:"} qtd={"3"} text={"andares"} /> Posteriormente saber quantos andares tem a residência e tambbém se é de quintal comum */}
+                            <DetailsItem icon={<Building02Icon color="#808080" />} title={"Edifício:"} qtd={"3"} text={"andares"} /> Posteriormente saber quantos andares tem a residência e tambbém se é de quintal comum
                             <DetailsItem icon={<KitchenUtensilsIcon color="#808080" />} title={"Cozinha:"} qtd={realStateInformations?.kitchen} text={"cozinha"} />
-                        </div>
+                        </div> */}
                          <div className={`${styles.ownerDescription}`}>
                             <div className="lastUpdate d-flex align-items-center gap-1">
                                 <Clock05Icon color="#808080" size={20} />
-                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>{realStateInformations?.createdAt}</p>
+                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>{ new Date(realStateInformations?.updated_at).toLocaleString('pt-PT')}</p>
                             </div>
                             <h2 className="ownerDescriptionTitle fw-semibold">Descrição do proprietário</h2>
                             <p className="ownerDescriptionText text-wrap text-truncate text-secondary m-0">
@@ -89,15 +92,18 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                         <Payment02Icon />
                                         Efectuar pagamento 
                                     </Link>
-                                    <ActionButtons 
-                                        icon={<Call02Icon />}
-                                        text={'Negociar Preço'} 
-                                        onClick={handleShow}
-                                        color={'#3541A9'} 
-                                        backgroundColor={'#FFFF'} 
-                                        border={'1px solid #3541A9'} 
-                                    />
-                                    
+                                    {
+                                        realStateInformations.is_negotiable && (
+                                            <ActionButtons 
+                                                icon={<Call02Icon />}
+                                                text={'Negociar Preço'} 
+                                                onClick={handleShow}
+                                                color={'#3541A9'} 
+                                                backgroundColor={'#FFFF'} 
+                                                border={'1px solid #3541A9'} 
+                                            />
+                                        )
+                                    }
                                     <Modal
                                         show={show} 
                                         onHide={() => {
@@ -124,7 +130,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                                                     <p className="text-secondary m-0">Preço anunciado</p>
                                                                     <p className="text-default-color fw-semibold fs-3 m-0">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || '85.000,00kz'}</p>
                                                                 </div>
-                                                                <div className={`${styles.detailsItem} d-flex flex-column gap-3`}>
+                                                                {/* <div className={`${styles.detailsItem} d-flex flex-column gap-3`}>
                                                                     <DetailsItem
                                                                         icon={<BedIcon color="#808080" />}
                                                                         title={"Quartos"}
@@ -143,7 +149,7 @@ export default function RealStateDetailsCard({whatIsThis, realStateInformations}
                                                                         qtd={realStateInformations?.kitchen}
                                                                         whatIsThis={'negotiationModal'}
                                                                     />
-                                                                </div>
+                                                                </div> */}
                                                             </div>
                                                         </div>
                                                         <div className="col-6 border-start border-2 ps-4">

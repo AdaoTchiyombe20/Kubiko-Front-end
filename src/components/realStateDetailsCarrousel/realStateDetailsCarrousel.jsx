@@ -24,16 +24,28 @@ export default function DetailsCarrousel({
             )
           })
         ) : (
-            <>
-              {
-                images?.map((_, index) => (
+           images?.map((image, index) => (
+              image.type === 'IMAGEM' ? (
                   <Carousel.Item key={index}>
-                    <img src={`house${index + 2}`} alt={`house${index + 1}`} className='rounded-3' style={{height: '500px'}}/>
+                      <img
+                          src={image.url}
+                          alt={image.public_id}
+                          className='rounded-3'
+                          style={{ height: '500px' }}
+                      />
                   </Carousel.Item>
-                ))
-              }
-            </>
-          )
+              ) : (
+                  <Carousel.Item key={index}>
+                      <video
+                          src={image.url}
+                          controls
+                          className='rounded-3'
+                          style={{ height: '500px' }}
+                      />
+                  </Carousel.Item>
+              )
+          ))
+        )
       }
     </Carousel>
   );

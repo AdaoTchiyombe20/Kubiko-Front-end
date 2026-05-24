@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
+import Spinner from 'react-bootstrap/Spinner';
 import { Theme } from "@radix-ui/themes";
 import { ArrowRight01Icon, ArrowRight02Icon, ArrowRight03Icon, City03Icon, FavouriteCircleIcon, Home12Icon, Home13Icon, House01Icon, PinLocation03Icon, Search01Icon, SearchingIcon, SolidLine01Icon, UserSearch02Icon, WinkIcon } from "hugeicons-react";
-import house5 from '../../assets/imgs/house5.png'
 import Tab from "../../components/tab/tab";
 import Cards from "../../components/cards/cards";
 import Header from "../../components/header/header";
@@ -14,6 +14,9 @@ import RandomText from "../../components/randomTextAndSvg/randomText";
 import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import PublicityCards from "../../components/publicityCards/publicityCards";
 import FeaturedProperties from "../../components/ featuredProperties/ featuredProperties";
+import { getAllProperties } from "../../utils/requests";
+import house5 from '../../assets/imgs/house5.png'
+
 import styles from './home.module.css'
 
 export default function Home(){
@@ -77,28 +80,10 @@ export default function Home(){
         }
     ]
 
-    var [realState, setRealState] = useState([])
+    var [isLoading, setIsLoading] = useState(false)
+    var [allProperties, setAllProperties] = useState([])
     useEffect(() => {
-        async function ListRealState(){
-            const endpoint = 'http://localhost:3001/properties'
-
-            try{
-                const data = await fetch(endpoint, {
-                    method: 'GET',
-                    headers: {
-                        'content-application': 'application/json'
-                    }
-                })
-
-                var resposta = await data.json()
-                setRealState(resposta)
-                console.log(resposta)
-            }
-            catch(error){
-                console.log("Erro: ", error)
-            }
-        }
-        ListRealState()
+        getAllProperties(setIsLoading, setAllProperties)
     }, [])
 
     return(
@@ -163,9 +148,28 @@ export default function Home(){
                 <div className="my-4">
                     <div className={`mb-4 ${styles.realStateCardsContainer}`}>
                         {
-                            realState?.map((_, index) => (
-                                <Cards index={index+1}/>
-                            ))
+                            isLoading ? (
+                                <div 
+                                    className="w-100 h-100 my-4 d-flex justify-content-center align-items-center"
+                                >
+                                    <Spinner 
+                                        animation="border"
+                                        role="status" 
+                                        variant="primary"
+                                        style={{ width: "5rem", height: "5rem" }}
+                                    >
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
+                                </div>
+                            ) : (
+                                allProperties?.map((property, index) => (
+                                    <Cards 
+                                        key={index} 
+                                        index={index + 1}
+                                        data = {property.property} 
+                                    />
+                                ))
+                            )
                         }
                     </div>
                     <div>

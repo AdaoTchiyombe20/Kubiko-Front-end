@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { Nav, Tab, Tabs } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import z, { array, set } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
@@ -128,6 +128,7 @@ export default function RegisterProperty() {
 
     const [isLoadingPage, setIsLoadingPage] = useState(true)
     const {setShowModal, setShowLocalModal} = useContext(AppContext)
+    const navigate = useNavigate()
 
     useEffect(() =>{
         async function load() {
@@ -139,13 +140,12 @@ export default function RegisterProperty() {
                 setShowLocalModal('registerProperty')
             }
             setIsLoadingPage(false)
+            setShowModal(false)
             refreshToken()
         }
 
         load();
-    }, [])
-    
-    
+    }, [])  
 
     const  [isLoading, setIsLoading] = useState(false)
     const [show, setShow] = useState(false);
@@ -438,7 +438,7 @@ export default function RegisterProperty() {
                                                                             className="form-select text-secondary cursor-pointer outline-none shadow-none"
                                                                             id="floatingSelecttype_of_property"
                                                                             defaultValue={"0"}
-                                                                            {...register("type_of_property")}
+                                                                            {...register("type_of_property")} 
                                                                         >
                                                                             <option value={"0"} hidden disabled>
                                                                                 Selecione o tipo de propriedade
@@ -773,10 +773,10 @@ export default function RegisterProperty() {
                                                 <form 
                                                     className="mt-4 d-flex align-items-center gap-2"
                                                     id="finishRegisterPropertyForm"
-                                                    onSubmit={(e)=>{
+                                                    onSubmit={async (e)=>{
                                                         e.preventDefault()
                                                         
-                                                        registerProperty(payload, setIsLoading)
+                                                        await registerProperty(payload, setIsLoading, navigate)
                                                         console.log("Enviando dados para o backend...")
                                                     }}
                                                 >

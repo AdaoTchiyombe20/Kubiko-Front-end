@@ -9,54 +9,61 @@ import RandomText from "../../components/randomTextAndSvg/randomText";
 import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import styles from './realStateDetails.module.css'
+import { getPropertyDetails } from "../../utils/requests";
 
 export default function RealStateDetails(){
 
     const {setShowLocalModal, handleShowModal} = useContext(AppContext)
     const { id } = useParams()
     const navigate = useNavigate()
-    const [realStateInformations, setRealStateInformation] = useState([])
+    const [propertyDetails, setPropertyDetails] = useState({})
+    const [isLoading, setIsLoading] = useState(false)
     console.log(id)
 
     useEffect(() =>{
-        async function realStateDetailShowInformation(){
-            const endpoint = `http://localhost:3001/properties/${id}`
+        getPropertyDetails(setIsLoading, setPropertyDetails, id)
+        // async function realStateDetailShowInformation(){
+        //     const endpoint = `http://localhost:3001/properties/${id}`
 
-            try{
-                const data = await fetch(endpoint, {
-                    method: 'GET',
-                    headers: {
-                        'content-type' : 'application/json'
-                    }
-                })
+        //     try{
+        //         const data = await fetch(endpoint, {
+        //             method: 'GET',
+        //             headers: {
+        //                 'content-type' : 'application/json'
+        //             }
+        //         })
 
-                const resposta = await data.json()
-                setRealStateInformation(resposta)
-                console.log(resposta)
-            }
-            catch(error){
-                console.log("Error: ", error)
-            }
-        }
-        realStateDetailShowInformation()
+        //         const resposta = await data.json()
+        //         setRealStateInformation(resposta)
+        //         console.log(resposta)
+        //     }
+        //     catch(error){
+        //         console.log("Error: ", error)
+        //     }
+        // }
+        // realStateDetailShowInformation()
     }, [])
+
+    if(isLoading)
+        return <>Carregando...</>
+
     return(
         <>
             <Header />
             <div className={`${styles.realStateDetails}`}>
                 <RealStateDetailsCard 
                     whatIsThis="realStateDetails"
-                    realStateInformations={realStateInformations}
+                    realStateInformations={propertyDetails}
                 />
                 <h2 className="my-4">Similares na mesma região</h2>
                 <div className={`${styles.realStateDetailsContainerCards} container-fluid mb-4`}>
-                    <div className={`${styles.realStateContainerCards}`}>
+                    {/* <div className={`${styles.realStateContainerCards}`}>
                         {
                             [...Array(5)].map((_, index) => (
                                 <Cards index={index+1}/>
                             ))
                         }
-                    </div>
+                    </div> */}
                 </div>
                 <div className="d-flex mb-4">
                     <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<UserSearch02Icon size={16} color="#D28920"/>}/>
