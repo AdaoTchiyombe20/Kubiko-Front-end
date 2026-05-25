@@ -20,10 +20,8 @@ export default function Cards({
   return (
     <Card className='p-0'>
       <Card.Header className={`${styles.cardHeader} p-0 position-relative`}>
-        <div className='border border-2 p-1 top d-flex align-items-center justify-content-center rounded-circle' style={{width: '50px', height: '50px'}}>
-          <FavouriteIcon size={25} color='#FFFF' />
-        </div>
-        <Card.Img variant="top" src={cardImg} style={{height: '166px'}} />
+       
+        <Card.Img variant="top" src={cardImg} style={{height: '200px'}} />
       </Card.Header>
       <Card.Body>
           <div className={`${styles.sellOrRent} d-flex align-items-center gap-1 mb-3`}>
@@ -33,9 +31,9 @@ export default function Cards({
             </svg>
             <p className='m-0 text-default-color'>{capitalize(data.type_of_property)}</p>
           </div>
-        <Card.Title className='fw-semibold'>{data.price.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} / mês</Card.Title>
+        <Card.Title className='fw-semibold'>{Number(data.price).toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} {data.type_property_purchase === 'FOR_RENT' ? '/ mês' : ''}</Card.Title>
         <Card.Text className={`${styles.cardText} m-0`}>
-          <span className='fw-normal text-secondary'>Tipo:</span> {data?.title}
+          <span className='fw-normal text-secondary'>Titulo:</span> {data?.title}
         </Card.Text>
         <Card.Text className={`${styles.cardText} m-0`}>
           <span className='fw-normal text-secondary'>Localização:</span> Luanda, {data.property_localization.municipality}, {data.property_localization.neighborhood}

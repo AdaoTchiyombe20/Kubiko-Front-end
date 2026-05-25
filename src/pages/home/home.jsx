@@ -79,6 +79,44 @@ export default function Home(){
             title: "Busca inteligente por localização"
         }
     ]
+    const filterSelectsArray = [
+        {
+            name: 'type_of_purchase',
+            label: 'Propósito',
+            option: ['FOR_RENT', 'FOR_SALE']
+        },
+        {
+            name: 'type_of_property',
+            label: 'Tipo de Imóvel',
+            option: [
+                'APARTAMENTO',
+                'VIVENDA',
+                'ESCRITORIO',
+                'FAZENDA',
+                'TERRENO',
+                'LOJA',
+                'ARMAZEM',
+                'HOTEL',
+                'PENTHOUSE',
+                'DUPLEX',
+                'TRIPLEX',
+                'QUARTO',
+                'SUITE',
+                'CONDOMINIO',
+                'RESORT',
+                'HOSPITAL',
+                'ESCOLA',
+                'RESTAURANTE',
+                'CINEMA',
+                'SHOPPING',
+            ]
+        },
+        {
+            name: 'is_negotiable',
+            label: 'É Negociável',
+            option: ['true', 'false']
+        },
+    ]
 
     var [isLoading, setIsLoading] = useState(false)
     var [allProperties, setAllProperties] = useState([])
@@ -102,35 +140,47 @@ export default function Home(){
                         <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
                         <h1 className="text-center lh-1 text-default-color">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
-                    <form className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}>
-                        <div className="col border-end border-2 pe-4 d-flex flex-column">
-                            <label htmlFor="">Tipo de imóvel</label>
-                            <Form.Select>
-                                <option value="">Apartamento</option>
-                            </Form.Select>
-                        </div>
-                        <div className="col border-end border-2 pe-4 d-flex flex-column">
-                            <label htmlFor="">Localização</label>
-                            <Form.Select>
-                                <option value="">Kilamba</option>
-                            </Form.Select>
-                        </div>
-                        <div className="col border-end border-2 pe-4 d-flex flex-column">
+                    <form 
+                        className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}
+                    >
+                        {
+                            filterSelectsArray.map((select, index) => (
+                                <div className="col border-end border-2 pe-4 d-flex flex-column">
+                                    <label htmlFor="">{select.label}</label>
+                                    <Form.Select
+                                        defaultValue={""}
+                                    >
+                                        <option value={""} disabled>{select.label}</option>
+                                        {
+                                            select.option.map((option, index) => (
+                                                <option key={index} value={`${option}`}>{option === 'FOR_RENT' ? 'Aluguel' : option === 'FOR_SALE' ? 'Venda' : option === 'true' ? 'Negociável' : option === "false" ? 'Não Negociável' : option}</option>
+                                            ))
+                                        }
+                                    </Form.Select>
+                                </div>
+                            ))
+                        }
+                        <div className="col border-end border-2 pe-4 d-flex flex-column justify-content-between h-100">
                             <label htmlFor="">Preço</label>
-                            <Form.Select>
-                                <option value="">20.000.000kz</option>
-                            </Form.Select>
-                        </div>
-                        <div className="col border-end border-2 pe-4 d-flex flex-column">
-                            <label htmlFor="">Nº de quartos</label>
-                            <Form.Select>
-                                <option value="">5 ou mais</option>
-                            </Form.Select>
+                            <input
+                                type="number"
+                                name=""
+                                id=""
+                                className="rounded-3 border border-2 outline-none shadow-none"
+                                placeholder="20000kz" 
+                                min={25000}
+                                style={{
+                                    padding: '11px 20px 11px 12px'
+                                }}
+                            />
                         </div>
                         <div className="col">
-                            <button className="btn btn-primary bg-default-color border-0 text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3">
+                            <button 
+                                type="submit"
+                                className="btn btn-primary bg-default-color border-0 text-white w-100 d-flex justify-content-center align-items-center gap-3 rounded-3"
+                            >
                                 Pesquisar
-                                <Search01Icon />
+                                <Search01Icon size={18} />
                             </button>
                         </div>
                     </form>
@@ -139,12 +189,12 @@ export default function Home(){
              
             <main className="mb-5 homePage-main">
                 <div className="d-flex mb-4">
-                    <RandomText text='IMÓVEIS' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<City03Icon size={16} color="#D28920"/>}/>
+                    <RandomText text='IMÓVEIS' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#eaf6fc'} icon={<City03Icon size={16} color="#10265B"/>}/>
                 </div>
                 <h2 className="mb-4">Onde você quiser morar, o Kubiko ajuda a encontrar.</h2>
-                <Theme>
+                {/* <Theme>
                     <Tab />
-                </Theme>
+                </Theme> */}
                 <div className="my-4">
                     <div className={`mb-4 ${styles.realStateCardsContainer}`}>
                         {
@@ -163,11 +213,13 @@ export default function Home(){
                                 </div>
                             ) : (
                                 allProperties?.map((property, index) => (
-                                    <Cards 
-                                        key={index} 
-                                        index={index + 1}
-                                        data = {property.property} 
-                                    />
+                                    index < 12 && (
+                                        <Cards 
+                                            key={index} 
+                                            index={index + 1}
+                                            data = {property.property} 
+                                        />
+                                    )
                                 ))
                             )
                         }
@@ -184,18 +236,18 @@ export default function Home(){
                         
                     </div>
                     <div className="col-2 d-flex align-items-center gap-2">
-                        <div className="d-flex align-items-center justify-content-center rounded-3 px-2" style={{backgroundColor: '#FCF7EA'}}>
-                        <WinkIcon color="#D28920" />
+                        <div className="d-flex align-items-center justify-content-center rounded-3 px-2" style={{backgroundColor: '#eaf6fc'}}>
+                            <WinkIcon color="#10265B" />
                         </div>
                         <p className="m-0">Dúvidas? Fale Conosco</p>
-                        <ArrowRight03Icon  color="#D28920"/>
+                        <ArrowRight03Icon color="#D28920"/>
                     </div>
                     <div className="col-5 border border-1 w-50">
                     </div>
                 </div>
                 <div className="mb-4">
                     <div className="d-flex justify-content-center mb-4">
-                        <RandomText text='SÓ FALTA VOCÊ' textColor='#3541A9' borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<FavouriteCircleIcon size={16} color="#3541A9"/>}/> 
+                        <RandomText text='SÓ FALTA VOCÊ' textColor='#10265B' borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<FavouriteCircleIcon size={16} color="#3541A9"/>}/> 
                     </div>
                     <h1 className="text-center mb-4">Confira o que podemos fazer por você</h1>
                     <div className="row gap-5">
@@ -208,16 +260,27 @@ export default function Home(){
                     </div>
                 </div>
                 <div className="d-flex mb-4">
-                    <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<UserSearch02Icon size={16} color="#D28920"/>}/>
+                    <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<UserSearch02Icon size={16} color="#3541A9"/>}/>
                 </div>
                 <div>
                     <FeaturedProperties />
                 </div>
                 <div>
-                    <h1 className="text-center display-1" style={{fontWeight: '500'}}>Destaque o seu <span className="text-default-color">imóvel</span></h1>
-                    <p className="text-center my-3" style={{
-                        fontSize: '18px'
-                    }}>
+                    <h1 
+                        className="text-center display-1" 
+                        style={{
+                            fontWeight: '500',
+                            marginTop: '100px'
+                        }}
+                    >
+                        Destaque o seu <span className="text-default-color">imóvel</span>
+                    </h1>
+                    <p 
+                        className="text-center my-3" 
+                        style={{
+                            fontSize: '18px'
+                        }}
+                    >
                         Transforme seu imóvel em uma estrela! Com nosso sistema de patrocínio, Sua <br /> propriedade aparece em destaque para milhares de compradores qualificados.
                     </p>
                     <div className="container-fluid">
@@ -242,13 +305,13 @@ export default function Home(){
                                     <li>Estatísticas detalhadas de performance</li>
                                 </ul>
                                 <div className="d-flex flex-column align-items-center fw-semibold rounded-2 py-3 mb-3" style={{
-                                    backgroundColor: '#FDEFE1',
-                                    color: '#F4983F'
+                                    backgroundColor: '#EDEFFD',
+                                    color: '#10265B'
                                 }}>
                                     <p className="">1000AOA / 24h</p>
                                     <p className="m-0">por dia de destaque</p>
                                 </div>
-                                <button type="button" className="btn btn-warning text-white w-100 py-2">Destacar agora</button>
+                                <button type="button" className="btn btn-primary bg-default-color border-0 shadow-none outline-none text-white w-100 py-2">Destacar agora</button>
                             </div>
                             <div className={`${styles.highlightPropertyImages} col-lg-8`}>
                                 <div className="border"></div>

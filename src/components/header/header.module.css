@@ -12,3 +12,6 @@
     line-height: 0.95rem;
     color: #3541A9;
 }
+.ul li a {
+    font-size: 14px;
+}

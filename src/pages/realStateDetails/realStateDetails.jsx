@@ -18,8 +18,7 @@ export default function RealStateDetails(){
     const navigate = useNavigate()
     const [propertyDetails, setPropertyDetails] = useState({})
     const [isLoading, setIsLoading] = useState(false)
-    console.log(id)
-
+    
     useEffect(() =>{
         getPropertyDetails(setIsLoading, setPropertyDetails, id)
         // async function realStateDetailShowInformation(){
@@ -66,7 +65,7 @@ export default function RealStateDetails(){
                     </div> */}
                 </div>
                 <div className="d-flex mb-4">
-                    <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#D28920"} borderRadius={'rounded-5'} backgroundColor={'#FCF7EA'} icon={<UserSearch02Icon size={16} color="#D28920"/>}/>
+                    <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<UserSearch02Icon size={16} color="#3541A9"/>}/>
                 </div>
                 <RecentSearchs />
             </div>

@@ -7,6 +7,7 @@ export default function Sidebar({
 }){
 
     const location = useLocation()
+    const isMyProfile = location.pathname.startsWith('/my-profile');
 
     return(
         <aside
@@ -36,10 +37,12 @@ export default function Sidebar({
                 <ul className={`${styles.sidebar_ul} list-unstyled d-flex flex-column gap-1`}>
                     {
                         routesArray?.map((route, index) => (
-                            console.log(location.pathname, route.url),
                             <li key={index} className={`${location.pathname === `/admin/${route.url}` ? styles.active : ''}  d-flex align-items-center gap-2 lh-lg`}>
-                                <route.icon icon={route.icon} color={whatIsThis === 'myProfile' ? '#10265B' :  '#ffff'} />
-                                <Link to={route.url} className={`text-decoration-none ${whatIsThis === 'myProfile' ? 'text-default-color' : 'text-white'} w-100`}>
+                                <route.icon icon={route.icon} color={whatIsThis === 'myProfile' ? '#10265B' :  '#ffff'}/>
+                                <Link 
+                                    to={route.url} 
+                                    className={`text-decoration-none ${whatIsThis === 'myProfile' ? `text-default-color ${styles.active2}` : 'text-white'} w-100`}
+                                >
                                     {route.name}
                                 </Link>
                             </li>

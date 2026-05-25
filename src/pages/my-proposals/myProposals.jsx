@@ -1,6 +1,8 @@
 import { Calendar04Icon, Location09Icon } from "hugeicons-react";
 import house from "../../assets/imgs/house.png"
+import { useEffect, useState } from "react";
 export default function MyProposals(){
+
     return(
         <div
             className="px-4"

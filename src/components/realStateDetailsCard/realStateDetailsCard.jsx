@@ -14,6 +14,8 @@ import z, { property } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { makeProposal } from "../../utils/requests"
+import { getDataFromStorage } from "../../utils/storage"
+import VariousModal from "../modal/modal"
 
 export default function RealStateDetailsCard({
     whatIsThis, 
@@ -26,11 +28,12 @@ export default function RealStateDetailsCard({
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(!show)
     const [whatModal, setWhatModal] = useState('sendProposal')
+    const [proposedPrice, setProposedPrice] = useState(0)
 
     const proposalSchema = z.object({
         offer_price: z.string().min(5, 'O preço mínimo é de 25000kz'),
         message: z.string().trim().min(25, 'Descrição muito curta'),
-        months: z.coerce.number({ invalid_type_error: "Valor inválido" }).min(1, "O mínimo é 1 mês"),
+        // months: z.coerce.number({ invalid_type_error: "Valor inválido" }).min(1, "O mínimo é 1 mês"),
     })
     const {
         handleSubmit,
@@ -47,8 +50,17 @@ export default function RealStateDetailsCard({
     })
     const onSubmit = async (data) => {
         data["property_id"] = realStateInformations.id
-        await makeProposal(setIsloading, data)
+        let success = await makeProposal(setIsloading, data)
+
+        if(success !== null){
+            setWhatModal("")
+            setProposedPrice(Number(data['offer_price']))
+        }
     }
+
+    const num = 299
+
+    console.log(num.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}))
 
     return(
         <div className="row">
@@ -61,7 +73,16 @@ export default function RealStateDetailsCard({
                     )
                 }
                 <div> 
-                    <DetailsCarrousel images = {realStateInformations?.property_medias} whatIsThis={whatIsThis} />
+                    <DetailsCarrousel
+                    
+                        images = {
+                            whatIsThis === 'registerProperty' 
+                            ? realStateInformations?.images 
+                            : realStateInformations?.property_medias
+                        }
+                        video = {whatIsThis === 'registerProperty' ? realStateInformations?.video : null}
+                        whatIsThis={whatIsThis} 
+                    />
                 </div>
             </div>
             <div className="col-7 ps-3">
@@ -76,7 +97,7 @@ export default function RealStateDetailsCard({
                             <h2 className="mt-2 text-truncate">{realStateInformations?.title || 'Descrição não disponível'}</h2>
                         </div>
                         <div className={`${styles.realStatePrice}`}>
-                            <p className="fw-semibold m-0 ">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.type_property_purchase === 'FOR_RENT' ? '/mês' : ''}</span></p>
+                            <p className="fw-semibold m-0 ">{Number(realStateInformations?.price)?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.type_property_purchase === 'FOR_RENT' ? '/mês' : ''}</span></p>
                             <small>{realStateInformations?.type_property_purchase === 'FOR_RENT' ? "Valor mensal. Pagamento negociável." : "Valor único. Pagamento à vista."}</small>
                         </div>
                         {/* <div className={`${styles.detailsItem} d-flex gap-4`}>
@@ -109,12 +130,26 @@ export default function RealStateDetailsCard({
                                         backgroundColor={'#3541A9'} 
                                         border={'none'} 
                                         onClick={() => {
+                                            if(!getDataFromStorage('user')){
+                                                setShowLocalModal('login')
+                                                handleShowModal()
+                                                return
+                                            }
                                             setShowLocalModal('scheduleVisit')
                                             handleShowModal()
                                         }}
                                     />
                                     <Link
-                                        to={'/payment'}
+                                        // to={'/payment'}
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            if(!getDataFromStorage('user')){
+                                                setShowLocalModal('login')
+                                                handleShowModal()
+                                                return
+                                            }
+                                            navigate('/payment')
+                                        }}
                                         className="text-decoration-none btn btn-primary border-0 bg-default-color py-2 gap-2 d-flex justify-content-center align-items-center"
                                     >
                                         <Payment02Icon />
@@ -125,7 +160,14 @@ export default function RealStateDetailsCard({
                                             <ActionButtons 
                                                 icon={<Call02Icon />}
                                                 text={'Negociar Preço'} 
-                                                onClick={handleShow}
+                                                onClick={()=> {
+                                                    if(!getDataFromStorage('user')){
+                                                        setShowLocalModal('login')
+                                                        handleShowModal()
+                                                        return
+                                                    } 
+                                                    handleShow()
+                                                }}
                                                 color={'#3541A9'} 
                                                 backgroundColor={'#FFFF'} 
                                                 border={'1px solid #3541A9'} 
@@ -136,6 +178,7 @@ export default function RealStateDetailsCard({
                                         show={show} 
                                         onHide={() => {
                                             handleShow()
+                                            setWhatModal("sendProposal")
                                         }} 
                                         centered 
                                         size={whatModal === 'sendProposal' ? "xl" : 'lg'}
@@ -189,11 +232,11 @@ export default function RealStateDetailsCard({
                                                                     {errors.message && <p className="text-danger">{errors.message.message}</p>
                                                                     }
                                                                 </div>
-                                                                <div className='d-flex flex-column gap-2 w-100 mb-3'>
+                                                                {/* <div className='d-flex flex-column gap-2 w-100 mb-3'>
                                                                     <label htmlFor="" className='ps-1 fw-semibold'>Meses<span className="text-danger" >*</span></label>
                                                                     <input type="number" {...register('months')} className="form-control shadow-none outline-none" placeholder="6 meses" min={1}/>
                                                                     {errors.months && <p className="text-danger">{errors.months.message}</p>}
-                                                                </div>
+                                                                </div> */}
                                                                 {/* <div className="d-flex justify-content-between gap-2">
                                                                     <div className="form-floating w-100">
                                                                         <select
@@ -259,7 +302,7 @@ export default function RealStateDetailsCard({
                                                                             width: '60%'
                                                                         }}
                                                                     >
-                                                                        {isLoading ? "Enviando" : 'Enviar Proposta'}
+                                                                        {isLoading ? "Enviando..." : 'Enviar Proposta'}
                                                                     </button>
                                                                 </div>
                                                             </form>
@@ -303,7 +346,7 @@ export default function RealStateDetailsCard({
                                                                 </div>
                                                                 <div className="d-flex align-items-center justify-content-between">
                                                                     <p className="text-secondary m-0">Valor da Proposta</p>
-                                                                    <p className="m-0">{realStateInformations.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || 'Preço não disponível'}</p>
+                                                                    <p className="m-0">{proposedPrice?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || 'Preço não disponível'}</p>
                                                                 </div>
                                                                 <div className="d-flex align-items-center justify-content-between">
                                                                     <p className="text-secondary m-0">Data de envio</p>

@@ -58,10 +58,6 @@ export async function logout(){
         toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     } 
-    
-    // finally {
-    //     setIsLoading(false);
-    // }
 }
 
 export async function refreshToken(){
@@ -84,6 +80,49 @@ export async function refreshToken(){
     } catch (error) {
         console.error('Error refreshing token:', error);
         return null
+    }
+}
+
+export async function assumeClient() {
+    try {
+
+        let response = await fetch(BASE_URL + '/assume-roles/client', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include'
+        });
+
+        // se token expirou
+        if (response.status === 401) {
+
+            const newAcessToken = await refreshToken();
+            response = await fetch(BASE_URL + '/assume-roles/client', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${newAcessToken}`
+                },
+                credentials: 'include'
+            });
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+
+            throw new Error(
+                errorData.message ||
+                'Algo deu errado no Assume Client.'
+            );
+        }
+
+        const result = await response.json();
+        return result
+        console.log(result);
+
+    } catch (error) {
+        console.error(error);
+        return null;
     }
 }
 
@@ -134,7 +173,7 @@ export async function verifyIndividualOwner(data, setIsLoading, endpoint){
     setIsLoading(true);
     console.log("verify: ", data)
     try {
-        const response = await fetch(BASE_URL + endpoint, {
+        let response = await fetch(BASE_URL + endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -234,6 +273,8 @@ export async function registerProperty(payload, setIsLoading, navigate){
     }
 }
 
+// Properties
+
 export async function publishProperty(id, navigate){
 
     try {
@@ -262,7 +303,6 @@ export async function publishProperty(id, navigate){
         return null
     } 
 }
-
 export async function getMyProperties(setProperties, setIsLoading, cursor = 0, limit = 20){
     setIsLoading(true)
     try {
@@ -304,7 +344,6 @@ export async function getMyProperties(setProperties, setIsLoading, cursor = 0, l
         setIsLoading(false)
     }
 }
-
 export async function getAllProperties(setIsLoading, setAllProperties){
     setIsLoading(true)
 
@@ -341,7 +380,7 @@ export async function getAllProperties(setIsLoading, setAllProperties){
         return result
 
     } catch(error) {
-        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        toast.error(error.message === 'Failed to fetch' ? 'Erro na conexão, verifique sua internet ' : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
         setIsLoading(false)
@@ -420,15 +459,143 @@ export async function getPropertiesFilter(setIsLoading, setPropertiesFilter, fil
         setIsLoading(false)
     }
 }
+
+// Proposal
+
 export async function makeProposal(setIsLoading, data){
     console.log('entrou')
     setIsLoading(true)
 
+    await assumeClient()
+    await refreshToken()
+
+
+    console.log(JSON.stringify(data))
     try{
-        let response = await fetch(BASE_URL + `/negotiatons/init`, {
+        const response = await fetch(BASE_URL + `/negotiations/init`, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`,
+                'content-type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        console.log(result)
+        return result
+
+    } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function getAllProposal(setIsLoading, setAllProposals){
+    setIsLoading(true)
+
+    await assumeOwner()
+    await refreshToken()
+
+    try{
+        let response = await fetch(BASE_URL + '/negotiations/receivedProposals', {
+            method: 'GET',
+            headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include'
+        });
+
+        if (response.status === 401) {
+            const newAcessToken = await refreshToken();
+            response = await fetch(BASE_URL + '/negotiations', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${newAcessToken}`
+                },
+                credentials: 'include'
+            });
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        setAllProposals(result.data.data)
+        console.log(result)
+        return result
+
+    } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function acceptProposal(setIsLoading, data){
+    console.log('entrou')
+    setIsLoading(true)
+
+    await assumeOwner()
+    await refreshToken()
+
+    console.log(JSON.stringify(data))
+    try{
+        const response = await fetch(BASE_URL + `/negotiations/accept`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`,
+                'content-type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        console.log(result)
+        return result
+
+    } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function rejectProposal(setIsLoading, data){
+    console.log('entrou')
+    setIsLoading(true)
+
+    await assumeOwner()
+    await refreshToken()
+
+    console.log(JSON.stringify(data))
+    try{
+        const response = await fetch(BASE_URL + `/negotiations/accept`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`,
+                'content-type': 'application/json'
             },
             credentials: 'include',
             body: JSON.stringify(data)

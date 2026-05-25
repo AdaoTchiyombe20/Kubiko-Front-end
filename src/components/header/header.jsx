@@ -23,19 +23,39 @@ export default function Header(){
                 <Link to={'/'} className="img">
                     <img src={Logo} alt=""/>
                 </Link>
-                <nav className="">
-                    <ul className="list-unstyled d-flex align-items-center m-0 gap-5">
+                <nav className="flex-grow-1 d-flex align-items-center justify-content-center">
+                    <ul className={`list-unstyled d-flex align-items-center m-0 gap-5 ${styles.ul}`}>
                         <li>
-                            <Dropdown title={'Alugar imóveis'}/>
+                            <Link 
+                                to={'/filters'} 
+                                className="text-decoration-none text-default-color"
+                            >
+                                Alugar imóveis
+                            </Link>
                         </li>
                         <li>
-                            <Dropdown title={'Comprar imóveis'}/>
+                             <Link 
+                                to={'/filters'} 
+                                className="text-decoration-none text-default-color"
+                            >
+                                Comprar imóveis
+                            </Link>
                         </li>
                         <li>
-                            <Dropdown title={'Anunciar imóveis'}/>
+                             <Link 
+                                to={'/filters'} 
+                                className="text-decoration-none text-default-color"
+                            >
+                                Destacar imóvel
+                            </Link>
                         </li>
-                        <li style={{fontSize: '14px'}}>
-                            Como funciona
+                        <li>
+                             <Link 
+                                to={'/cadastrar-imovel'} 
+                                className="text-decoration-none text-default-color"
+                            >
+                                Cadastrar imóvel
+                            </Link>
                         </li>
                     </ul>
                 </nav>

@@ -1,7 +1,9 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import Header from "../../components/header/header";
 import Sidebar from "../../components/sidebar/sidebar";
 import { MailDownload01Icon, MailUpload01Icon, Payment02Icon, RealEstate01Icon, ShoppingBasket01Icon, UserCircleIcon } from "hugeicons-react";
+import { useEffect } from "react";
+import { getDataFromStorage } from "../../utils/storage";
 
 export default function MyProfile(){
 
@@ -38,6 +40,9 @@ export default function MyProfile(){
         },
     ]
 
+    const user = localStorage.getItem('user');
+    if(!user)
+        return <Navigate to={"/"} replace={true} />
 
     return(
         <>

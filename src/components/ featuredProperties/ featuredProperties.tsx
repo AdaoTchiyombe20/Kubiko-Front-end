@@ -21,7 +21,7 @@ export default function FeaturedProperties() {
 
     // Move from first item centered to last item centered
     const totalDistance = (items.length - 1) * (ITEM_WIDTH + GAP)
-    const x = useTransform(scrollYProgress, [0, 1], [0, -totalDistance])
+    const x = useTransform(scrollYProgress, [0, 1], [180, -200])
 
     return (
         <div id="example">
@@ -97,12 +97,12 @@ export default function FeaturedProperties() {
                     }
                 </AnimatePresence>
             </div>
-            <section className="intro-section">
-                <h1 className="impact">Imóveis em <span className="text-default-color">destaque</span></h1>
-            </section>
 
             <div ref={containerRef} className="scroll-container">
-                <div className="sticky-wrapper">
+                <div className="sticky-wrapper d-flex flex-column">
+                    <section className="intro-section mt-5" style={{width: 'max-content'}}>
+                        <h1 className="impact d-flex gap-3">Imóveis em <span className="text-default-color">destaque</span></h1>
+                    </section>
                     <motion.div className="gallery" style={{ x }}>
                         {
                             items.map((item) => (
@@ -176,7 +176,7 @@ function StyleSheet() {
 
             .sticky-wrapper {
                 position: sticky;
-                top: 0;
+                top: 90px;
                 height: 60vh;
                 width: 400px;
                 margin: 0 auto;

@@ -138,6 +138,7 @@ export default function RegisterProperty() {
             if (response === null) {
                 setShowModal(true)
                 setShowLocalModal('registerProperty')
+                return
             }
             setIsLoadingPage(false)
             setShowModal(false)
@@ -164,12 +165,18 @@ export default function RegisterProperty() {
         quantity: z.string().min(1, 'A quantidade deve ser um número positivo')
     })
     const propertySchema = z.object({
-        title: z.string().trim().min(20, 'Pelo menos 20 caracteres'),
+        title: z.string().trim().min(20, 'Pelo menos 20 caracteres').refine(
+            value => /[a-zA-ZÀ-ÿ]/.test(value),
+            'O título deve conter letras'
+        ),
         price: z.string().min(4, 'O preço mínimo é de 1000kz'),
         description: z.string().trim().min(25, 'Descrição muito curta'),
         municipality: z.string().refine(value => value !== '0', 'Selecione um munícipio'),
         type_of_property: z.string().refine(value => value !== '0', 'Selecione um tipo de propriedade'),
-        neighborhood: z.string().trim().min(4, 'O bairro deve conter pelo menos 4 caracteres'),
+        neighborhood: z.string().trim().min(4, 'O bairro deve conter pelo menos 4 caracteres').refine(
+            value => /[a-zA-ZÀ-ÿ]/.test(value),
+            'O título deve conter letras'
+        ),
     })
     const { register, handleSubmit, formState : {errors} } = useForm({
         mode: 'onChange',
@@ -508,7 +515,7 @@ export default function RegisterProperty() {
                                                                     {errors.description && ( <small className="text-danger">{errors.description.message}</small> )}
                                                                 </div>
 
-                                                                <div>
+                                                                <div style={{ maxHeight: '120px', overflowY: 'auto' }}>
                                                                     {
                                                                         compartmentsList.map((compartment, index) => (
                                                                             <RegisterPropertyCounter

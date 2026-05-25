@@ -7,6 +7,12 @@
 .sidebar_ul li:hover{
     background-color: #10265B;
 }
+.sidebar_ul li:hover svg{
+    color: #ffff !important;
+}
 .active{
     background-color: #10265B;
+}
+.sidebar_ul li:hover .active2{
+    color: white !important;
 }

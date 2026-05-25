@@ -5,13 +5,12 @@ import house04 from '@/assets/imgs/house4.jpg'
 
 export default function DetailsCarrousel({
   images,
+  video,
   whatIsThis
 }) {
 
-  console.log(images)
   return (
     <Carousel className='details-carrousel' interval={null}>
-      
       {
         whatIsThis === 'registerProperty' ? (
           images?.map((image, index) => { 
