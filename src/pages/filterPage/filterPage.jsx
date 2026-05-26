@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { ArrowDown01Icon, GridViewIcon, Menu07Icon, Search01Icon } from "hugeicons-react";
+import { ArrowDown01Icon, GridViewIcon, ListSettingIcon, Menu07Icon, Search01Icon } from "hugeicons-react";
 import Dropdown from 'react-bootstrap/Dropdown';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Slider } from "primereact/slider";
 import FilterSelect from "./filterSelect/filterSelect";
 import styles from './filterPage.module.css'
@@ -21,6 +22,8 @@ export default function FilterPage(){
     const navigate = useNavigate()
     const [rangePrice, setRangePrice] = useState(25000);
     const [pageSize, setPageSize] = useState(1)
+    const [cardsView, setCardsView] = useState('grid')
+    const [showFiltersCanvas, setShowFiltersCanvas] = useState(false)
     const filterSelectsArray = [
         {
             name: 'type_of_purchase',
@@ -173,11 +176,45 @@ export default function FilterPage(){
         const queryString = new URLSearchParams(cleanedData).toString()
         await getPropertiesFilter(setIsLoading, setPropertyFilter, queryString)
         setFiltersLength(Object.keys(cleanedData).length)
+        setShowFiltersCanvas(false)
         console.log("Filter object:", cleanedData, queryString)
     }
     const onError = () => {
         toast.error("Preencha os campos corretamente")
     }
+    const renderFiltersForm = (showTitle = true) => (
+        <>
+            {showTitle && <h3 className="mb-4">Filtros</h3>}
+            <form 
+                action="#"
+                onSubmit={handleSubmit(onSubmit, onError)}
+            >
+                <div className={`${styles.searchField} d-flex align-items-center position-relative`}>
+                    <input type="text" className="form-control shadow-none" placeholder="Digite cidade, municípios, ou bairros" style={{padding: '8px 35px'}} />
+                    <Search01Icon size={16} className="position-absolute" style={{left: '10px'}}/>
+                </div>
+                <div className={`${styles.filterControls} d-flex flex-column gap-3 mt-3`}>
+                    {
+                        filterSelectsArray.map((filter) =>(
+                            <FilterSelect 
+                                key={filter.name}
+                                name={filter.name}
+                                label={filter.label} 
+                                options={filter.option}
+                                register={register}
+                            />
+                        ))
+                    }
+                </div>
+                <div className="card border border-0 my-4 d-flex justify-content-center">
+                    <label htmlFor="preco">Preço do imóvel</label>
+                    <Slider value={rangePrice} onChange={(e) => setRangePrice(e.value)} max={25000000} className="w-14rem my-3" />
+                    <p className="m-0"><span className="text-secondary">Preço: </span>25.000 kz - {rangePrice.toLocaleString('pt-BR')} kz</p>
+                </div>
+                <button type="submit" className="btn bg-default-color text-white w-100">Aplicar filtro</button>
+            </form>
+        </>
+    )
 
     useEffect(() => {
         getPropertiesFilter(setIsLoading, setPropertyFilter)
@@ -186,21 +223,41 @@ export default function FilterPage(){
     return(
         <>
             <Header />
-            <div 
-                className="px-5"
-                style={{
-                    marginTop: '80px'
-                }}    
-            >
+            <div className={styles.filterPage}>
                 <div className="d-flex flex-column">
-                    <div className="d-flex justify-content-between align-items-center my-3 py-2 px-3 border rounded-3">
-                        <div className="d-flex align-items-center gap-2 ">
-                            <Menu07Icon />
-                            <GridViewIcon />
+                    <div className={`${styles.filterToolbar} d-flex justify-content-between align-items-center my-3 py-2 px-3 border rounded-3`}>
+                        <div className="d-flex align-items-center gap-1">
+                            <button
+                                type="button"
+                                className={`${styles.viewButton} ${cardsView === 'list' ? styles.viewButtonActive : ''}`}
+                                aria-label="Ver imóveis em lista"
+                                title="Lista"
+                                onClick={() => setCardsView('list')}
+                            >
+                                <Menu07Icon />
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.viewButton} ${cardsView === 'grid' ? styles.viewButtonActive : ''}`}
+                                aria-label="Ver imóveis em grelha"
+                                title="Grelha"
+                                onClick={() => setCardsView('grid')}
+                            >
+                                <GridViewIcon />
+                            </button>
                         </div>
                         <div className="d-flex align-items-center gap-2">
+                            <button
+                                type="button"
+                                className={`${styles.filterToggleButton} d-lg-none`}
+                                aria-label="Abrir filtros"
+                                onClick={() => setShowFiltersCanvas(true)}
+                            >
+                                <ListSettingIcon size={18} />
+                                <span>Filtros</span>
+                            </button>
                             <Dropdown>
-                                <Dropdown.Toggle className={`${styles.dropdown} d-flex align-items-center gap-2 bg-white text-black border-0 outline-none" id="dropdown-basic`}>
+                                <Dropdown.Toggle className={`${styles.dropdown} d-flex align-items-center gap-2 bg-white text-black border-0 outline-none`}>
                                     Mostrar:
                                     <span>{pageSize}</span>
                                     <ArrowDown01Icon />
@@ -220,7 +277,20 @@ export default function FilterPage(){
                             </Dropdown>
                         </div>
                     </div>
-                    <div className="d-flex align-items-center gap-1">
+                    <Offcanvas 
+                        show={showFiltersCanvas} 
+                        onHide={() => setShowFiltersCanvas(false)}
+                        placement="start"
+                        className={styles.filtersOffcanvas}
+                    >
+                        <Offcanvas.Header closeButton>
+                            <Offcanvas.Title>Filtros</Offcanvas.Title>
+                        </Offcanvas.Header>
+                        <Offcanvas.Body>
+                            {renderFiltersForm(false)}
+                        </Offcanvas.Body>
+                    </Offcanvas>
+                    <div className={`${styles.filtersSummary} d-flex align-items-center gap-1`}>
                         <span className="text-secondary">{filtersLength > 1 ? `${filtersLength} filtros aplicados` : `${filtersLength} filtro aplicado`}:</span>
                         <p 
                             className="text-black m-0 text-decoration-underline cursor-pointer"
@@ -240,45 +310,14 @@ export default function FilterPage(){
                         </p>
                     </div>
                 </div>
-                <div className="d-flex gap-4 w-100 my-4">
+                <div className={`${styles.filterContent} d-flex gap-4 w-100 my-4`}>
                     <aside 
-                        className="w-25 position-sticky bg-white"
-                        style={{
-                            top: '100px',
-                            height: 'fit-content'
-                        }}
+                        className={`${styles.filtersSidebar} position-sticky bg-white`}
                     >
-                        <h3 className="mb-4">Filtros</h3>
-                        <form 
-                            action="#"
-                            onSubmit={handleSubmit(onSubmit, onError)}
-                        >
-                            <div className="d-flex align-items-center position-relative">
-                                <input type="text" className="form-control shadow-none" placeholder="Digite cidade, municípios, ou bairros" style={{padding: '8px 35px'}} />
-                                <Search01Icon size={16} className="position-absolute" style={{left: '10px'}}/>
-                            </div>
-                            <div className="d-flex flex-column gap-3 mt-3">
-                                {
-                                    filterSelectsArray.map((filter) =>(
-                                        <FilterSelect 
-                                            name={filter.name}
-                                            label={filter.label} 
-                                            options={filter.option}
-                                            register={register}
-                                        />
-                                    ))
-                                }
-                            </div>
-                            <div className="card border border-0 my-4 d-flex justify-content-center">
-                                <label htmlFor="preco">Preço do imóvel</label>
-                                <Slider value={rangePrice} onChange={(e) => setRangePrice(e.value)} max={25000000} className="w-14rem my-3" />
-                                <p className="m-0"><span className="text-secondary">Preço: </span>25.000 kz - {rangePrice.toLocaleString('pt-BR')} kz</p>
-                            </div>
-                            <button type="submit" className="btn bg-default-color text-white w-100">Aplicar filtro</button>
-                        </form>
+                        {renderFiltersForm()}
                     </aside>
                     <div 
-                        className={`${styles.cardsContainer} w-75 h-100`}        
+                        className={`${styles.cardsContainer} ${cardsView === 'list' ? styles.cardsContainerList : ''} h-100`}        
                     >
                         {
                             isLoading ? (
@@ -299,15 +338,11 @@ export default function FilterPage(){
                                         <Cards 
                                             index={index}
                                             data={property.property}
+                                            view={cardsView}
                                         />
                                     ))
                                 ) : (
-                                    <div 
-                                        className="w-100 d-flex justify-content-center align-items-end"
-                                        style={{
-                                            height: '33vh'
-                                        }}
-                                    >
+                                    <div className={`${styles.emptyState} w-100 d-flex justify-content-center align-items-center`}>
                                         <h1 className="fw-semibold display-4">Ups! Sem resultados ...</h1>
                                     </div>
                                 )
@@ -315,7 +350,7 @@ export default function FilterPage(){
                         }
                     </div>
                 </div>
-                <div className="py-5 px-4">
+                <div className={styles.recentSearches}>
                     <RecentSearchs />
                 </div>
             </div>

@@ -1,8 +1,140 @@
+.filterPage{
+    margin-top: 80px;
+    padding: 0 48px;
+}
 .dropdown::after{
     display: none !important;
 }
+.filterToolbar{
+    gap: 12px;
+}
+.viewButton{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 8px;
+    color: #1f2933;
+    background-color: transparent;
+    transition: background-color 160ms ease, color 160ms ease;
+}
+.viewButton:hover,
+.viewButtonActive{
+    color: #3541A9;
+    background-color: #EDEFFD;
+}
+.filterToggleButton{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid #D9DEE8;
+    border-radius: 8px;
+    color: #10265B;
+    background-color: #fff;
+}
+.filterToggleButton:hover{
+    border-color: #3541A9;
+    color: #3541A9;
+}
 .cardsContainer{
+    width: 75%;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 15px;
+}
+.cardsContainerList{
+    grid-template-columns: 1fr;
+}
+.filterContent{
+    align-items: flex-start;
+}
+.filtersSidebar{
+    top: 100px;
+    width: 25%;
+    height: fit-content;
+}
+.filtersOffcanvas{
+    width: min(92vw, 420px) !important;
+}
+.filtersOffcanvas :global(.offcanvas-body){
+    padding-top: 0;
+}
+.emptyState{
+    min-height: 33vh;
+    text-align: center;
+}
+.recentSearches{
+    padding: 48px 24px;
+}
+
+@media (max-width: 991.98px){
+    .filterPage{
+        padding: 0 24px;
+    }
+
+    .filterContent{
+        flex-direction: column;
+    }
+
+    .filtersSidebar{
+        display: none;
+    }
+
+    .filterControls{
+        display: flex !important;
+        flex-direction: column;
+    }
+
+    .cardsContainer{
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 575.98px){
+    .filterPage{
+        padding: 0 16px;
+    }
+
+    .filterToolbar{
+        align-items: stretch !important;
+        flex-direction: column;
+    }
+
+    .filterToolbar > div{
+        justify-content: space-between;
+    }
+
+    .filtersSummary{
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .filterToggleButton{
+        flex: 1;
+    }
+
+    .filterControls{
+        grid-template-columns: 1fr;
+    }
+
+    .searchField input{
+        font-size: 14px;
+    }
+
+    .cardsContainer{
+        grid-template-columns: 1fr;
+    }
+
+    .emptyState h1{
+        font-size: 32px;
+    }
+
+    .recentSearches{
+        padding: 32px 0;
+    }
 }

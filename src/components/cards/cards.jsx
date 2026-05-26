@@ -9,7 +9,8 @@ import styles from './cards.module.css'
 
 export default function Cards({
   index,
-  data
+  data,
+  view = 'grid'
 }) {
   const navigate = useNavigate()
   const [realStateInformation, setRealStateInformation] = useState([])
@@ -17,13 +18,15 @@ export default function Cards({
     return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
   }
   const path = data.property_medias[0].url
+  const isListView = view === 'list'
+
   return (
-    <Card className='p-0'>
-      <Card.Header className={`${styles.cardHeader} p-0 position-relative`}>
+    <Card className={`${isListView ? styles.listCard : ''} p-0`}>
+      <Card.Header className={`${styles.cardHeader} ${isListView ? styles.listCardHeader : ''} p-0 position-relative`}>
        
-        <Card.Img variant="top" src={path} style={{height: '200px'}} className='object-fit-cover' />
+        <Card.Img variant="top" src={path} className={`${styles.cardImage} ${isListView ? styles.listCardImage : 'object-fit-cover'}`} />
       </Card.Header>
-      <Card.Body>
+      <Card.Body className={isListView ? styles.listCardBody : ''}>
           <div className={`${styles.sellOrRent} d-flex align-items-center gap-1 mb-3`}>
             <p className='m-0 rounded-5'>{data.type_property_purchase === 'FOR_RENT' ? 'Aluguel' : 'Venda'}</p>
             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="#F0F0F2" className="bi bi-circle-fill" viewBox="0 0 16 16">
@@ -39,7 +42,7 @@ export default function Cards({
           <span className='fw-normal text-secondary'>Localização:</span> Luanda, {data.property_localization.municipality}, {data.property_localization.neighborhood}
         </Card.Text>
       </Card.Body>
-      <Card.Footer className={`${styles.cardFooter} border border-0 bg-light-subtle`}>
+      <Card.Footer className={`${styles.cardFooter} ${isListView ? styles.listCardFooter : ''} border border-0 bg-light-subtle`}>
         <Button className='w-100 bg-light border-1 border-primary text-default-color py-2' onClick={()=>{
           navigate(`/details/${data.id}`)
         }}>Ver detalhes</Button>
