@@ -129,15 +129,15 @@ export default function Home(){
             <Header />
 
             <div 
-                className="d-flex flex-column pb-4 position-relative mb-3"
+                className="d-flex flex-column pb-3 pb-md-4 position-relative mb-3"
                 style={{
                     marginTop: '80px',
                 }}
             >
                 <Carrousel />
                 <div className={`${styles.aboveCarrousel} h-100 w-100 d-flex flex-column justify-content-between align-items-center position-absolute`}>
-                    <div>
-                        <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
+                    <div className="container px-3">
+                        <h2 className="text-white text-center mb-3 mb-md-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
                         <h1 className="text-center lh-1 text-default-color">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
                     {/* <form 
@@ -187,7 +187,7 @@ export default function Home(){
                 </div>
             </div>
              
-            <main className="mb-5 homePage-main mt-0">
+            <main className={`mb-5 homePage-main mt-0 ${styles.homeMain}`}>
                 <div className="d-flex mb-4">
                     <RandomText text='IMÓVEIS' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#eaf6fc'} icon={<City03Icon size={16} color="#10265B"/>}/>
                 </div>
@@ -231,18 +231,18 @@ export default function Home(){
                         </Link>
                     </div>
                 </div>
-                <div className="row align-items-center my-4">
-                    <div className="col-4 border border-1 w-25">
+                <div className="row align-items-center justify-content-center g-3 my-4">
+                    <div className="d-none d-md-block col-md border border-1">
                         
                     </div>
-                    <div className="col-2 d-flex align-items-center gap-2">
+                    <div className="col-12 col-md-auto d-flex align-items-center justify-content-center gap-2 text-center">
                         <div className="d-flex align-items-center justify-content-center rounded-3 px-2" style={{backgroundColor: '#eaf6fc'}}>
                             <WinkIcon color="#10265B" />
                         </div>
                         <p className="m-0">Dúvidas? Fale Conosco</p>
                         <ArrowRight03Icon color="#D28920"/>
                     </div>
-                    <div className="col-5 border border-1 w-50">
+                    <div className="d-none d-md-block col-md border border-1">
                     </div>
                 </div>
                 <div className="mb-4">
@@ -250,7 +250,7 @@ export default function Home(){
                         <RandomText text='SÓ FALTA VOCÊ' textColor='#10265B' borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<FavouriteCircleIcon size={16} color="#3541A9"/>}/> 
                     </div>
                     <h1 className="text-center mb-4">Confira o que podemos fazer por você</h1>
-                    <div className="row gap-5">
+                    <div className="row row-cols-1 row-cols-xl-3 g-4">
                         {
                             publicityCards.map((item, index) => (
                                 <PublicityCards key={index} icon={item.icon} text={item.text} title={item.title}/>                                
@@ -262,12 +262,10 @@ export default function Home(){
                 <div className="d-flex mb-4">
                     <RandomText text='FAÇA PARTE VOCÊ TAMBÉM' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#EDEFFD'} icon={<UserSearch02Icon size={16} color="#3541A9"/>}/>
                 </div>
-                <div>
-                    <FeaturedProperties />
-                </div>
+                
                 <div>
                     <h1 
-                        className="text-center display-1" 
+                        className={`text-center display-1 ${styles.highlightTitle}`} 
                         style={{
                             fontWeight: '500',
                             marginTop: '100px'
@@ -276,16 +274,17 @@ export default function Home(){
                         Destaque o seu <span className="text-default-color">imóvel</span>
                     </h1>
                     <p 
-                        className="text-center my-3" 
+                        className="text-center my-3 mx-auto" 
                         style={{
                             fontSize: '18px'
                         }}
                     >
-                        Transforme seu imóvel em uma estrela! Com nosso sistema de patrocínio, Sua <br /> propriedade aparece em destaque para milhares de compradores qualificados.
+                        Transforme seu imóvel em uma estrela! Com nosso sistema de patrocínio, sua propriedade aparece em destaque para milhares de compradores qualificados.
                     </p>
                     <div className="container-fluid">
-                        <div className="row gx-5 my-5 px-5">
-                            <div className="col-lg-4 shadow-lg rounded-4 px-4 py-4">
+                        <div className="row g-4 g-xl-5 my-5 px-0 px-lg-4 px-xl-5 align-items-stretch">
+                            <div className="col-12 col-xl-4">
+                              <div className="h-100 shadow-lg rounded-4 px-3 px-sm-4 py-4">
                                 <div className="d-flex align-items-center gap-2 mb-4">
                                     <div className="d-flex justify-content-center align-items-center text-default-color text-white rounded-circle" style={{
                                         height: '50px',
@@ -312,8 +311,9 @@ export default function Home(){
                                     <p className="m-0">por dia de destaque</p>
                                 </div>
                                 <button type="button" className="btn btn-primary bg-default-color border-0 shadow-none outline-none text-white w-100 py-2">Destacar agora</button>
+                              </div>
                             </div>
-                            <div className={`${styles.highlightPropertyImages} col-lg-8`}>
+                            <div className={`${styles.highlightPropertyImages} col-12 col-xl-8`}>
                                 <div className="border"></div>
                                 <div className="border"></div>
                                 <div className="border"></div>
@@ -323,7 +323,7 @@ export default function Home(){
                 </div> 
                 <div className="my-5" >
                     <h1 className="text-center display-4" style={{fontWeight: '500'}}>Planos que crescem com você</h1>
-                    <p className="text-center text-secondary mt-1 mb-5" style={{
+                    <p className="text-center text-secondary mt-1 mb-5 mx-auto" style={{
                         fontSize: '18px'
                     }}>
                         Escolha o plano perfeito para sua agência imobiliária. Desde iniciantes até profissionais experientes, temos a solução ideal. Ver planos

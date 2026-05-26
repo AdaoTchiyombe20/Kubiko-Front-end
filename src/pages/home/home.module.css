@@ -1,14 +1,17 @@
+.homeMain{
+    overflow-x: hidden;
+}
 .aboveCarrousel{
     padding-top: 120px;
     bottom: -20px;
 }
 .aboveCarrousel h2{
     font-family: 'Parkinsans';
-    font-size: 60px;
+    font-size: clamp(28px, 5vw, 60px);
 }
 .aboveCarrousel h1{
     font-family: 'Parkinsans';
-    font-size: 70px;
+    font-size: clamp(36px, 7vw, 70px);
 }
 .homePageForm{
     width: 90vw;
@@ -27,7 +30,7 @@
 }
 .realStateCardsContainer{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
     justify-content: center;
     gap: 20px;
 }
@@ -36,20 +39,79 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 10px;
+    min-height: 360px;
 }
 .highlightPropertyImages div{
     border-radius: 8px;
+    min-height: 170px;
+    background-color: #f8f9fa;
 }
 .highlightPropertyImages div:first-child{
     grid-row: 1 / span 2;
 }
 .plansContainer{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 450px));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 450px));
+    align-items: stretch;
     justify-content: center;
-    gap: 70px;
+    gap: clamp(24px, 5vw, 70px);
     margin: 100px 0 50px 0;
 }
-.plansContainer div{
+.plansContainer > div{
     box-shadow: 1px 0px 40px 10px rgba(77, 71, 71, 0.103);
+}
+
+.highlightTitle{
+    font-size: clamp(40px, 8vw, 80px);
+}
+
+@media (max-width: 1199.98px){
+    .highlightPropertyImages{
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        min-height: auto;
+    }
+
+    .highlightPropertyImages div:first-child{
+        grid-row: auto;
+    }
+
+    .plansContainer{
+        grid-template-columns: minmax(0, 450px);
+        margin-top: 56px;
+    }
+
+    .plansContainer > div{
+        width: 100%;
+        min-height: 560px;
+        scale: 1 !important;
+    }
+}
+
+@media (max-width: 767.98px){
+    .homeMain{
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .aboveCarrousel{
+        padding-top: 64px;
+        bottom: 0;
+        justify-content: center !important;
+    }
+
+    .aboveCarrousel h1 br{
+        display: none;
+    }
+
+}
+
+@media (max-width: 575.98px){
+    .aboveCarrousel{
+        padding-top: 32px;
+    }
+
+    .aboveCarrousel h2{
+        margin-bottom: 12px !important;
+    }
 }

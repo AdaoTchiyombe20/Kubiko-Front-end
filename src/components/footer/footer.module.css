@@ -1,6 +1,9 @@
+.footer{
+    overflow-x: hidden;
+}
 .footer_up_left p{
     color: #FFFFFF99;
-    text-align: justify;
+    max-width: 420px;
 }
 .footerLogo div{
     background-color: white;
@@ -17,4 +20,14 @@
     font-size: 14px;
     color: white;
     text-decoration: none;
+}
+
+@media (max-width: 767.98px){
+    .footer{
+        padding: 40px 20px;
+    }
+
+    .footer_up_left p{
+        max-width: 100%;
+    }
 }
