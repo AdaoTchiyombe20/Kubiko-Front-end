@@ -334,8 +334,9 @@ export default function FilterPage(){
                                 </div>
                             ) : (
                                 propertyFilter.length > 0 ? (
-                                     propertyFilter?.map((property, index) => (
+                                     propertyFilter?.slice(0, pageSize).map((property, index) => (
                                         <Cards 
+                                            key={property.property?.id || index}
                                             index={index}
                                             data={property.property}
                                             view={cardsView}
