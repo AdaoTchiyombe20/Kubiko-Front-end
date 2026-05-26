@@ -32,3 +32,96 @@
     font-size: 18px;
     margin: 16px 0;
 }
+
+.detailsLayout{
+    --details-media-height: clamp(360px, 45vw, 500px);
+}
+
+.detailsTitle{
+    overflow-wrap: anywhere;
+}
+
+.detailsMedia :global(.details-carrousel img),
+.detailsMedia :global(.details-carrousel video){
+    width: 100%;
+    height: var(--details-media-height) !important;
+    object-fit: cover;
+}
+
+.additionalInfoList{
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.additionalInfoList > div{
+    min-width: min(100%, 220px);
+}
+
+.actionButtons{
+    flex-wrap: wrap;
+}
+
+.actionButtons button,
+.actionButtons a{
+    min-width: max-content;
+}
+
+@media (min-width: 992px){
+    .proposalFormColumn{
+        border-left: 1px solid var(--bs-border-color);
+    }
+}
+
+@media (max-width: 1199.98px){
+    .detailsLayout{
+        --details-media-height: clamp(320px, 58vw, 480px);
+    }
+}
+
+@media (max-width: 767.98px){
+    .detailsLayout{
+        --details-media-height: clamp(260px, 72vw, 360px);
+    }
+
+    .realStatePrice{
+        margin-top: 16px;
+    }
+
+    .realStatePrice p{
+        font-size: 18px;
+    }
+
+    .ownerDescription{
+        margin: 20px 0;
+    }
+
+    .additionalInfoList{
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .actionButtons{
+        align-items: stretch !important;
+        flex-direction: column;
+    }
+
+    .actionButtons button,
+    .actionButtons a{
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575.98px){
+    .detailsLayout{
+        --details-media-height: 260px;
+    }
+
+    .detailsMedia :global(.details-carrousel .carousel-control-next),
+    .detailsMedia :global(.details-carrousel .carousel-control-prev){
+        height: 36px;
+        width: 36px !important;
+        margin: 0 12px;
+    }
+}

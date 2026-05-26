@@ -59,8 +59,8 @@ export default function RealStateDetailsCard({
     }
 
     return(
-        <div className="row">
-            <div className="col-5">
+        <div className={`${styles.detailsLayout} row g-4 g-xl-5 align-items-start`}>
+            <div className="col-12 col-xl-5">
                 {
                     whatIsThis === 'realStateDetails' && (
                         <div className="mb-3">
@@ -68,7 +68,7 @@ export default function RealStateDetailsCard({
                         </div>
                     )
                 }
-                <div> 
+                <div className={styles.detailsMedia}> 
                     <DetailsCarrousel
                     
                         images = {
@@ -81,7 +81,7 @@ export default function RealStateDetailsCard({
                     />
                 </div>
             </div>
-            <div className="col-7 ps-3">
+            <div className="col-12 col-xl-7">
                 {
                     <>
                         <div>
@@ -90,7 +90,7 @@ export default function RealStateDetailsCard({
                                     <small className="bg-secondary-subtle px-3 py-1 rounded-5">641653</small>
                                 )
                             }
-                            <h2 className="mt-2 text-truncate">{realStateInformations?.title || 'Descrição não disponível'}</h2>
+                            <h2 className={`${styles.detailsTitle} mt-2`}>{realStateInformations?.title || 'Descrição não disponível'}</h2>
                         </div>
                         <div className={`${styles.realStatePrice}`}>
                             <p className="fw-semibold m-0 ">{Number(realStateInformations?.price)?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'})} <span className="text-secondary fw-normal">{realStateInformations?.type_property_purchase === 'FOR_RENT' ? '/mês' : ''}</span></p>
@@ -112,14 +112,14 @@ export default function RealStateDetailsCard({
                                 {realStateInformations?.description || 'Descrição não disponível'}
                             </p>
                         </div>
-                        <div className="d-flex gap-2">
+                        <div className={`${styles.additionalInfoList} d-flex gap-2`}>
                             <AdditionalInformation icon={<CheckmarkBadge02Icon />} text={"Informações confirmadas pelo anunciante"} />
                             <AdditionalInformation icon={<Call02Icon />} text={"Contacto direto com o proprietário"}/>
                             <AdditionalInformation icon={<Time04Icon />} text={"Visitas mediante agendamento"}/>
                         </div>
                         {
                             whatIsThis === 'realStateDetails' && (
-                                <div className="d-flex align-items-center gap-3 mt-3">
+                                <div className={`${styles.actionButtons} d-flex align-items-center gap-3 mt-3`}>
                                     <ActionButtons 
                                         icon={<Calendar04Icon />} 
                                         text={'Agendar visita'} 
@@ -193,8 +193,8 @@ export default function RealStateDetailsCard({
                                         {   
                                             whatModal === 'sendProposal' ?
                                                 (
-                                                    <div className="row">
-                                                        <div className="col-6 pe-4">
+                                                    <div className="row g-4">
+                                                        <div className="col-12 col-lg-6 pe-lg-4">
                                                             <div className="mb-3">
                                                                 <DetailsCarrousel images = {realStateInformations?.property_medias} whatIsThis={whatModal} />
                                                             </div>
@@ -207,7 +207,7 @@ export default function RealStateDetailsCard({
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="col-6 border-start border-2 ps-4">
+                                                        <div className={`${styles.proposalFormColumn} col-12 col-lg-6 border-2 ps-lg-4`}>
                                                             <h2 className="fw-semibold">Enviar Proposta ao Proprietário</h2>
                                                             <p className="text-secondary fw-sem">Envie o valor que pretende oferecer pelo imóvel. <br />O proprietário irá analisar e responder directamente pela plataforma</p>
                                                             <form 
