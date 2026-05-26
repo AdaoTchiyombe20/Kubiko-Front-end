@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { Nav, Tab, Tabs } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import z, { array, set } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
@@ -145,6 +145,14 @@ export default function RegisterProperty() {
             refreshToken()
         }
 
+        const user = localStorage.getItem('user');
+
+        if (!user) {
+            handleShow();
+            navigate("/", { replace: true });
+            return
+        }
+
         load();
     }, [])  
 
@@ -153,6 +161,12 @@ export default function RegisterProperty() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    // const user = localStorage.getItem('user');
+    // if(!user){
+    //     handleShow()        
+    //     return <Navigate to={"/"} replace={true} />
+    // }
 
     const date = new Date().toLocaleDateString('pt-AO')
     const [payload, setPayload] = useState({})
@@ -823,48 +837,48 @@ export default function RegisterProperty() {
                             <div>
                                 <BackButton
                                     icon={<ArrowLeft02Icon />}
-                                    onClick={() => propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : ''}
+                                    onClick={() => propertyInfo === 'finish' ? setPropertyInfo('fotografias') : propertyInfo === 'fotografias' ? setPropertyInfo('informacoes') : navigate(-1)}
                                 />
                             </div>
                             <div>
-                            <button
-                                type="submit"
-                                form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
-                                disabled={isLoading}
-                                className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
-                                onClick={() => {
-                                    if (propertyInfo === 'fotografias') {
-                                        if(files.length < 2){
-                                            toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
-                                            return
+                                <button
+                                    type="submit"
+                                    form={propertyInfo === 'finish' ? "finishRegisterPropertyForm" : "form"}
+                                    disabled={isLoading}
+                                    className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
+                                    onClick={() => {
+                                        if (propertyInfo === 'fotografias') {
+                                            if(files.length < 2){
+                                                toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
+                                                return
+                                            }
+
+                                            const images = files.filter(f => f.type.startsWith('image/'))
+                                            const video = files.filter(f => f.type.startsWith('video/'))
+
+                                            if (images.length < 1) {
+                                                toast.error('Adicione pelo menos 1 imagem do imóvel')
+                                                return
+                                            }
+
+                                            if (video.length > 1) {
+                                                toast.error('Só é permitido 1 vídeo')
+                                                return
+                                            }
+
+                                            setPayload(prev => ({
+                                                ...prev, 
+                                                images,
+                                                video,
+                                                createdAt: date
+                                            }))
+                                            setPropertyInfo('finish')
                                         }
-
-                                        const images = files.filter(f => f.type.startsWith('image/'))
-                                        const video = files.filter(f => f.type.startsWith('video/'))
-
-                                        if (images.length < 1) {
-                                            toast.error('Adicione pelo menos 1 imagem do imóvel')
-                                            return
-                                        }
-
-                                        if (video.length > 1) {
-                                            toast.error('Só é permitido 1 vídeo')
-                                            return
-                                        }
-
-                                        setPayload(prev => ({
-                                            ...prev, 
-                                            images,
-                                            video,
-                                            createdAt: date
-                                        }))
-                                        setPropertyInfo('finish')
-                                    }
-                                }}
-                            >
-                                {isLoading ? 'Enviando...' :  'Continuar'}
-                                <ArrowRight02Icon />
-                            </button>
+                                    }}
+                                >
+                                    {isLoading ? 'Enviando...' :  'Continuar'}
+                                    <ArrowRight02Icon />
+                                </button>
                             </div>
                         </footer>
                     </>

@@ -16,12 +16,12 @@ export default function Cards({
   function capitalize(texto){
     return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
   }
-  
+  const path = data.property_medias[0].url
   return (
     <Card className='p-0'>
       <Card.Header className={`${styles.cardHeader} p-0 position-relative`}>
        
-        <Card.Img variant="top" src={cardImg} style={{height: '200px'}} />
+        <Card.Img variant="top" src={path} style={{height: '200px'}} className='object-fit-cover' />
       </Card.Header>
       <Card.Body>
           <div className={`${styles.sellOrRent} d-flex align-items-center gap-1 mb-3`}>

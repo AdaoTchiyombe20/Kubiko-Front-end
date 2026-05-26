@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { ArrowLeft02Icon, BankIcon, Download04Icon, Pdf02Icon, SecurityCheckIcon, UserIcon } from "hugeicons-react";
 import BackButton from "../../navigateBackButton/navigateBackButton";
@@ -8,12 +8,24 @@ import house from "../../assets/imgs/house.png"
 import mcx from "../../assets/imgs/multicaixa_express.png"
 import styles from "./makePayment.module.css"
 import { toast } from "react-toastify";
+import { makePayments } from "../../utils/requests";
 
 export default function MakePayment(){
 
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const {
+        announcedPrice,
+        kubikoTaxPrice,
+        totalPaymentValue,
+        propertyTitle,
+        listed_id
+    } = location.state || {}
 
     const [file, setFile] = useState()
+    const [isLoadingPayment, setIsLoadingPayment] = useState(false)
+    const [payments, setPayments] = useState([])
 
     const { getRootProps, getInputProps} = useDropzone({
         accept: {
@@ -72,21 +84,40 @@ export default function MakePayment(){
                                     />
                                 </div> */}
                                 <div className="mb-4">
-                                    <p className="fw-semibold fs-4 m-0">Apartamento T3 Moderno</p>
+                                    <p className="fw-semibold fs-4 m-0">
+                                        {propertyTitle}
+                                    </p>
                                     <p className="text-secondary m-0">Talatona, Luanda</p>
                                 </div>
                                 <div>
                                     <div className="d-flex justify-content-between align-items-center border-top border-bottom border-1 py-2">
                                         <p className="text-secondary m-0">Preço Anunciado</p>
-                                        <p className="fw-semibold m-0">78.000,00kz</p>
+                                        <p className="fw-semibold m-0">
+                                            {
+                                                announcedPrice?.toLocaleString("pt-AO", {
+                                                    style: 'currency',
+                                                    currency: 'AOA'
+                                                })
+                                            }
+                                        </p>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center border-top border-bottom border-1 py-2">
                                         <p className="text-secondary m-0">Taxa da Kubiko (5%)</p>
-                                        <p className="fw-semibold m-0">3.900,00kz</p>
+                                        <p className="fw-semibold m-0">
+                                            {kubikoTaxPrice?.toLocaleString("pt-AO", {
+                                                style: 'currency',
+                                                currency: 'AOA'
+                                            })}
+                                        </p>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center border-top border-1 pt-2">
                                         <p className="fw-semibold text-primary m-0">Valor da Proposta</p>
-                                        <p className="fw-semibold text-primary fs-4 m-0">81.900,00kz</p>
+                                        <p className="m-0 fw-semibold">
+                                            {totalPaymentValue?.toLocaleString("pt-AO", {
+                                                style: 'currency',
+                                                currency: 'AOA'
+                                            })}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +213,12 @@ export default function MakePayment(){
                                     </div>
                                     <div className="d-flex align-items-center justify-content-between">
                                         <p className="m-0 fw-semibold">Kubiko Pagamentos</p>
-                                        <p className="m-0 fw-semibold">81.900,00 kz</p>
+                                        <p className="m-0 fw-semibold">
+                                            {totalPaymentValue?.toLocaleString("pt-AO", {
+                                                style: 'currency',
+                                                currency: 'AOA'
+                                            })}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -220,15 +256,20 @@ export default function MakePayment(){
                             </div>
                             <button 
                                 className="btn btn-primary bg-default-color border-0 w-100 mt-3 py-2"
-                                onClick={() => {
+                                onClick={async () => {
                                     if(!file){
                                         toast.error("Adicione o comprovativo de pagamento")
                                     }
-                                    else
-                                        navigate('/my-profile')
+                                    else{
+                                        const paymentPayload = {
+                                            listed_property_id: listed_id,
+                                            paymentType: 'DIRECT_PURCHASE'
+                                        }
+                                        await makePayments(setIsLoadingPayment, paymentPayload)
+                                    }
                                 }}
                             >
-                                Confirmar pagamento
+                                {isLoadingPayment ? 'Aguardando' : 'Confirmar pagamento'}
                             </button>
                         </div>
                     </div>

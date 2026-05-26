@@ -227,6 +227,7 @@ export default function FilterPage(){
                             onClick={() => {                                
                                 if(filtersLength === 0){
                                     toast.info("Não há nenhum filtro aplicado!")
+                                    reset()
                                     return
                                 }
                                 getPropertiesFilter(setIsLoading, setPropertyFilter)

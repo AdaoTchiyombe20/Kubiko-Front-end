@@ -82,12 +82,12 @@ export default function MyProperties(){
                                             </div>
                                             <div className="d-flex flex-column gap-2 w-25">
                                                 <p
-                                                    className="d-flex justify-content-center text-warning fw-semibold rounded-2 border-0 py-2 m-0"
+                                                    className={`${property.type_property_purchase === 'FOR_RENT' ? 'text-warning' : 'text-default-color'} d-flex justify-content-center fw-semibold rounded-2 border-0 py-2 m-0`}
                                                     style={{
-                                                        backgroundColor: '#FCF3D5'
+                                                        backgroundColor: property.type_property_purchase === 'FOR_RENT' ? '#FCF3D5' : '#eaf6fc'
                                                     }}
                                                 >
-                                                    Aluguel
+                                                    {property.type_property_purchase === 'FOR_RENT' ? 'Aluguel' : 'Venda'}
                                                 </p>
                                                 <button
                                                     className="btn btn-outline-primary fw-semibold border py-2 shadow-sm"

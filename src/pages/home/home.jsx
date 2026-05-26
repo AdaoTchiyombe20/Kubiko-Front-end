@@ -129,9 +129,9 @@ export default function Home(){
             <Header />
 
             <div 
-                className="d-flex flex-column pb-4 position-relative mb-5"
+                className="d-flex flex-column pb-4 position-relative mb-3"
                 style={{
-                    marginTop: '80px'
+                    marginTop: '80px',
                 }}
             >
                 <Carrousel />
@@ -140,7 +140,7 @@ export default function Home(){
                         <h2 className="text-white text-center mb-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
                         <h1 className="text-center lh-1 text-default-color">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
-                    <form 
+                    {/* <form 
                         className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}
                     >
                         {
@@ -183,11 +183,11 @@ export default function Home(){
                                 <Search01Icon size={18} />
                             </button>
                         </div>
-                    </form>
+                    </form> */}
                 </div>
             </div>
              
-            <main className="mb-5 homePage-main">
+            <main className="mb-5 homePage-main mt-0">
                 <div className="d-flex mb-4">
                     <RandomText text='IMÓVEIS' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#eaf6fc'} icon={<City03Icon size={16} color="#10265B"/>}/>
                 </div>

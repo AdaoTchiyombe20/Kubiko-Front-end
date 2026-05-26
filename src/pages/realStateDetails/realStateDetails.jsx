@@ -10,6 +10,7 @@ import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import styles from './realStateDetails.module.css'
 import { getPropertyDetails } from "../../utils/requests";
+import SpinnerLoading from "../../components/spinner/spinner";
 
 export default function RealStateDetails(){
 
@@ -21,30 +22,24 @@ export default function RealStateDetails(){
     
     useEffect(() =>{
         getPropertyDetails(setIsLoading, setPropertyDetails, id)
-        // async function realStateDetailShowInformation(){
-        //     const endpoint = `http://localhost:3001/properties/${id}`
-
-        //     try{
-        //         const data = await fetch(endpoint, {
-        //             method: 'GET',
-        //             headers: {
-        //                 'content-type' : 'application/json'
-        //             }
-        //         })
-
-        //         const resposta = await data.json()
-        //         setRealStateInformation(resposta)
-        //         console.log(resposta)
-        //     }
-        //     catch(error){
-        //         console.log("Error: ", error)
-        //     }
-        // }
-        // realStateDetailShowInformation()
     }, [])
 
-    if(isLoading)
-        return <>Carregando...</>
+    if(isLoading){
+        return(
+            <div
+                className="d-flex justify-content-center align-items-center"
+                style={{
+                    height: '100vh'
+                }}
+            >
+                <SpinnerLoading
+                    width={"10"}
+                    height={"10"}
+                />
+
+            </div>
+        )
+    }
 
     return(
         <>

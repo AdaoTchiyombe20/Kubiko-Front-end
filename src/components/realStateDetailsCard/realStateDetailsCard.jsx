@@ -58,10 +58,6 @@ export default function RealStateDetailsCard({
         }
     }
 
-    const num = 299
-
-    console.log(num.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}))
-
     return(
         <div className="row">
             <div className="col-5">
@@ -148,7 +144,15 @@ export default function RealStateDetailsCard({
                                                 handleShowModal()
                                                 return
                                             }
-                                            navigate('/payment')
+                                            navigate('/payment', {
+                                                state: {
+                                                    announcedPrice: Number(realStateInformations?.price),
+                                                    kubikoTaxPrice: Number(realStateInformations?.price) * 0.05,
+                                                    totalPaymentValue: Number(realStateInformations?.price) + (Number(realStateInformations?.price) * 0.05),
+                                                    propertyTitle: realStateInformations?.title,
+                                                    listed_id: realStateInformations?.id
+                                                }
+                                            })
                                         }}
                                         className="text-decoration-none btn btn-primary border-0 bg-default-color py-2 gap-2 d-flex justify-content-center align-items-center"
                                     >
@@ -199,7 +203,7 @@ export default function RealStateDetailsCard({
                                                             <div className="mt-3">
                                                                 <div className="pb-2">
                                                                     <p className="text-secondary m-0">Preço anunciado</p>
-                                                                    <p className="text-default-color fw-semibold fs-3 m-0">{realStateInformations?.price?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || '85.000,00kz'}</p>
+                                                                    <p className="text-default-color fw-semibold fs-3 m-0">{Number(realStateInformations?.price)?.toLocaleString("pt-AO", {style: 'currency', currency: 'AOA'}) || '85.000,00kz'}</p>
                                                                 </div>
                                                             </div>
                                                         </div>

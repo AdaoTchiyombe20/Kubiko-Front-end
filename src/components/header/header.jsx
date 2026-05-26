@@ -45,6 +45,15 @@ export default function Header(){
                              <Link 
                                 to={'/filters'} 
                                 className="text-decoration-none text-default-color"
+                                onClick={(e)=>{
+                                    if(!getDataFromStorage('user')){
+                                        e.preventDefault()
+                                        setShowLocalModal('login')
+                                        handleShowModal()
+                                        return
+                                    }
+
+                                }}
                             >
                                 Destacar imóvel
                             </Link>
@@ -52,6 +61,15 @@ export default function Header(){
                         <li>
                              <Link 
                                 to={'/cadastrar-imovel'} 
+                                onClick={(e)=>{
+                                    if(!getDataFromStorage('user')){
+                                        e.preventDefault()
+                                        setShowLocalModal('login')
+                                        handleShowModal()
+                                        return
+                                    }
+
+                                }}
                                 className="text-decoration-none text-default-color"
                             >
                                 Cadastrar imóvel
@@ -60,10 +78,10 @@ export default function Header(){
                     </ul>
                 </nav>
                 <div className="d-flex align-items-center gap-4 px-3">
-                    <div className={`${styles.favourites} d-flex align-items-center justify-content-center text-default-color rounded-2`}>
+                    {/* <div className={`${styles.favourites} d-flex align-items-center justify-content-center text-default-color rounded-2`}>
                         <FavouriteIcon size={18}/>
                         Favoritos
-                    </div>
+                    </div> */}
                     <div className="dropdown" onClick={() => {
                         if(!isLogged){
                             setShowLocalModal('login')

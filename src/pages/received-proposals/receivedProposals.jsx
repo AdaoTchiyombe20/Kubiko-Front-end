@@ -1,7 +1,7 @@
 import { Calendar04Icon, Location09Icon, StarIcon } from "hugeicons-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { acceptProposal, getAllProposal } from "../../utils/requests";
+import { acceptProposal, getAllProposal, rejectProposal } from "../../utils/requests";
 import SpinnerLoading from "../../components/spinner/spinner";
 
 export default function ReceivedProposals(){
@@ -89,13 +89,20 @@ export default function ReceivedProposals(){
                                                 }}
                                                 disabled={isLoadingAcceptProposal}
                                             >
-                                                {isLoadingAcceptProposal ? 'Aceitando ...' : 'Aceitar'}
+                                                {isLoadingAcceptProposal ? 'Processando' : 'Aceitar'}
                                             </button>
                                             <button 
                                                 className="btn btn-danger w-50"
                                                 disabled={isLoadingAcceptProposal}
+                                                onClick={(e)=> {
+                                                    e.preventDefault()
+                                                    rejectProposal(setIsLoadingAcceptProposal, {
+                                                        message: proposal?.message || '',
+                                                        negociation_id: proposal?.negociationEvents[0].negociation_id
+                                                    })
+                                                }}
                                             >
-                                                Recusar
+                                                {isLoadingAcceptProposal ? 'Processando' : 'Aceitar'}
                                             </button>
                                         </div>
                                     </div>

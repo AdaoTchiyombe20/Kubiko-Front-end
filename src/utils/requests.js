@@ -121,6 +121,19 @@ export async function assumeClient() {
         console.log(result);
 
     } catch (error) {
+        if (!navigator.onLine) {
+            toast.error("Sem ligação à internet.");
+            return null;
+        }
+
+        if (
+            error.message?.includes("Failed to fetch") ||
+            error.message?.includes("ERR_NETWORK") ||
+            error.message?.includes("ERR_NAME_NOT_RESOLVED")
+        ) {
+            toast.error("Erro de conexão. Verifique a internet.");
+            return null;
+        }
         console.error(error);
         return null;
     }
@@ -421,8 +434,8 @@ export async function getPropertyDetails(setIsLoading, setPropertyDetails, id){
         console.log(result)
         return result
 
-    } catch(error) {
-        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+    } catch(error) {errorData.message 
+        toast.error(error.message === 'Failed to fetch' ? 'Erro na conexão, Verifique a sua interne' : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
         setIsLoading(false)
@@ -453,6 +466,22 @@ export async function getPropertiesFilter(setIsLoading, setPropertiesFilter, fil
         return result
 
     } catch(error) {
+
+        if (!navigator.onLine) {
+            toast.error("Sem ligação à internet.");
+            return null;
+        }
+
+        if (
+            error.message?.includes("Failed to fetch") ||
+            error.message?.includes("ERR_NETWORK") ||
+            error.message?.includes("ERR_NAME_NOT_RESOLVED")
+        ) {
+            toast.error("Erro de conexão. Verifique a internet.");
+            return null;
+        }
+        
+        
         toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
@@ -494,7 +523,7 @@ export async function makeProposal(setIsLoading, data){
         return result
 
     } catch(error) {
-        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        toast.error(error.message === 'Token inválido' ? "Verifique a sua internet e tente novamente!" : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
         setIsLoading(false)
@@ -517,7 +546,52 @@ export async function getAllProposal(setIsLoading, setAllProposals){
 
         if (response.status === 401) {
             const newAcessToken = await refreshToken();
-            response = await fetch(BASE_URL + '/negotiations', {
+            response = await fetch(BASE_URL + '/negotiations/receivedProposals', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${newAcessToken}`
+                },
+                credentials: 'include'
+            });
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        setAllProposals(result.data.data)
+        console.log(result)
+        return result
+
+    } catch(error) {
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function getAllSentProposals(setIsLoading, setAllProposals){
+    setIsLoading(true)
+
+    await assumeClient()
+    await refreshToken()
+
+    try{
+        let response = await fetch(BASE_URL + '/negotiations/sentProposals', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include'
+        });
+
+        if (response.status === 401) {
+            const newAcessToken = await refreshToken();
+            response = await fetch(BASE_URL + '/negotiations/sentProposals', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${newAcessToken}`
@@ -591,7 +665,7 @@ export async function rejectProposal(setIsLoading, data){
 
     console.log(JSON.stringify(data))
     try{
-        const response = await fetch(BASE_URL + `/negotiations/accept`, {
+        const response = await fetch(BASE_URL + `/negotiations/reject`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`,
@@ -614,6 +688,62 @@ export async function rejectProposal(setIsLoading, data){
 
     } catch(error) {
         toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+
+// Payment
+
+export async function makePayments(setIsLoading, data){
+    console.log('entrou')
+    setIsLoading(true)
+
+    await assumeClient()
+    await refreshToken()
+
+
+    console.log(JSON.stringify(data))
+    try{
+        const response = await fetch(BASE_URL + `/payments`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`,
+                'content-type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        console.log(result)
+        return result
+
+    } catch(error) {
+        if (!navigator.onLine) {
+            toast.error("Sem ligação à internet.");
+            return null;
+        }
+
+        if (
+            error.message?.includes("Failed to fetch") ||
+            error.message?.includes("ERR_NETWORK") ||
+            error.message?.includes("ERR_NAME_NOT_RESOLVED")
+        ) {
+            toast.error("Erro de conexão. Verifique a internet.");
+            return null;
+        }
+        
+        
+        toast.error(error.message === 'Token inválido' ? "Verifique a sua internet e tente novamente!" : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
         setIsLoading(false)

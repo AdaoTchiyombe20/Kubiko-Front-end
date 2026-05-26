@@ -1,7 +1,15 @@
 import { Calendar04Icon, Location09Icon } from "hugeicons-react";
 import house from "../../assets/imgs/house.png"
 import { useEffect, useState } from "react";
+import { getAllSentProposals } from "../../utils/requests";
 export default function MyProposals(){
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [allProposals, setAllProposals] = useState([])
+
+    useEffect(() => {
+            getAllSentProposals(setIsLoading, setAllProposals)
+        }, [])
 
     return(
         <div
