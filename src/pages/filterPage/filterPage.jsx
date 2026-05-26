@@ -21,9 +21,10 @@ export default function FilterPage(){
 
     const navigate = useNavigate()
     const [rangePrice, setRangePrice] = useState(25000);
-    const [pageSize, setPageSize] = useState(1)
+    const [pageSize, setPageSize] = useState(10)
     const [cardsView, setCardsView] = useState('grid')
     const [showFiltersCanvas, setShowFiltersCanvas] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     const filterSelectsArray = [
         {
             name: 'type_of_purchase',
@@ -182,6 +183,28 @@ export default function FilterPage(){
     const onError = () => {
         toast.error("Preencha os campos corretamente")
     }
+    const normalizeSearchText = (value) => {
+        return String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+    }
+    const displayedProperties = propertyFilter.filter((property) => {
+        const propertyData = property.property || {}
+        const localization = propertyData.property_localization || {}
+        const searchableText = [
+            propertyData.title,
+            propertyData.description,
+            propertyData.type_of_property,
+            propertyData.type_property_purchase,
+            localization.province,
+            localization.municipality,
+            localization.neighborhood
+        ].join(' ')
+
+        return normalizeSearchText(searchableText).includes(normalizeSearchText(searchTerm))
+    })
+    const activeFiltersLength = filtersLength + (searchTerm.trim() ? 1 : 0)
     const renderFiltersForm = (showTitle = true) => (
         <>
             {showTitle && <h3 className="mb-4">Filtros</h3>}
@@ -190,7 +213,14 @@ export default function FilterPage(){
                 onSubmit={handleSubmit(onSubmit, onError)}
             >
                 <div className={`${styles.searchField} d-flex align-items-center position-relative`}>
-                    <input type="text" className="form-control shadow-none" placeholder="Digite cidade, municípios, ou bairros" style={{padding: '8px 35px'}} />
+                    <input 
+                        type="text" 
+                        className="form-control shadow-none" 
+                        placeholder="Digite cidade, municípios, ou bairros" 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{padding: '8px 35px'}} 
+                    />
                     <Search01Icon size={16} className="position-absolute" style={{left: '10px'}}/>
                 </div>
                 <div className={`${styles.filterControls} d-flex flex-column gap-3 mt-3`}>
@@ -264,12 +294,12 @@ export default function FilterPage(){
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
                                     {
-                                        [...Array(10)].map((_, i) => (
-                                            <Dropdown.Item href="#" key={`${i + 1}`} className="bg-white text-black" onClick={(e) => {
+                                        [10, 20, 30, 40, 50].map((size) => (
+                                            <Dropdown.Item href="#" key={size} className="bg-white text-black" onClick={(e) => {
                                                 e.preventDefault()
-                                                setPageSize(i+1)
+                                                setPageSize(size)
                                             }}>{
-                                                i + 1}
+                                                size}
                                             </Dropdown.Item>
                                         ))
                                     }
@@ -291,17 +321,18 @@ export default function FilterPage(){
                         </Offcanvas.Body>
                     </Offcanvas>
                     <div className={`${styles.filtersSummary} d-flex align-items-center gap-1`}>
-                        <span className="text-secondary">{filtersLength > 1 ? `${filtersLength} filtros aplicados` : `${filtersLength} filtro aplicado`}:</span>
+                        <span className="text-secondary">{activeFiltersLength > 1 ? `${activeFiltersLength} filtros aplicados` : `${activeFiltersLength} filtro aplicado`}:</span>
                         <p 
                             className="text-black m-0 text-decoration-underline cursor-pointer"
                             onClick={() => {                                
-                                if(filtersLength === 0){
+                                if(activeFiltersLength === 0){
                                     toast.info("Não há nenhum filtro aplicado!")
                                     reset()
                                     return
                                 }
                                 getPropertiesFilter(setIsLoading, setPropertyFilter)
                                 setRangePrice(25000)
+                                setSearchTerm('')
                                 setFiltersLength(0)
                                 reset()
                             }}
@@ -333,8 +364,8 @@ export default function FilterPage(){
                                     />
                                 </div>
                             ) : (
-                                propertyFilter.length > 0 ? (
-                                     propertyFilter?.slice(0, pageSize).map((property, index) => (
+                                displayedProperties.length > 0 ? (
+                                     displayedProperties?.slice(0, pageSize).map((property, index) => (
                                         <Cards 
                                             key={property.property?.id || index}
                                             index={index}
