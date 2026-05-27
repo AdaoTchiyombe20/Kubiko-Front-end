@@ -6,7 +6,7 @@ import ActionButtons from "../realStateDetailsActionButtons/actionButtons"
 import DetailsCarrousel from "../realStateDetailsCarrousel/realStateDetailsCarrousel"
 import AdditionalInformation from "../detailsAdditionalInformations/detailsAdditionInformations"
 import styles from './realStateDetailsCard.module.css'
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AppContext } from "../context/appcontext"
 import { Modal } from "react-bootstrap"
 import { TfiLock } from "react-icons/tfi";
@@ -14,7 +14,7 @@ import z, { property } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { makeProposal } from "../../utils/requests"
-import { getDataFromStorage } from "../../utils/storage"
+import { getDataFromStorage, setDataIntoStorage } from "../../utils/storage"
 
 export default function RealStateDetailsCard({
     whatIsThis, 
@@ -28,11 +28,25 @@ export default function RealStateDetailsCard({
     const handleShow = () => setShow(!show)
     const [whatModal, setWhatModal] = useState('sendProposal')
     const [proposedPrice, setProposedPrice] = useState(0)
+    const [isNegotiating, setIsNegotiating] = useState(false)
+    const negotiationKey = realStateInformations?.listing_id || realStateInformations?.id
     const lastUpdate = realStateInformations?.updated_at || realStateInformations?.createdAt || realStateInformations?.created_at
     const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : new Date()
     const formattedLastUpdate = Number.isNaN(lastUpdateDate.getTime())
         ? new Date().toLocaleString('pt-PT')
         : lastUpdateDate.toLocaleString('pt-PT')
+
+    useEffect(() => {
+        const negotiatedProperties = getDataFromStorage('negotiatingProperties') || []
+        const hasApiNegotiation = Boolean(
+            realStateInformations?.is_negotiating ||
+            realStateInformations?.has_negociation ||
+            realStateInformations?.has_negotiation ||
+            realStateInformations?.negociation_id
+        )
+
+        setIsNegotiating(Boolean(negotiationKey && negotiatedProperties.includes(negotiationKey)) || hasApiNegotiation)
+    }, [negotiationKey, realStateInformations])
 
     const proposalSchema = z.object({
         offer_price: z.string().min(5, 'O preço mínimo é de 25000kz'),
@@ -57,6 +71,13 @@ export default function RealStateDetailsCard({
         let success = await makeProposal(setIsloading, data)
 
         if(success !== null){
+            const negotiatedProperties = getDataFromStorage('negotiatingProperties') || []
+
+            if (negotiationKey && !negotiatedProperties.includes(negotiationKey)) {
+                setDataIntoStorage('negotiatingProperties', [...negotiatedProperties, negotiationKey])
+            }
+
+            setIsNegotiating(true)
             setWhatModal("")
             setProposedPrice(Number(data['offer_price']))
         }
@@ -151,10 +172,12 @@ export default function RealStateDetailsCard({
                                             navigate('/payment', {
                                                 state: {
                                                     announcedPrice: Number(realStateInformations?.price),
+                                                    paymentBaseValue: Number(realStateInformations?.price),
                                                     kubikoTaxPrice: Number(realStateInformations?.price) * 0.05,
                                                     totalPaymentValue: Number(realStateInformations?.price) + (Number(realStateInformations?.price) * 0.05),
                                                     propertyTitle: realStateInformations?.title,
-                                                    listed_id: realStateInformations?.listing_id
+                                                    listed_id: realStateInformations?.listing_id,
+                                                    paymentContext: 'DIRECT_PURCHASE'
                                                 }
                                             })
                                         }}
@@ -164,23 +187,25 @@ export default function RealStateDetailsCard({
                                         Efectuar pagamento 
                                     </Link>
                                     {
-                                        realStateInformations.is_negotiable && (
-                                            <ActionButtons 
-                                                icon={<Call02Icon />}
-                                                text={'Negociar Preço'} 
-                                                onClick={()=> {
-                                                    if(!getDataFromStorage('user')){
-                                                        setShowLocalModal('login')
-                                                        openModal()
+	                                        realStateInformations.is_negotiable && (
+	                                            <ActionButtons 
+	                                                icon={<Call02Icon />}
+	                                                text={isNegotiating ? 'Já negociando' : 'Negociar Preço'} 
+	                                                onClick={()=> {
+                                                        if(isNegotiating) return
+	                                                    if(!getDataFromStorage('user')){
+	                                                        setShowLocalModal('login')
+	                                                        openModal()
                                                         return
                                                     } 
                                                     handleShow()
                                                 }}
-                                                color={'#3541A9'} 
-                                                backgroundColor={'#FFFF'} 
-                                                border={'1px solid #3541A9'} 
-                                            />
-                                        )
+	                                                color={'#3541A9'} 
+	                                                backgroundColor={isNegotiating ? '#F1F3F9' : '#FFFF'} 
+	                                                border={'1px solid #3541A9'}
+                                                    disabled={isNegotiating}
+	                                            />
+	                                        )
                                     }
                                     <Modal
                                         show={show} 

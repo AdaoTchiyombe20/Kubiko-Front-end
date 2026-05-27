@@ -1,10 +1,10 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "../../components/header/header";
 import Sidebar from "../../components/sidebar/sidebar";
 import { MailDownload01Icon, MailUpload01Icon, Payment02Icon, RealEstate01Icon, ShoppingBasket01Icon, UserCircleIcon } from "hugeicons-react";
-import { useEffect } from "react";
-import { getDataFromStorage } from "../../utils/storage";
 import styles from "./account.module.css";
+import { getCurrentUser } from "../../utils/requests";
 
 export default function MyProfile(){
 
@@ -34,17 +34,22 @@ export default function MyProfile(){
             url: 'my-payments',
             icon: Payment02Icon
         },
-        {
-            name: 'Histórico de compras',
-            url: 'purchase-history',
-            icon: ShoppingBasket01Icon
-        },
+        // {
+        //     name: 'Histórico de compras',
+        //     url: 'purchase-history',
+        //     icon: ShoppingBasket01Icon
+        // },
     ]
+    const [userProfile, setUserProfile] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
     const user = localStorage.getItem('user');
     if(!user)
         return <Navigate to={"/"} replace={true} />
 
+    useEffect(()=> {
+        getCurrentUser(setIsLoading, setUserProfile)
+    }, [])
     return(
         <>
             <Header />
@@ -54,7 +59,7 @@ export default function MyProfile(){
                     whatIsThis={'myProfile'}
                 />
                 <div className={styles.accountContent}>
-                    <Outlet />
+                    <Outlet context={{ user: userProfile, isLoading }} />
                 </div>
             </div>
         </>

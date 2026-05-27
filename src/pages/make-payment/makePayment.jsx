@@ -8,6 +8,7 @@ import mcx from "../../assets/imgs/multicaixa_express.png"
 import styles from "./makePayment.module.css"
 import { toast } from "react-toastify";
 import { makePayments } from "../../utils/requests";
+import { getDataFromStorage, setDataIntoStorage } from "../../utils/storage";
 
 export default function MakePayment(){
 
@@ -20,8 +21,20 @@ export default function MakePayment(){
         totalPaymentValue,
         propertyTitle,
         listed_id,
-        paymentType = 'DIRECT_PURCHASE'
+        paymentType = 'DIRECT_PURCHASE',
+        paymentBaseValue,
+        paymentContext = 'DIRECT_PURCHASE'
     } = location.state || {}
+
+    const announcedValue = Number(announcedPrice || 0)
+    const baseValue = Number(paymentBaseValue ?? (totalPaymentValue ? Number(totalPaymentValue) - Number(kubikoTaxPrice || 0) : announcedValue))
+    const calculatedTaxPrice = baseValue * 0.05
+    const calculatedTotalPaymentValue = baseValue + calculatedTaxPrice
+    const baseLabel = paymentContext === 'ACCEPTED_PROPOSAL'
+        ? 'Valor da Proposta Aceite'
+        : paymentContext === 'ANNOUNCED_PRICE'
+            ? 'Valor Anunciado'
+            : 'Valor do Imóvel'
 
     const [file, setFile] = useState()
     const [isLoadingPayment, setIsLoadingPayment] = useState(false)
@@ -81,7 +94,7 @@ export default function MakePayment(){
                                         <p className="text-secondary m-0">Preço Anunciado</p>
                                         <p className="fw-semibold m-0">
                                             {
-                                                Number(announcedPrice || 0).toLocaleString("pt-AO", {
+                                                announcedValue.toLocaleString("pt-AO", {
                                                     style: 'currency',
                                                     currency: 'AOA'
                                                 })
@@ -89,18 +102,27 @@ export default function MakePayment(){
                                         </p>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center border-top border-bottom border-1 py-2">
+                                        <p className="text-secondary m-0">{baseLabel}</p>
+                                        <p className="fw-semibold m-0">
+                                            {baseValue.toLocaleString("pt-AO", {
+                                                style: 'currency',
+                                                currency: 'AOA'
+                                            })}
+                                        </p>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center border-bottom border-1 py-2">
                                         <p className="text-secondary m-0">Taxa da Kubiko (5%)</p>
                                         <p className="fw-semibold m-0">
-                                            {Number(kubikoTaxPrice || 0).toLocaleString("pt-AO", {
+                                            {calculatedTaxPrice.toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
                                         </p>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center border-top border-1 pt-2">
-                                        <p className="fw-semibold text-primary m-0">Valor da Proposta</p>
+                                        <p className="fw-semibold text-primary m-0">Total a Transferir</p>
                                         <p className="m-0 fw-semibold">
-                                            {Number(totalPaymentValue || 0).toLocaleString("pt-AO", {
+                                            {calculatedTotalPaymentValue.toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
@@ -201,7 +223,7 @@ export default function MakePayment(){
                                     <div className="d-flex align-items-center justify-content-between gap-3">
                                         <p className="m-0 fw-semibold">Kubiko Pagamentos</p>
                                         <p className="m-0 fw-semibold text-end">
-                                            {Number(totalPaymentValue || 0).toLocaleString("pt-AO", {
+                                            {calculatedTotalPaymentValue.toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
@@ -261,6 +283,22 @@ export default function MakePayment(){
                                     const result = await makePayments(setIsLoadingPayment, paymentPayload)
 
                                     if(result){
+                                        const savedPayments = getDataFromStorage('myPayments') || []
+                                        const paymentRecord = {
+                                            id: result?.payment?.id || result?.id || crypto.randomUUID(),
+                                            propertyTitle: propertyTitle || 'Imóvel selecionado',
+                                            listed_property_id: listed_id,
+                                            announcedPrice: announcedValue,
+                                            paymentBaseValue: baseValue,
+                                            kubikoTaxPrice: calculatedTaxPrice,
+                                            totalPaymentValue: calculatedTotalPaymentValue,
+                                            paymentType,
+                                            paymentContext,
+                                            status: result?.payment?.status || result?.status || 'PENDING_VALIDATION',
+                                            created_at: new Date().toISOString()
+                                        }
+
+                                        setDataIntoStorage('myPayments', [paymentRecord, ...savedPayments])
                                         toast.success("Pagamento enviado para validação")
                                         navigate('/my-profile/my-payments')
                                     }

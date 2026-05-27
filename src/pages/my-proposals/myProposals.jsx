@@ -6,8 +6,8 @@ import SpinnerLoading from "../../components/spinner/spinner";
 
 const getProposalStatus = (proposal) => (
     proposal?.status ||
-    proposal?.negociationEvents?.[0]?.status ||
     proposal?.negociationEvents?.at?.(-1)?.status ||
+    proposal?.negociationEvents?.[0]?.status ||
     'PENDING'
 )
 
@@ -30,17 +30,22 @@ export default function MyProposals(){
     const goToPayment = (proposal) => {
         const property = proposal?.property_listing?.property
         const listedId = proposal?.property_listing?.id || proposal?.listed_property_id
-        const proposedPrice = Number(proposal?.accepted_value || proposal?.proposed_price || property?.price || 0)
-        const kubikoTaxPrice = proposedPrice * 0.05
+        const currentStatus = getProposalStatus(proposal)
+        const announcedPrice = Number(property?.price || 0)
+        const acceptedPrice = Number(proposal?.accepted_value || proposal?.proposed_price || 0)
+        const paymentBaseValue = currentStatus === 'ACCEPTED' ? acceptedPrice : announcedPrice
+        const kubikoTaxPrice = paymentBaseValue * 0.05
 
         navigate('/payment', {
             state: {
-                announcedPrice: Number(property?.price || proposedPrice),
+                announcedPrice,
+                paymentBaseValue,
                 kubikoTaxPrice,
-                totalPaymentValue: proposedPrice + kubikoTaxPrice,
+                totalPaymentValue: paymentBaseValue + kubikoTaxPrice,
                 propertyTitle: property?.title,
                 listed_id: listedId,
-                paymentType: 'DIRECT_PURCHASE'
+                paymentType: 'DIRECT_PURCHASE',
+                paymentContext: currentStatus === 'ACCEPTED' ? 'ACCEPTED_PROPOSAL' : 'ANNOUNCED_PRICE'
             }
         })
     }
@@ -98,10 +103,10 @@ export default function MyProposals(){
                                         </button>
                                         <button
                                             className="btn btn-primary bg-default-color border-0 py-2"
-                                            disabled={currentStatus !== 'ACCEPTED'}
+                                            disabled={currentStatus === 'PENDING'}
                                             onClick={() => goToPayment(proposal)}
                                         >
-                                            {currentStatus === 'ACCEPTED' ? 'Fazer pagamento' : 'Aguardando resposta'}
+                                            {currentStatus === 'ACCEPTED' ? 'Pagar proposta aceite' : currentStatus === 'REJECTED' ? 'Pagar valor anunciado' : 'Aguardando resposta'}
                                         </button>
                                     </div>
                                 </div>

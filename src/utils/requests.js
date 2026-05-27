@@ -3,7 +3,7 @@ import { getDataFromStorage, setDataIntoStorage } from "./storage";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export async function signUser(data, setIsLoading, navigate, endpoint){
+export async function signUser(setIsLoading, setUser){
     setIsLoading(true);
     try {
         const response = await fetch(BASE_URL + endpoint, {
@@ -36,6 +36,71 @@ export async function signUser(data, setIsLoading, navigate, endpoint){
         setIsLoading(false);
     }
 }
+
+export async function getCurrentUser(setIsLoading, setUser){
+    setIsLoading(true)
+
+    try{
+        let response = await fetch(BASE_URL + '/users/me', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include'
+        });
+
+        if (response.status === 401) {
+            const newAcessToken = await refreshToken();
+
+            if (!newAcessToken) {
+                throw new Error('Sessão expirada. Inicie sessão novamente.');
+            }
+
+            response = await fetch(BASE_URL + '/useres/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${newAcessToken}`
+                },
+                credentials: 'include'
+            });
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        setUser(result.user || result.data || result)
+        console.log(result)
+        return result
+
+    } catch(error) {
+
+        if (!navigator.onLine) {
+            toast.error("Sem ligação à internet.");
+            return null;
+        }
+
+        if (
+            error.message?.includes("Failed to fetch") ||
+            error.message?.includes("ERR_NETWORK") ||
+            error.message?.includes("ERR_NAME_NOT_RESOLVED")
+        ) {
+            toast.error("Erro de conexão. Verifique a internet.");
+            return null;
+        }
+        
+        
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+
 
 export async function logout(){
     try {
@@ -747,6 +812,72 @@ export async function makePayments(setIsLoading, data){
         
         
         toast.error(error.message === 'Token inválido' ? "Verifique a sua internet e tente novamente!" : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
+        return null
+    }finally{
+        setIsLoading(false)
+    }
+}
+export async function getPayments(setIsLoading, setPayment){
+    setIsLoading(true)
+
+    await assumeClient()
+    await refreshToken()
+
+    try{
+        let response = await fetch(BASE_URL + '/payments', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('user'))?.accessToken}`
+            },
+            credentials: 'include'
+        });
+
+        if (response.status === 401) {
+            const newAcessToken = await refreshToken();
+
+            if (!newAcessToken) {
+                throw new Error('Sessão expirada. Inicie sessão novamente.');
+            }
+
+            response = await fetch(BASE_URL + '/payments', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${newAcessToken}`
+                },
+                credentials: 'include'
+            });
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.log(errorData)
+            throw new Error(errorData.message || 'Erro de validação. Verifique seus dados e tente novamente.');
+            return
+        }
+        
+        const result = await response.json();
+        setPayment(result)
+        console.log(result)
+        return result
+
+    } catch(error) {
+
+        if (!navigator.onLine) {
+            toast.error("Sem ligação à internet.");
+            return null;
+        }
+
+        if (
+            error.message?.includes("Failed to fetch") ||
+            error.message?.includes("ERR_NETWORK") ||
+            error.message?.includes("ERR_NAME_NOT_RESOLVED")
+        ) {
+            toast.error("Erro de conexão. Verifique a internet.");
+            return null;
+        }
+        
+        
+        toast.error(error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{
         setIsLoading(false)

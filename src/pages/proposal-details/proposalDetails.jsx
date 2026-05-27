@@ -7,23 +7,35 @@ const formatMoney = (value) => Number(value || 0).toLocaleString('pt-AO', {
     currency: 'AOA'
 })
 
+const getProposalStatus = (proposal) => (
+    proposal?.status ||
+    proposal?.negociationEvents?.at?.(-1)?.status ||
+    proposal?.negociationEvents?.[0]?.status ||
+    'PENDING'
+)
+
 export default function ProposalDetails(){
     const navigate = useNavigate()
     const location = useLocation()
     const proposal = location.state?.proposal || {}
     const property = proposal?.property_listing?.property || {}
+    const currentStatus = getProposalStatus(proposal)
+    const announcedPrice = Number(property?.price || 0)
     const proposedPrice = Number(proposal?.accepted_value || proposal?.proposed_price || 0)
-    const kubikoTaxPrice = proposedPrice * 0.05
+    const paymentBaseValue = currentStatus === 'ACCEPTED' ? proposedPrice : announcedPrice
+    const kubikoTaxPrice = paymentBaseValue * 0.05
 
     const handlePayment = () => {
         navigate('/payment', {
             state: {
-                announcedPrice: Number(property?.price || proposedPrice),
+                announcedPrice,
+                paymentBaseValue,
                 kubikoTaxPrice,
-                totalPaymentValue: proposedPrice + kubikoTaxPrice,
+                totalPaymentValue: paymentBaseValue + kubikoTaxPrice,
                 propertyTitle: property?.title,
                 listed_id: proposal?.property_listing?.id || proposal?.listed_property_id,
-                paymentType: 'DIRECT_PURCHASE'
+                paymentType: 'DIRECT_PURCHASE',
+                paymentContext: currentStatus === 'ACCEPTED' ? 'ACCEPTED_PROPOSAL' : 'ANNOUNCED_PRICE'
             }
         })
     }
@@ -91,12 +103,16 @@ export default function ProposalDetails(){
                                 <p className="fw-semibold text-default-color fs-5 m-0 text-end">{formatMoney(proposedPrice)}</p>
                             </div>
                             <div className="d-flex justify-content-between align-items-center border-bottom border-1 py-2 gap-3">
-                                <p className="text-secondary m-0">Taxa Kubiko</p>
+                                <p className="text-secondary m-0">{currentStatus === 'ACCEPTED' ? 'Base do pagamento' : 'Base se pagar agora'}</p>
+                                <p className="fw-semibold m-0 text-end">{formatMoney(paymentBaseValue)}</p>
+                            </div>
+                            <div className="d-flex justify-content-between align-items-center border-bottom border-1 py-2 gap-3">
+                                <p className="text-secondary m-0">Taxa Kubiko (5%)</p>
                                 <p className="fw-semibold m-0 text-end">{formatMoney(kubikoTaxPrice)}</p>
                             </div>
                             <div className="d-flex justify-content-between align-items-center border-bottom border-1 py-2 gap-3">
                                 <p className="text-secondary m-0">Total a pagar</p>
-                                <p className="fw-semibold m-0 text-end">{formatMoney(proposedPrice + kubikoTaxPrice)}</p>
+                                <p className="fw-semibold m-0 text-end">{formatMoney(paymentBaseValue + kubikoTaxPrice)}</p>
                             </div>
                             <div className="d-flex justify-content-between align-items-center py-2 gap-3">
                                 <p className="text-secondary m-0">Forma de Pagamento</p>
@@ -109,8 +125,8 @@ export default function ProposalDetails(){
 
             {
                 location.state?.mode === 'sent' && (
-                    <button className="btn btn-primary bg-default-color border-0 w-100 py-3 mt-4" onClick={handlePayment}>
-                        Fazer pagamento
+                    <button className="btn btn-primary bg-default-color border-0 w-100 py-3 mt-4" onClick={handlePayment} disabled={currentStatus === 'PENDING'}>
+                        {currentStatus === 'ACCEPTED' ? 'Pagar proposta aceite' : currentStatus === 'REJECTED' ? 'Pagar valor anunciado' : 'Aguardando resposta'}
                     </button>
                 )
             }
