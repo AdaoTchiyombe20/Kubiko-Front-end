@@ -8,10 +8,9 @@ export default function FilterSelect({
 }){
     return(
        <select
-        {...register(name)} 
+       {...register(name)} 
         aria-label="Default select example" 
         className='outline-none shadow-none form-select' 
-        defaultValue={""}
     >
             <option value={""} disabled>{label}</option> 
             {

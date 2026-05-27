@@ -15,12 +15,15 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function FilterPage(){
 
     const navigate = useNavigate()
-    const [rangePrice, setRangePrice] = useState(25000);
+    const location = useLocation()
+    const initialSearchParams = new URLSearchParams(location.search)
+    const initialMaxPrice = Number(initialSearchParams.get('max_price'))
+    const [rangePrice, setRangePrice] = useState(initialMaxPrice >= 25000 ? initialMaxPrice : 25000);
     const [pageSize, setPageSize] = useState(10)
     const [cardsView, setCardsView] = useState('grid')
     const [showFiltersCanvas, setShowFiltersCanvas] = useState(false)
@@ -129,20 +132,7 @@ export default function FilterPage(){
             (val) => val === "true" ? true : val === "false" ? false : undefined,
             z.boolean().optional()
         )
-    }).refine(
-        (data) => {
-            return (
-            data.type_of_property ||
-            data.type_of_purchase ||
-            data.municipality ||
-            data.is_negotiable !== undefined
-            );
-        },
-        {
-            message: "Selecione pelo menos um filtro",
-            path: ["root"],
-        }
-    )
+    })
     const {
         register,
         handleSubmit,
@@ -151,9 +141,10 @@ export default function FilterPage(){
     } = useForm({
         resolver: zodResolver(filterSchema),
         defaultValues: {
-            type_of_property : '',
-            type_of_purchase: '',
-            municipality: ''
+            type_of_property : initialSearchParams.get('type_of_property') || '',
+            type_of_purchase: initialSearchParams.get('type_of_purchase') || '',
+            municipality: initialSearchParams.get('municipality') || '',
+            is_negotiable: initialSearchParams.get('is_negotiable') || ''
         }
     })
     const onSubmit = async (data) => {
@@ -247,8 +238,22 @@ export default function FilterPage(){
     )
 
     useEffect(() => {
+        const initialQueryString = initialSearchParams.toString()
+
+        if(initialQueryString){
+            getPropertiesFilter(setIsLoading, setPropertyFilter, initialQueryString)
+            setFiltersLength([...initialSearchParams.keys()].length)
+            reset({
+                type_of_property : initialSearchParams.get('type_of_property') || '',
+                type_of_purchase: initialSearchParams.get('type_of_purchase') || '',
+                municipality: initialSearchParams.get('municipality') || '',
+                is_negotiable: initialSearchParams.get('is_negotiable') || ''
+            })
+            return
+        }
+
         getPropertiesFilter(setIsLoading, setPropertyFilter)
-    }, [])
+    }, [location.search])
     console.log(errors)
     return(
         <>
@@ -335,6 +340,7 @@ export default function FilterPage(){
                                 setSearchTerm('')
                                 setFiltersLength(0)
                                 reset()
+                                navigate('/filters', { replace: true })
                             }}
                         >
                             Limpar tudo

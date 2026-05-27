@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import { Theme } from "@radix-ui/themes";
@@ -20,6 +20,13 @@ import house5 from '../../assets/imgs/house5.png'
 import styles from './home.module.css'
 
 export default function Home(){
+    const navigate = useNavigate()
+    const [homeFilters, setHomeFilters] = useState({
+        type_of_purchase: '',
+        type_of_property: '',
+        is_negotiable: '',
+        max_price: ''
+    })
 
     const plans = [
         {
@@ -123,13 +130,23 @@ export default function Home(){
     useEffect(() => {
         getAllProperties(setIsLoading, setAllProperties)
     }, [])
+    const handleHomeSearch = (e) => {
+        e.preventDefault()
+
+        const cleanedFilters = Object.fromEntries(
+            Object.entries(homeFilters).filter(([_, value]) => value !== '')
+        )
+        const queryString = new URLSearchParams(cleanedFilters).toString()
+
+        navigate(`/filters${queryString ? `?${queryString}` : ''}`)
+    }
 
     return(
         <>
             <Header />
 
             <div 
-                className="d-flex flex-column pb-3 pb-md-4 position-relative mb-3"
+                className="d-flex flex-column pb-3 pb-md-4 position-relative mb-5"
                 style={{
                     marginTop: '80px',
                 }}
@@ -140,15 +157,20 @@ export default function Home(){
                         <h2 className="text-white text-center mb-3 mb-md-5">Bem-vindo ao <span className="text-default-color">Kubiko</span></h2>
                         <h1 className="text-center lh-1 text-default-color">Invista Hoje no <br /> Sonho da sua casa</h1>
                     </div>
-                    {/* <form 
+                    <form 
                         className={`${styles.homePageForm} row bg-white d-flex align-items-end rounded-4 gap-3 shadow-lg py-5 px-4`}
+                        onSubmit={handleHomeSearch}
                     >
                         {
                             filterSelectsArray.map((select, index) => (
                                 <div className="col border-end border-2 pe-4 d-flex flex-column">
                                     <label htmlFor="">{select.label}</label>
                                     <Form.Select
-                                        defaultValue={""}
+                                        value={homeFilters[select.name]}
+                                        onChange={(e) => setHomeFilters(prev => ({
+                                            ...prev,
+                                            [select.name]: e.target.value
+                                        }))}
                                     >
                                         <option value={""} disabled>{select.label}</option>
                                         {
@@ -164,11 +186,15 @@ export default function Home(){
                             <label htmlFor="">Preço</label>
                             <input
                                 type="number"
-                                name=""
-                                id=""
+                                name="max_price"
                                 className="rounded-3 border border-2 outline-none shadow-none"
                                 placeholder="20000kz" 
                                 min={25000}
+                                value={homeFilters.max_price}
+                                onChange={(e) => setHomeFilters(prev => ({
+                                    ...prev,
+                                    max_price: e.target.value
+                                }))}
                                 style={{
                                     padding: '11px 20px 11px 12px'
                                 }}
@@ -183,11 +209,11 @@ export default function Home(){
                                 <Search01Icon size={18} />
                             </button>
                         </div>
-                    </form> */}
+                    </form>
                 </div>
             </div>
              
-            <main className={`mb-5 homePage-main mt-0 ${styles.homeMain}`}>
+            <main className={`mb-5 homePage-main mt-5 ${styles.homeMain}`}>
                 <div className="d-flex mb-4">
                     <RandomText text='IMÓVEIS' textColor={"#10265B"} borderRadius={'rounded-5'} backgroundColor={'#eaf6fc'} icon={<City03Icon size={16} color="#10265B"/>}/>
                 </div>
