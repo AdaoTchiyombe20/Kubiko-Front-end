@@ -300,9 +300,8 @@ export default function RegisterProperty() {
             key={file.path}
             style={{
                 height: '70px',
-                minWidth: '320px'
             }}
-            className="d-flex align-items-center justify-content-between border rounded-3 px-2"
+            className={`${styles.fileItem} d-flex align-items-center justify-content-between border rounded-3 px-2`}
         >
             <div className="d-flex gap-3 align-items-center h-100">
                 <div>
@@ -380,10 +379,10 @@ export default function RegisterProperty() {
     }
 
     return (
-        <>
+        <div className={styles.registerPage}>
             <VariousModal />
 
-            <header className="d-flex align-items-center justify-content-between border-bottom">
+            <header className={`${styles.registerHeader} d-flex align-items-center justify-content-between border-bottom`}>
                 <Link to={"/"} className="img">
                     <img src={Logo} alt="" />
                 </Link>
@@ -418,23 +417,20 @@ export default function RegisterProperty() {
                     </div>
                 ) : (
                     <>
-                        <div className="container-fluid p-0">
+                        <div className={`${styles.registerMain} container-fluid p-0`}>
                             {
                                 propertyInfo !== 'finish' ? (
                                     <div
-                                        className="row w-100 m-0"
-                                        style={{
-                                            height: "calc(100vh - 160px)",
-                                        }}
+                                        className={`${styles.registerLayout} row w-100 m-0`}
                                     >
-                                        <div className="col d-flex flex-column justify-content-center align-items-center h-100">
+                                        <div className={`${styles.registerIntro} col-12 col-lg d-flex flex-column justify-content-center align-items-center h-100`}>
                                             <AnimatePresence mode="wait">
                                                 {
                                                     propertyInfo === 'informacoes' ? showTitle('informacoes', 'Informações de imóvel', 'Fique à vontade para editar os dados do seu imóvel.') : propertyInfo === 'fotografias' ? showTitle('fotografias', 'Fotografias do imóvel', 'Adicione fotografias que destaquem o melhor do seu imóvel.') : ''
                                                 }
                                             </AnimatePresence>
                                         </div>
-                                        <div className="col p-0 overflow-hidden">
+                                        <div className={`${styles.registerContent} col-12 col-lg p-0 overflow-hidden`}>
                                             <AnimatePresence mode="wait">
                                                 {
                                                     propertyInfo === 'informacoes' ? (
@@ -444,12 +440,13 @@ export default function RegisterProperty() {
                                                             animate={{ opacity: 1, x: 0 }}
                                                             exit={{ opacity: 0, x: -50 }}
                                                             transition={{ duration: 0.4 }}
-                                                            className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                                            className={`${styles.formMotion} w-100 h-100 d-flex justify-content-center align-items-center`}
                                                         >
                                                             <form
                                                                 id="form"
                                                                 onSubmit={handleSubmit(onSubmit)}
                                                                 action="#"
+                                                                className={styles.propertyForm}
                                                                 style={{
                                                                     width: "80%",
                                                                 }}
@@ -478,7 +475,7 @@ export default function RegisterProperty() {
                                                                         </label>
                                                                         {errors.type_of_property && ( <small className="text-danger">{errors.type_of_property.message}</small> )}
                                                                 </div>
-                                                                <div className="d-flex justify-content-between gap-4 mb-3">
+                                                                <div className={`${styles.formGridTwo} d-flex justify-content-between gap-4 mb-3`}>
                                                                     <div className="form-floating w-100">
                                                                         <input
                                                                             {...register("title")}
@@ -620,7 +617,7 @@ export default function RegisterProperty() {
                                                                 </div>
 
                                                                 <div className="mb-4">
-                                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                                    <div className={`${styles.optionRow} d-flex align-items-center justify-content-between mb-2`}>
                                                                         <p
                                                                             className="m-0"
                                                                             style={{
@@ -648,7 +645,7 @@ export default function RegisterProperty() {
                                                                             </Tab.Container>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                                                    <div className={`${styles.optionRow} d-flex align-items-center justify-content-between mb-2`}>
                                                                         <p
                                                                             className="m-0"
                                                                             style={{
@@ -678,7 +675,7 @@ export default function RegisterProperty() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="d-flex justify-content-between gap-4 mb-3">
+                                                                <div className={`${styles.formGridTwo} d-flex justify-content-between gap-4 mb-3`}>
                                                                     <div className="form-floating w-100">
                                                                         <select
                                                                             className="form-select text-secondary cursor-pointer outline-none shadow-none"
@@ -726,9 +723,9 @@ export default function RegisterProperty() {
                                                             animate={{ opacity: 1, y: -1 }}
                                                             exit={{ opacity: 0, y: 50 }}
                                                             transition={{ duration: 0.4 }}
-                                                            className="w-100 h-100 d-flex justify-content-center align-items-center"
+                                                            className={`${styles.formMotion} w-100 h-100 d-flex justify-content-center align-items-center`}
                                                         >
-                                                            <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center p-0`}>
+                                                            <section className={`${styles.dropzone} ${styles.mediaSection} container col d-flex flex-column align-items-center justify-content-center p-0`}>
                                                                 <div 
                                                                     {...getRootProps({className: 'dropzone d-flex flex-column align-items-center h-100 py-5'})}
                                                                     style={{
@@ -748,7 +745,7 @@ export default function RegisterProperty() {
                                                                 </div>
                                                                 <aside>
                                                                     <ul
-                                                                        className="list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4"
+                                                                        className={`${styles.fileList} list-unstyled d-flex justify-content-center flex-wrap gap-2 mt-4`}
                                                                     >
                                                                         {fileItems}
                                                                     </ul>
@@ -762,9 +759,8 @@ export default function RegisterProperty() {
                                     </div>
                                 ) : (
                                     <div 
-                                        className="row w-100 m-0"
+                                        className={`${styles.finishLayout} row w-100 m-0`}
                                         style={{
-                                            height: "calc(100vh - 160px)",
                                             padding: '40px 64px 64px 64px'
                                         }}
                                     >
@@ -778,7 +774,7 @@ export default function RegisterProperty() {
                                                 className="w-100 h-100"
                                             >
                                                 <h1
-                                                    className="text-center mb-5"
+                                                    className={`${styles.finishTitle} text-center mb-5`}
                                                     style={{
                                                         fontFamily: "Parkinsans",
                                                         fontSize: "58px",
@@ -792,7 +788,7 @@ export default function RegisterProperty() {
                                                     realStateInformations={payload} 
                                                 />
                                                 <form 
-                                                    className="mt-4 d-flex align-items-center gap-2"
+                                                    className={`${styles.termsForm} mt-4 d-flex align-items-center gap-2`}
                                                     id="finishRegisterPropertyForm"
                                                     onSubmit={async (e)=>{
                                                         e.preventDefault()
@@ -829,10 +825,7 @@ export default function RegisterProperty() {
                             }
                         </div>
                         <footer
-                            className="d-flex align-items-center justify-content-between border px-5"
-                            style={{
-                                height: "80px",
-                            }}
+                            className={`${styles.registerFooter} d-flex align-items-center justify-content-between border px-5`}
                         >
                             <div>
                                 <BackButton
@@ -884,6 +877,6 @@ export default function RegisterProperty() {
                     </>
                 )
             }
-        </>
+        </div>
     )
 }
