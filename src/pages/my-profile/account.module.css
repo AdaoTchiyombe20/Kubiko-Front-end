@@ -1,0 +1,144 @@
+.accountShell{
+    min-height: calc(100dvh - 80px);
+    margin-top: 80px;
+}
+
+.accountContent{
+    min-width: 0;
+    margin-left: 280px;
+    transition: margin-left 180ms ease;
+}
+
+.accountPage{
+    padding: 24px;
+}
+
+.profileSummary{
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.profileSummaryTop{
+    padding: 24px;
+}
+
+.profileAvatar{
+    width: 88px;
+    height: 88px;
+    flex: 0 0 88px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #10265B;
+    background-color: #EDF7FF;
+}
+
+.iconButton{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #10265B;
+    background-color: white;
+}
+
+.profileMetrics{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 0 24px 24px;
+}
+
+.metricCard{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    padding: 16px;
+    background-color: #fff;
+}
+
+.metricIcon{
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    color: #3541A9;
+    background-color: #EDEFFD;
+}
+
+.profileDetailsGrid{
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
+    gap: 24px;
+}
+
+.profilePanel{
+    min-width: 0;
+    background-color: #fff;
+}
+
+.detailLine{
+    gap: 16px;
+    min-width: 0;
+}
+
+.detailLine span:last-child{
+    min-width: 0;
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+@media (max-width: 991.98px){
+    .accountContent{
+        margin-left: 72px;
+    }
+
+    .accountPage{
+        padding: 20px;
+    }
+
+    .profileMetrics{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .profileDetailsGrid{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575.98px){
+    .accountPage{
+        padding: 16px;
+    }
+
+    .profileSummaryTop{
+        align-items: flex-start !important;
+        padding: 20px;
+    }
+
+    .profileSummaryTop > div:first-child{
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .profileAvatar{
+        width: 72px;
+        height: 72px;
+        flex-basis: 72px;
+        font-size: 24px;
+    }
+
+    .profileMetrics{
+        grid-template-columns: 1fr;
+        padding: 0 20px 20px;
+    }
+
+    .detailLine{
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .detailLine span:last-child{
+        text-align: left;
+    }
+}

@@ -16,3 +16,91 @@
 .sidebar_ul li:hover .active2{
     color: white !important;
 }
+
+.profileSidebar{
+    position: fixed;
+    top: 80px;
+    left: 0;
+    z-index: 2;
+    width: 280px;
+    height: calc(100dvh - 80px);
+    background-color: white;
+    transition: width 180ms ease;
+}
+
+.profileSidebarToggle{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 14px auto 8px;
+    border-radius: 8px;
+    color: #10265B;
+    background-color: white;
+}
+
+.profileSidebarLogo{
+    overflow: hidden;
+}
+
+.profileSidebarNav{
+    overflow-x: hidden;
+}
+
+.sidebarLabel{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.activeProfile{
+    background-color: #EDEFFD;
+}
+
+.activeProfile svg{
+    color: #3541A9 !important;
+}
+
+@media (max-width: 991.98px){
+    .profileSidebar{
+        width: 72px;
+        overflow-x: hidden;
+    }
+
+    .profileSidebarExpanded{
+        width: 280px;
+        box-shadow: 0 16px 40px rgba(16, 38, 91, 0.14);
+    }
+
+    .profileSidebarToggle{
+        display: flex;
+    }
+
+    .profileSidebarLogo{
+        display: none !important;
+    }
+
+    .profileSidebarNav{
+        padding: 8px !important;
+        margin-top: 8px !important;
+    }
+
+    .profileSidebar .sidebar_ul li{
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    .profileSidebarExpanded .sidebar_ul li{
+        justify-content: flex-start;
+        padding: 10px 12px;
+    }
+
+    .profileSidebar .sidebarLabel{
+        display: none;
+    }
+
+    .profileSidebarExpanded .sidebarLabel{
+        display: block;
+    }
+}

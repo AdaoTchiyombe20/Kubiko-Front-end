@@ -413,7 +413,7 @@ export async function getPropertyDetails(setIsLoading, setPropertyDetails, id){
 
         if (response.status === 401) {
             const newAcessToken = await refreshToken();
-            response = await fetch(BASE_URL + '/properties/listings', {
+            response = await fetch(BASE_URL + `/properties/listings/${id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${newAcessToken}`
@@ -430,11 +430,14 @@ export async function getPropertyDetails(setIsLoading, setPropertyDetails, id){
         }
         
         const result = await response.json();
-        setPropertyDetails(result.property.property)
+        setPropertyDetails({
+            ...result.property.property,
+            listing_id: result.property.id
+        })
         console.log(result)
         return result
 
-    } catch(error) {errorData.message 
+    } catch(error) {
         toast.error(error.message === 'Failed to fetch' ? 'Erro na conexão, Verifique a sua interne' : error.message || 'Ocorreu um erro. Por favor, tente novamente.');
         return null
     }finally{

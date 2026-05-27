@@ -150,7 +150,7 @@ export default function RealStateDetailsCard({
                                                     kubikoTaxPrice: Number(realStateInformations?.price) * 0.05,
                                                     totalPaymentValue: Number(realStateInformations?.price) + (Number(realStateInformations?.price) * 0.05),
                                                     propertyTitle: realStateInformations?.title,
-                                                    listed_id: realStateInformations?.id
+                                                    listed_id: realStateInformations?.listing_id
                                                 }
                                             })
                                         }}

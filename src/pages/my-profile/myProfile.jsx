@@ -4,6 +4,7 @@ import Sidebar from "../../components/sidebar/sidebar";
 import { MailDownload01Icon, MailUpload01Icon, Payment02Icon, RealEstate01Icon, ShoppingBasket01Icon, UserCircleIcon } from "hugeicons-react";
 import { useEffect } from "react";
 import { getDataFromStorage } from "../../utils/storage";
+import styles from "./account.module.css";
 
 export default function MyProfile(){
 
@@ -47,12 +48,12 @@ export default function MyProfile(){
     return(
         <>
             <Header />
-            <div>
+            <div className={styles.accountShell}>
                 <Sidebar 
                     routesArray={myProfileRoutes}
                     whatIsThis={'myProfile'}
                 />
-                <div style={{marginLeft: '280px'}}>
+                <div className={styles.accountContent}>
                     <Outlet />
                 </div>
             </div>
