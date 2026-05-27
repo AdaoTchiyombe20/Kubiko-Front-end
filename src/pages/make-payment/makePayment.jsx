@@ -4,7 +4,6 @@ import { useDropzone } from "react-dropzone";
 import { ArrowLeft02Icon, BankIcon, Download04Icon, Pdf02Icon, SecurityCheckIcon, UserIcon } from "hugeicons-react";
 import BackButton from "../../navigateBackButton/navigateBackButton";
 import Header from "../../components/header/header";
-import house from "../../assets/imgs/house.png"
 import mcx from "../../assets/imgs/multicaixa_express.png"
 import styles from "./makePayment.module.css"
 import { toast } from "react-toastify";
@@ -20,12 +19,12 @@ export default function MakePayment(){
         kubikoTaxPrice,
         totalPaymentValue,
         propertyTitle,
-        listed_id
+        listed_id,
+        paymentType = 'DIRECT_PURCHASE'
     } = location.state || {}
 
     const [file, setFile] = useState()
     const [isLoadingPayment, setIsLoadingPayment] = useState(false)
-    const [payments, setPayments] = useState([])
 
     const { getRootProps, getInputProps} = useDropzone({
         accept: {
@@ -56,36 +55,24 @@ export default function MakePayment(){
             }}
         >
             <Header />
-            <div className="ps-5 mb-4 mt-2">
+            <div className="px-3 px-md-5 mb-4 mt-2">
                 <BackButton
                     icon={<ArrowLeft02Icon />}
                     onClick={() => navigate(-1)}
                 />
             </div>
             <div
-                className="px-5"
+                className="container-fluid px-3 px-md-5"
             >
                 <h2 className="m-0 ps-1">Finalizar o pagamento do imóvel</h2>
                 <p className="text-secondary ps-1">Realize o pagamento de forma segura através da plataforma Kubiko</p>
                 <div className="container-fluid px-0">
                     <div className="row gx-4 px-0">
-                        <div className="col-6">
+                        <div className="col-12 col-lg-6 mb-4 mb-lg-0">
                             <div className="border rounded-4 p-4 pt-3 mb-3">
-                                {/* <h2 className="fw-semibold fs-3 mb-4">Detalhes do imóvel</h2>
-                                <div
-                                    style={{
-                                        height: '250px'
-                                    }}
-                                >
-                                    <img
-                                        src={house}
-                                        alt=""
-                                        className="object-fit-cover w-100 h-100 rounded-2"
-                                    />
-                                </div> */}
                                 <div className="mb-4">
                                     <p className="fw-semibold fs-4 m-0">
-                                        {propertyTitle}
+                                        {propertyTitle || 'Imóvel selecionado'}
                                     </p>
                                     <p className="text-secondary m-0">Talatona, Luanda</p>
                                 </div>
@@ -94,7 +81,7 @@ export default function MakePayment(){
                                         <p className="text-secondary m-0">Preço Anunciado</p>
                                         <p className="fw-semibold m-0">
                                             {
-                                                announcedPrice?.toLocaleString("pt-AO", {
+                                                Number(announcedPrice || 0).toLocaleString("pt-AO", {
                                                     style: 'currency',
                                                     currency: 'AOA'
                                                 })
@@ -104,7 +91,7 @@ export default function MakePayment(){
                                     <div className="d-flex justify-content-between align-items-center border-top border-bottom border-1 py-2">
                                         <p className="text-secondary m-0">Taxa da Kubiko (5%)</p>
                                         <p className="fw-semibold m-0">
-                                            {kubikoTaxPrice?.toLocaleString("pt-AO", {
+                                            {Number(kubikoTaxPrice || 0).toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
@@ -113,7 +100,7 @@ export default function MakePayment(){
                                     <div className="d-flex justify-content-between align-items-center border-top border-1 pt-2">
                                         <p className="fw-semibold text-primary m-0">Valor da Proposta</p>
                                         <p className="m-0 fw-semibold">
-                                            {totalPaymentValue?.toLocaleString("pt-AO", {
+                                            {Number(totalPaymentValue || 0).toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
@@ -130,10 +117,10 @@ export default function MakePayment(){
                             </div>
                             <section className={`${styles.dropzone} container col d-flex flex-column align-items-center justify-content-center mt-3 p-0`}>
                                 <div 
-                                    {...getRootProps({className: 'dropzone d-flex flex-column align-items-center pt-5'})}
+                                    {...getRootProps({className: 'dropzone d-flex flex-column align-items-center justify-content-center text-center px-3'})}
                                     style={{
                                         width: '100%',
-                                        height: file ? '200px' : '170px',
+                                        minHeight: file ? '200px' : '170px',
                                         border: '2px dashed #3333c9',
                                         borderRadius: '8px',
                                     }}
@@ -147,9 +134,9 @@ export default function MakePayment(){
                                     />
                                     {
                                         file && (
-                                            <div className="mt-3 d-flex align-items-center gap-2">
+                                            <div className="mt-3 d-flex align-items-center gap-2 w-100 justify-content-center">
                                                 <Pdf02Icon size={35} className="text-default-color"/>
-                                                <div className=" d-flex flex-column">
+                                                <div className="d-flex flex-column overflow-hidden">
                                                     <p className="m-0 fw-semibold text-default-color text-truncate">
                                                         {file?.name}
                                                     </p>
@@ -163,13 +150,13 @@ export default function MakePayment(){
                                 </div>
                             </section>
                         </div>
-                        <div className="col-6">
+                        <div className="col-12 col-lg-6">
                             <div className="mt-2 mb-4">
                                 <p className="fw-semibold fs-4 m-0">Método de pagamento</p>
                                 <p className="text-secondary m-0">Escolha o método de pagamento e siga as instruções</p>
                             </div>
                             <div className="border rounded-3 p-3 mb-3"> 
-                                <div className="d-flex justify-content-between mb-4">
+                                <div className="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
                                     <div className="d-flex gap-3">
                                         <div
                                             style={{
@@ -185,18 +172,18 @@ export default function MakePayment(){
                                         </div>
                                         <div>
                                             <p className="fw-semibold m-0">Multicaixa Express</p>
-                                            <p className="text-secondary m-0">Faça a transferência par ao número abaixo</p>
+                                            <p className="text-secondary m-0">Faça a transferência para o número abaixo</p>
                                         </div>
                                     </div>
                                     <p
-                                        className="border px-4 py-1 d-flex align-items-center justify-content-center text-default-color fw-semibold rounded-5 border-primary"
+                                        className="border px-4 py-1 d-flex align-items-center justify-content-center text-default-color fw-semibold rounded-5 border-primary m-0"
                                     >
                                             Recomendado
                                     </p>
                                 </div>
                                 <div className="mb-4">
                                     <p className="text-secondary m-0 mb-2 ps-1">Número de telemóvel</p>
-                                    <div className="d-flex align-items-center gap-3 border rounded-3 py-2 px-2">
+                                    <div className="d-flex align-items-center gap-3 border rounded-3 py-2 px-2 flex-wrap">
                                         <div className="px-2 border-end border-2"> 
                                             <UserIcon />
                                         </div>
@@ -207,14 +194,14 @@ export default function MakePayment(){
                                     </div>
                                 </div>
                                 <div>
-                                    <div className="d-flex align-items-center justify-content-between mb-2">
+                                    <div className="d-flex align-items-center justify-content-between mb-2 gap-3">
                                         <p className="m-0 text-secondary">Nome da conta</p>
                                         <p className="m-0 text-secondary">Valor a transferir</p>
                                     </div>
-                                    <div className="d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center justify-content-between gap-3">
                                         <p className="m-0 fw-semibold">Kubiko Pagamentos</p>
-                                        <p className="m-0 fw-semibold">
-                                            {totalPaymentValue?.toLocaleString("pt-AO", {
+                                        <p className="m-0 fw-semibold text-end">
+                                            {Number(totalPaymentValue || 0).toLocaleString("pt-AO", {
                                                 style: 'currency',
                                                 currency: 'AOA'
                                             })}
@@ -232,7 +219,7 @@ export default function MakePayment(){
                                         <p className="text-secondary m-0">Transfira através de referência bancária</p>
                                     </div>
                                 </div>
-                                <div className="d-flex gap-3">
+                                <div className="d-flex gap-3 overflow-auto">
                                     <div className="d-flex flex-column gap-2 ps-1">
                                         <p className="text-secondary m-0">Banco</p>
                                         <p className="text-secondary m-0">IBAN</p>
@@ -259,13 +246,23 @@ export default function MakePayment(){
                                 onClick={async () => {
                                     if(!file){
                                         toast.error("Adicione o comprovativo de pagamento")
+                                        return
                                     }
-                                    else{
-                                        const paymentPayload = {
-                                            listed_property_id: listed_id,
-                                            paymentType: 'DIRECT_PURCHASE'
-                                        }
-                                        await makePayments(setIsLoadingPayment, paymentPayload)
+
+                                    if(!listed_id){
+                                        toast.error("Não foi possível identificar o imóvel para pagamento")
+                                        return
+                                    }
+
+                                    const paymentPayload = {
+                                        listed_property_id: listed_id,
+                                        paymentType
+                                    }
+                                    const result = await makePayments(setIsLoadingPayment, paymentPayload)
+
+                                    if(result){
+                                        toast.success("Pagamento enviado para validação")
+                                        navigate('/my-profile/my-payments')
                                     }
                                 }}
                             >

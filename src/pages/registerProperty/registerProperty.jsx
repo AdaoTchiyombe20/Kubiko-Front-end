@@ -14,7 +14,6 @@ import BackButton from "../../navigateBackButton/navigateBackButton";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
 import RegisterPropertyCounter from "../../components/registerPropertyCounter/registerPropertyCounter";
 import { assumeOwner, refreshToken, registerProperty } from "../../utils/requests";
-import VariousModal from "../../components/modal/modal";
 import Logo from "../../assets/imgs/kubiko.png";
 import styles from "./index.module.css";
 import { AppContext } from "../../components/context/appcontext";
@@ -380,8 +379,6 @@ export default function RegisterProperty() {
 
     return (
         <div className={styles.registerPage}>
-            <VariousModal />
-
             <header className={`${styles.registerHeader} d-flex align-items-center justify-content-between border-bottom`}>
                 <Link to={"/"} className="img">
                     <img src={Logo} alt="" />

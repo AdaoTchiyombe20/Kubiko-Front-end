@@ -1,10 +1,8 @@
-import { useContext, useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft02Icon, Bathtub01Icon, BedIcon, Building02Icon, Calendar04Icon, Call02Icon, CheckmarkBadge02Icon, Clock05Icon, KitchenUtensilsIcon, Time04Icon, UserSearch02Icon } from "hugeicons-react";
-import Cards from "../../components/cards/cards";
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom";
+import { UserSearch02Icon } from "hugeicons-react";
 import Footer from "../../components/footer/footer";
 import Header from "../../components/header/header";
-import { AppContext } from "../../components/context/appcontext"
 import RandomText from "../../components/randomTextAndSvg/randomText";
 import RecentSearchs from "../../components/recentSearchs/recentSearchs";
 import RealStateDetailsCard from "../../components/realStateDetailsCard/realStateDetailsCard";
@@ -14,9 +12,7 @@ import SpinnerLoading from "../../components/spinner/spinner";
 
 export default function RealStateDetails(){
 
-    const {setShowLocalModal, handleShowModal} = useContext(AppContext)
     const { id } = useParams()
-    const navigate = useNavigate()
     const [propertyDetails, setPropertyDetails] = useState({})
     const [isLoading, setIsLoading] = useState(false)
     

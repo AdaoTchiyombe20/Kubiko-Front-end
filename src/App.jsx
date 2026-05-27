@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import VariousModal from "./components/modal/modal";
 import { AppContext } from "./components/context/appcontext";
 import 'react-toastify/dist/ReactToastify.css';

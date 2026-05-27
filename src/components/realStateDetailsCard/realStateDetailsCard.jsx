@@ -15,14 +15,13 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { makeProposal } from "../../utils/requests"
 import { getDataFromStorage } from "../../utils/storage"
-import VariousModal from "../modal/modal"
 
 export default function RealStateDetailsCard({
     whatIsThis, 
     realStateInformations
 }){
     const navigate = useNavigate()
-    const {setShowLocalModal, handleShowModal} = useContext(AppContext)
+    const {setShowLocalModal, openModal} = useContext(AppContext)
 
     const [isLoading, setIsloading] = useState(false)
     const [show, setShow] = useState(false);
@@ -128,11 +127,11 @@ export default function RealStateDetailsCard({
                                         onClick={() => {
                                             if(!getDataFromStorage('user')){
                                                 setShowLocalModal('login')
-                                                handleShowModal()
+                                                openModal()
                                                 return
                                             }
                                             setShowLocalModal('scheduleVisit')
-                                            handleShowModal()
+                                            openModal()
                                         }}
                                     />
                                     <Link
@@ -141,7 +140,7 @@ export default function RealStateDetailsCard({
                                             e.preventDefault()
                                             if(!getDataFromStorage('user')){
                                                 setShowLocalModal('login')
-                                                handleShowModal()
+                                                openModal()
                                                 return
                                             }
                                             navigate('/payment', {
@@ -167,7 +166,7 @@ export default function RealStateDetailsCard({
                                                 onClick={()=> {
                                                     if(!getDataFromStorage('user')){
                                                         setShowLocalModal('login')
-                                                        handleShowModal()
+                                                        openModal()
                                                         return
                                                     } 
                                                     handleShow()

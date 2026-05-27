@@ -74,6 +74,10 @@ const router = createBrowserRouter([
         element: <MyProposals />,
       },
       {
+        path: 'my-proposals/details-proposal/:id',
+        element: <ProposalDetails />,
+      },
+      {
         path: 'my-payments',
         element: <MyPayments />,
       },

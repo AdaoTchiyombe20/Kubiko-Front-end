@@ -8,7 +8,6 @@ import z from 'zod';
 import { ArrowLeft02Icon, Calendar04Icon, Call02Icon, GoogleIcon, Route03Icon, UserIcon } from 'hugeicons-react';
 import Alert from '../alert/alert';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import InputOtpAuth from '../inputOpt/inputOpt';
 import TimeChoose from '../timeChoose/timeChoose';
 import ScheduleCalendar from '../calendar/calendar';
@@ -18,11 +17,18 @@ import BackButton from '../../navigateBackButton/navigateBackButton';
 import VisitDetails from '../realStateVisitDetails/realStateVisitDetails';
 import styles from './modal.module.css'
 import { signUser, verifyIndividualOwner } from '../../utils/requests';
-import { toast } from 'react-toastify';
 
-export default function VariousModal(props) {
+const formatAngolaIban = (value = '') => {
+    const rawValue = value.replace(/\s/g, '').toUpperCase()
+    const withoutPrefix = rawValue.startsWith('AO06') ? rawValue.slice(4) : rawValue.replace(/^AO?0?6?/, '')
+    const iban = `AO06${withoutPrefix.replace(/\D/g, '')}`.slice(0, 25)
 
-    const {showModal, handleShowModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
+    return iban.match(/.{1,4}/g)?.join(' ') || 'AO06'
+}
+
+export default function VariousModal() {
+
+    const {showModal, closeModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [isFetchingBI, setIsFetchingBI] = useState(false)
@@ -31,7 +37,10 @@ export default function VariousModal(props) {
         ownerName: z.string().trim().min(9, 'O nome deve conter no mínimo 9 caracteres'),
         bi: z.string().trim().min(14, 'O BI deve conter no mínimo 14 caracteres').max(14, 'O BI deve conter no máximo 14 caracteres'),
         phone: z.string().trim().min(12, 'O número de telefone deve conter no mínimo 9 caracteres').max(12, 'O número de telefone deve conter no máximo 9 caracteres'),
-        bankAccount: z.string().trim().min(31, 'O IBAN deve conter no mínimo 25 caracteres').max(31, 'O IBAN deve conter no máximo 25 caracteres'),
+        bankAccount: z.string().refine(
+            value => value.replace(/\s/g, '').length === 25,
+            'O IBAN deve conter 25 caracteres'
+        ),
         dateOfBirth: z.string().min(10, "Data inválida")
     })
 
@@ -54,13 +63,14 @@ export default function VariousModal(props) {
     const onSubmitAssumeIndividualForm = async (data) => {
         const payload = {
             ...data,
+            bankAccount: data.bankAccount.replace(/\s/g, ''),
             phone: data.phone?.replace(/^244/, '') // remove só no início
         }
         console.log(payload)
         const success = await verifyIndividualOwner(payload, setIsLoading, '/profile/individual-owner')
         console.log("Sucesso: ", success)
         if(success !== null)
-            handleShowModal()
+            closeModal()
             
         // setIsLoading(true)
         // const success = await signUser(data, setIsLoading, null, '/auth/register/individual')
@@ -102,7 +112,7 @@ export default function VariousModal(props) {
     const onSubmit = async (data) => {
         const success = await signUser(data, setIsLoading, null, '/auth/login')
         if (success) {
-            handleShowModal()
+            closeModal()
             location.reload()
         }
     }
@@ -111,10 +121,11 @@ export default function VariousModal(props) {
         <>
         <Modal
             show={showModal}
-            onHide={handleShowModal}
+            onHide={closeModal}
             backdrop={showLocalModal === 'login' ? true : 'static'}
             keyboard={showLocalModal === 'login' ? true : false}
             centered
+            scrollable
         >
             {
                 showLocalModal == 'phone' && ( <BackButton icon={<ArrowLeft02Icon />} onClick={() => setShowLocalModal('login')} /> )
@@ -176,7 +187,7 @@ export default function VariousModal(props) {
                                 Não tem uma conta? 
                                 <Link 
                                     to={'/sign'}
-                                    onClick={handleShowModal}
+                                    onClick={closeModal}
                                     className='text-decoration-none text-primary'
                                     state={{
                                         showLogin: false
@@ -285,7 +296,26 @@ export default function VariousModal(props) {
                             </div>
                             <div className='d-flex flex-column gap-2 w-100 mb-3'>
                                 <label htmlFor="" className='ps-1 d-flex'>IBAN <span className='align-self-start'>*</span></label>
-                                <input type="text" {...registerAssumeIndividual('bankAccount')} placeholder='AO06 0000 0000 0000 0000 0000 0' />
+                                <input
+                                    type="text"
+                                    {...registerAssumeIndividual('bankAccount')}
+                                    placeholder='AO06 0000 0000 0000 0000 0000 0'
+                                    maxLength={31}
+                                    onFocus={() => {
+                                        if (!watch('bankAccount')) {
+                                            setValue('bankAccount', 'AO06', {
+                                                shouldValidate: true,
+                                                shouldDirty: true
+                                            })
+                                        }
+                                    }}
+                                    onChange={(e) => {
+                                        setValue('bankAccount', formatAngolaIban(e.target.value), {
+                                            shouldValidate: true,
+                                            shouldDirty: true
+                                        })
+                                    }}
+                                />
                                 {errorsAssumeIndividual.bankAccount && <p className='text-danger'>{errorsAssumeIndividual.bankAccount.message}</p>}
                             </div>
                             <button 
@@ -353,7 +383,7 @@ export default function VariousModal(props) {
                                 <VisitDetails icon={<UserIcon color='#808080' />} title={'Corretor'} text={'Cláudio Bênção'}/>
                             </div>
                             <button className={`${styles.sendPhoneCodeButton} btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 py-2 border-0 rounded-3`} onClick={()=>{
-                                handleShowModal()
+                                closeModal()
                             }}>
                                 Solicitar Visita
                             </button>
@@ -363,15 +393,11 @@ export default function VariousModal(props) {
             </Modal.Body>
             <Modal.Footer className='border-0 p-0'>
                 {
-                    showLocalModal == 'login' || showLocalModal == 'phone' &&
+                    (showLocalModal == 'login' || showLocalModal == 'phone') &&
                     (
                         <p className='m-0 text-secondary'>Ao continuar, você está de acordo com os <span><a href="#" className='text-black' >Termos de Uso do Kubiko</a></span> e ciente do <span><a href="#" className='text-black'>Aviso de Privacidade</a></span>.</p>
                     )
                 }
-            {/* <Button variant="secondary" onClick={handleShowModal}>
-                Close
-            </Button>
-            <Button variant="primary">Understood</Button> */}
             </Modal.Footer>
         </Modal>
         </>

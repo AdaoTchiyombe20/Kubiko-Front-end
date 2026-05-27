@@ -1,21 +1,24 @@
-import { useState, createContext, useEffect } from "react";
-import { get } from "react-hook-form";
+import { useState, createContext } from "react";
 import { getDataFromStorage } from "../../utils/storage";
 
 export const AppContext = createContext()
 
 export default function AppProvider({children}){
 
-    var [showModal, setShowModal] = useState(false)
-    var handleShowModal = () => setShowModal(!showModal)
-    var [showLocalModal, setShowLocalModal] = useState('')
-    var [isLogged, setIsLogged] = useState(getDataFromStorage('user') ? true : false)
+    const [showModal, setShowModal] = useState(false)
+    const [showLocalModal, setShowLocalModal] = useState('')
+    const [isLogged, setIsLogged] = useState(getDataFromStorage('user') ? true : false)
+
+    const openModal = () => setShowModal(true)
+    const closeModal = () => setShowModal(false)
 
     return(
         <AppContext.Provider value={{
             showModal,
             setShowModal,
-            handleShowModal,
+            handleShowModal: openModal,
+            openModal,
+            closeModal,
             showLocalModal,
             setShowLocalModal,
             isLogged,

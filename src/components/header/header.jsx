@@ -9,7 +9,7 @@ import { getDataFromStorage } from "../../utils/storage";
 import { logout } from "../../utils/requests";
 
 export default function Header(){
-    const { setShowLocalModal, handleShowModal, isLogged } = useContext(AppContext)
+    const { setShowLocalModal, openModal, isLogged } = useContext(AppContext)
     const [showMenu, setShowMenu] = useState(false)
     const user = getDataFromStorage('user')
 
@@ -18,7 +18,7 @@ export default function Header(){
             e.preventDefault()
             setShowMenu(false)
             setShowLocalModal('login')
-            handleShowModal()
+            openModal()
         }
     }
 
@@ -26,7 +26,7 @@ export default function Header(){
         if(!isLogged){
             setShowMenu(false)
             setShowLocalModal('login')
-            handleShowModal()
+            openModal()
         }
     }
 
