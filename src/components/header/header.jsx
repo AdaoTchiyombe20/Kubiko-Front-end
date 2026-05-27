@@ -46,7 +46,7 @@ export default function Header(){
                     <ul className={`list-unstyled d-flex align-items-center m-0 gap-5 ${styles.ul}`}>
                         <li>
                             <Link 
-                                to={'/filters'} 
+                                to={'/filters?type_of_purchase=FOR_RENT'} 
                                 className="text-decoration-none text-default-color"
                             >
                                 Alugar imóveis
@@ -54,7 +54,7 @@ export default function Header(){
                         </li>
                         <li>
                              <Link 
-                                to={'/filters'} 
+                                to={'/filters?type_of_purchase=FOR_SALE'} 
                                 className="text-decoration-none text-default-color"
                             >
                                 Comprar imóveis
@@ -132,12 +132,12 @@ export default function Header(){
                     <nav>
                         <ul className="list-unstyled d-flex flex-column gap-3 mb-4">
                             <li>
-                                <Link to="/filters" className={styles.mobileNavLink} onClick={() => setShowMenu(false)}>
+                                <Link to="/filters?type_of_purchase=FOR_RENT" className={styles.mobileNavLink} onClick={() => setShowMenu(false)}>
                                     Alugar imóveis
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/filters" className={styles.mobileNavLink} onClick={() => setShowMenu(false)}>
+                                <Link to="/filters?type_of_purchase=FOR_SALE" className={styles.mobileNavLink} onClick={() => setShowMenu(false)}>
                                     Comprar imóveis
                                 </Link>
                             </li>
