@@ -28,7 +28,7 @@ const formatAngolaIban = (value = '') => {
 
 export default function VariousModal() {
 
-    const {showModal, closeModal, showLocalModal, setShowLocalModal, isLogged} = useContext(AppContext)
+    const {showModal, closeModal, showLocalModal, setShowLocalModal, isLogged, notifyOwnerVerified} = useContext(AppContext)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const [isFetchingBI, setIsFetchingBI] = useState(false)
@@ -69,8 +69,10 @@ export default function VariousModal() {
         console.log(payload)
         const success = await verifyIndividualOwner(payload, setIsLoading, '/profile/individual-owner')
         console.log("Sucesso: ", success)
-        if(success !== null)
+        if(success !== null){
+            notifyOwnerVerified()
             closeModal()
+        }
             
         // setIsLoading(true)
         // const success = await signUser(data, setIsLoading, null, '/auth/register/individual')

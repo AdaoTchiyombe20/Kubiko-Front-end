@@ -28,6 +28,11 @@ export default function RealStateDetailsCard({
     const handleShow = () => setShow(!show)
     const [whatModal, setWhatModal] = useState('sendProposal')
     const [proposedPrice, setProposedPrice] = useState(0)
+    const lastUpdate = realStateInformations?.updated_at || realStateInformations?.createdAt || realStateInformations?.created_at
+    const lastUpdateDate = lastUpdate ? new Date(lastUpdate) : new Date()
+    const formattedLastUpdate = Number.isNaN(lastUpdateDate.getTime())
+        ? new Date().toLocaleString('pt-PT')
+        : lastUpdateDate.toLocaleString('pt-PT')
 
     const proposalSchema = z.object({
         offer_price: z.string().min(5, 'O preço mínimo é de 25000kz'),
@@ -104,7 +109,7 @@ export default function RealStateDetailsCard({
                          <div className={`${styles.ownerDescription}`}>
                             <div className="lastUpdate d-flex align-items-center gap-1">
                                 <Clock05Icon color="#808080" size={20} />
-                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>{ new Date(realStateInformations?.updated_at).toLocaleString('pt-PT')}</p>
+                                <p className="m-0"><span className="text-secondary">Última Atualização: </span>{formattedLastUpdate}</p>
                             </div>
                             <h2 className="ownerDescriptionTitle fw-semibold">Descrição do proprietário</h2>
                             <p className="ownerDescriptionText text-wrap text-truncate text-secondary m-0">

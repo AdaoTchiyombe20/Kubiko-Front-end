@@ -126,11 +126,12 @@ export default function RegisterProperty() {
     }
 
     const [isLoadingPage, setIsLoadingPage] = useState(true)
-    const {setShowModal, setShowLocalModal} = useContext(AppContext)
+    const {setShowModal, setShowLocalModal, ownerVerificationVersion} = useContext(AppContext)
     const navigate = useNavigate()
 
     useEffect(() =>{
         async function load() {
+            setIsLoadingPage(true)
             const response = await assumeOwner();
             console.log(response);
 
@@ -153,7 +154,7 @@ export default function RegisterProperty() {
         }
 
         load();
-    }, [])  
+    }, [ownerVerificationVersion])  
 
     const  [isLoading, setIsLoading] = useState(false)
     const [show, setShow] = useState(false);
@@ -167,7 +168,7 @@ export default function RegisterProperty() {
     //     return <Navigate to={"/"} replace={true} />
     // }
 
-    const date = new Date().toLocaleDateString('pt-AO')
+    const date = new Date().toISOString()
     const [payload, setPayload] = useState({})
 
     const [is_negotiable, setIsNegotiable] = useState(false);
@@ -837,11 +838,11 @@ export default function RegisterProperty() {
                                     disabled={isLoading}
                                     className="btn btn-primary bg-default-color border-0 d-flex align-items-center gap-2 py-2 px-3"
                                     onClick={() => {
-                                        if (propertyInfo === 'fotografias') {
-                                            if(files.length < 2){
-                                                toast.error('Adicione pelo menos 2 imagens do imóvel para prosseguir')
-                                                return
-                                            }
+	                                        if (propertyInfo === 'fotografias') {
+	                                            if(files.length < 2){
+	                                                toast.error('Adicione pelo menos 2 arquivos do imóvel para prosseguir')
+	                                                return
+	                                            }
 
                                             const images = files.filter(f => f.type.startsWith('image/'))
                                             const video = files.filter(f => f.type.startsWith('video/'))

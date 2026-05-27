@@ -8,17 +8,33 @@ export default function DetailsCarrousel({
   video,
   whatIsThis
 }) {
+  const registerMedia = [
+    ...(images || []),
+    ...(video || [])
+  ]
 
   return (
     <Carousel className='details-carrousel' interval={null}>
       {
         whatIsThis === 'registerProperty' ? (
-          images?.map((image, index) => { 
-            const path = URL.createObjectURL(image)
+          registerMedia.map((file, index) => { 
+            const path = URL.createObjectURL(file)
+            const isVideo = file.type?.startsWith('video/')
 
             return(
               <Carousel.Item key={index}>
-                <img src={path} alt={`house${index + 1}`} className='rounded-3' style={{height: '500px'}}/>
+                {
+                  isVideo ? (
+                    <video
+                      src={path}
+                      controls
+                      className='rounded-3 w-100 object-fit-cover'
+                      style={{height: '500px'}}
+                    />
+                  ) : (
+                    <img src={path} alt={`house${index + 1}`} className='rounded-3' style={{height: '500px'}}/>
+                  )
+                }
               </Carousel.Item>
             )
           })
